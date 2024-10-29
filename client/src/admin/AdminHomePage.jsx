@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Calendar from "../shared/Calendar";
 import AddTherapist from "./AddTherapist";
-function AdminMain() {
+function AdminHomePage() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showAddTherapist, setShowAddTherapist] = useState(false);
 
@@ -16,7 +16,7 @@ function AdminMain() {
   }
   return (
     <div>
-      <h1>AdminMain....</h1>
+      <h1>AdminHomePage....</h1>
       <button onClick={addTherapist}>הוסף מטפלים</button>
       <button onClick={openCalendar}>לוח שנה</button>
       {showCalendar && <Calendar userType="admin" />}
@@ -24,4 +24,4 @@ function AdminMain() {
     </div>
   );
 }
-export default AdminMain;
+export default AdminHomePage;

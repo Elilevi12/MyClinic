@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Calendar from "../shared/Calendar";
-function TherapistMain() {
+function TherapistHomePage() {
   const [showCalendar, setShowCalendar] = useState(false);
   function openCalendar() {
     setShowCalendar((showCalendar) => !showCalendar);
@@ -18,4 +18,4 @@ function TherapistMain() {
     </div>
   );
 }
-export default TherapistMain;
+export default TherapistHomePage;

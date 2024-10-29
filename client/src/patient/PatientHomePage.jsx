@@ -1,4 +1,4 @@
-function PatientMain(){
+function PatientHomePage(){
 return(
     <div>
         <h1>Patient</h1>
@@ -8,4 +8,4 @@ return(
     </div>
 )
 
-}export default PatientMain
+}export default PatientHomePage
