@@ -19,6 +19,7 @@ function AdminHomePage() {
       <h1>AdminHomePage....</h1>
       <button onClick={addTherapist}>הוסף מטפלים</button>
       <button onClick={openCalendar}>לוח שנה</button>
+      <button>רשימת מטפלים</button>
       {showCalendar && <Calendar userType="admin" />}
       {showAddTherapist && <AddTherapist />}
     </div>
