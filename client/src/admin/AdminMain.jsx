@@ -16,7 +16,7 @@ function AdminMain() {
   }
   return (
     <div>
-      <h1>AdminMain</h1>
+      <h1>AdminMain...</h1>
       <button onClick={addTherapist}>הוסף מטפלים</button>
       <button onClick={openCalendar}>לוח שנה</button>
       {showCalendar && <Calendar userType="admin" />}
