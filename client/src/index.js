@@ -8,9 +8,9 @@ import Therapist from './therapist/TherapistHomePage';
 import Login from './shared/Login';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
- <Login/>
+//  <Login/>
     // < Management />
-
+<AdminHomePage/>
 );
 
 // If you want to start measuring performance in your app, pass a function
