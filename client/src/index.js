@@ -5,12 +5,15 @@ import AdminHomePage from './admin/AdminHomePage'
 import TherapistHomePage from './therapist/TherapistHomePage'
 import PatientHomePage from './patient/PatientHomePage';
 import Therapist from './therapist/TherapistHomePage';
-import Login from './shared/Login';
+import Login from './patient/Login';
+import LoginSecure from './shared/LoginSecure'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 //  <Login/>
+<TherapistHomePage/>
     // < Management />
-<AdminHomePage/>
+/* <AdminHomePage/> */
+
 );
 
 // If you want to start measuring performance in your app, pass a function
