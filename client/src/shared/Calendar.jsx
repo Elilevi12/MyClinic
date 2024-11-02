@@ -26,7 +26,7 @@ const myEvents=[ {
       title: "משה לוי",
       rrule: {
         freq: "weekly",       // תדירות - שבועי
-        interval: 2,          // חזרה כל שבוע
+        interval: 1,          // חזרה כל שבוע
         byweekday: "mo",      // יום שני בלבד
         dtstart: "2024-11-04T10:00:00", // תאריך ושעה התחלה
         count: 20
