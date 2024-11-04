@@ -5,12 +5,14 @@ import AdminHomePage from './admin/AdminHomePage'
 import TherapistHomePage from './therapist/TherapistHomePage'
 import PatientHomePage from './patient/PatientHomePage';
 import Therapist from './therapist/TherapistHomePage';
-import Login from './patient/Login';
 import LoginSecure from './shared/LoginSecure'
+import App from './App';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+    <App/>
 //  <Login/>
-<TherapistHomePage/>
+// <TherapistHomePage/> 
     // < Management />
 /* <AdminHomePage/> */
 

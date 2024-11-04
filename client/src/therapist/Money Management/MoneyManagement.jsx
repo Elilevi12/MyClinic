@@ -1,16 +1,12 @@
-import { useState } from "react";
-import ListOfDuties from "./ListOfDuties";
+import { Link } from "react-router-dom";
 function MoneyManagement(){
-    const [showListOfDuties,setShowListOfDuties]=useState(false)
-
-function openListOfDuties(){
-    setShowListOfDuties(!showListOfDuties)
-}
 
     return (
         <div>
-<button onClick={openListOfDuties}>רשימת חובות</button>
-{showListOfDuties&&<ListOfDuties/>}
+<Link to={"list-of-duties"}>
+<button>רשימת חובות</button>
+</Link>
+
         </div>
     )
 }export default MoneyManagement;
