@@ -1,20 +1,28 @@
 const express = require("express");
 const app = express();
-const mysql = require("mysql2");
 const cors = require("cors");
-app.use(cors()); 
+require('dotenv').config()
+app.use(cors());
 
 app.use(express.json());
-app.get('/',(req,res)=>{
-    res.send("I server")
-})
+const db = require("./db/connection");
 
-const admin=require('./routes/admin')(app)
-const shared=require('./routes/shared')(app)
-const patient=require('./routes/patient')(app,mysql)
-const therapist=require('./routes/therapist')(app)
+app.get("/", (req, res) => {
+  res.send("I server");
+});
 
-app.listen(3300, () => {
-console.log( `Server is running on port 3300`);
- ;
+const appAdmin = require("./routes/admin");
+app.use("/admin/", appAdmin);
+
+const appTherapist = require("./routes/therapist");
+app.use("/therapist", appTherapist);
+
+const appShared = require("./routes/shared");
+app.use("/shared/", appShared);
+
+const appPatient = require("./routes/patient");
+app.use("/patients/", appPatient);
+
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server is running on port 3300`);
 });
