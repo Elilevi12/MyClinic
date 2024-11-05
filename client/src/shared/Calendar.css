@@ -6,3 +6,20 @@
     padding: 20px;
   }
 
+  /* .calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; 
+  }
+  
+  */
+  .calendar-container button {
+    margin: 5px;
+  }
+  
+  /* מגדיר את רוחב לוח השנה */
+  .fc {
+    width: 80%; /* אפשר לשנות לפי הצורך */
+  }

@@ -10,54 +10,51 @@ function Calendar() {
   const [display, setDisplay] = useState("dayGridMonth");
   const [events, setEvents] = useState([]);
 
-  const patientId1 = 123456789;
-  const patientId2 = 987654321;
-
+  const therapistId = 1;
   const fetchPatientDetails = async (id) => {
+    
     try {
       const response = await fetch(
-        `http://localhost:3300/therapist/getPatientsByTherapist/${id}`
+        `http://localhost:3300/therapist/getPatientsByTherapist/${therapistId}`
       );
       if (!response.ok) {
         throw new Error("שגיאה בקבלת פרטי המטופל");
       }
       const data = await response.json();
 
-      // הוספת אירוע מהשרת לאירועים הקיימים
-      const newEvent = {
-        title: `${data.first_name} ${data.last_name}`,
-        rrule: {
-          freq: "weekly", // תדירות - שבועי
-          interval: 1, // חזרה כל שבוע
-          byweekday: "mo", // יום שני בלבד
-          dtstart: `2024-11-05T${data.treatment_time}`, // תאריך ושעה התחלה
-          count: data.approved_sessions - 1,
-        },
-        duration: "00:45:00", // משך הפגישה
-        exdate: ["2024-11-11T10:00:00", "2024-11-25T10:00:00"],
-      };
 
-      setEvents((events) => [...events, newEvent]); // עדכון המצב של אירועים עם הנתונים החדשים
+const patientEvents=data.map((event) => ({
+  title: `${event.first_name} ${event.last_name}`,
+  rrule: {
+    freq: "weekly", // תדירות - שבועי
+    interval: 1, // חזרה כל שבוע
+    byweekday: "mo", // יום שני בלבד
+    dtstart: `2024-11-05T${event.treatment_time}`, // תאריך ושעה התחלה
+    count: event.approved_sessions - 1,
+  },
+  duration: "00:45:00", // משך הפגישה
+  exdate: ["2024-11-11T10:00:00", "2024-11-25T10:00:00"],
+}));
+setEvents(patientEvents);
+     
 
-      console.log(data.treatment_time);
+     
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    fetchPatientDetails(patientId2);
+    fetchPatientDetails();
     console.log(events);
 
-    fetchPatientDetails(patientId1);
-    fetchPatientDetails(123454321);
-    console.log(events);
-  }, []); // קריאה לפונקציה פעם אחת בלבד כאשר הרכיב נטען
+  
+  }, []); 
 
   const handleDisplayChange = (view) => {
     setDisplay(view);
   };
-  console.log(events);
+
 
   return (
     <div className="calendar-container">
@@ -80,7 +77,7 @@ function Calendar() {
         ]}
         initialView={display}
         key={display}
-        events={events} // העברת מצב האירועים כפרופס
+        events={events} 
       />
 
       <button>הוסף חופשה</button>

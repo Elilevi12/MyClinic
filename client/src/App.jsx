@@ -20,7 +20,7 @@ import PatientHomePage from "./patient/PatientHomePage";
 
 function App() {
   return (
-    <div>
+    <div className="app-container">
     
       <Router>
         <Routes>
