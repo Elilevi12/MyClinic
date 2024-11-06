@@ -1,13 +1,26 @@
-import React from 'react';
+import React,{ useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-function LoginSecure(){
+import { UserContext } from '../UserContext';
+
+function LoginAdmin(){
+
+
+  const { setUser } = useContext(UserContext);
+ useEffect(() => {
+ setUser({type:"admin"})
+
+
+ 
+ },[])
+
+
+ 
+  const { user } = useContext(UserContext);
+
+  
 return(
     <div>
 
-<h2>כניסת מורשים</h2>
-      <Link to="/therapist">
-        <button>מטפל</button>
-      </Link>
       <Link to="/admin">
         <button>מנהל</button>
       </Link>
@@ -20,4 +33,4 @@ return(
     </div>
 )
 
-}export default LoginSecure
+}export default LoginAdmin

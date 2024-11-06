@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
 import "./Calendar.css";
-
+import { UserContext } from "../UserContext";
 function Calendar() {
   const [display, setDisplay] = useState("dayGridMonth");
   const [events, setEvents] = useState([]);
+
+  const { user } = useContext(UserContext);
+
 
   const therapistId = 1;
   const fetchPatientDetails = async (id) => {
@@ -45,10 +48,8 @@ setEvents(patientEvents);
   };
 
   useEffect(() => {
-    fetchPatientDetails();
-    console.log(events);
-
-  
+   if (user.type!=="admin"){ fetchPatientDetails()};
+  console.log(user.type);
   }, []); 
 
   const handleDisplayChange = (view) => {

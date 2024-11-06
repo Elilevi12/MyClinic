@@ -1,11 +1,14 @@
 import './app.css'
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { UserProvider } from './UserContext';
+
 import LandingPage from "./shared/LandingPage";
 import LoginClient from "./patient/LoginClient";
-import LoginSecure from "./shared/LoginSecure";
+import LoginTherapist from './therapist/LoginTherapist';
 import AdminHomePage from "./admin/AdminHomePage";
-
+import LoginAdmin from './admin/LoginAdmin';
+import ListOfTherapists from './admin/ListOfTherapists';
 import Calendar from "./shared/Calendar";
 import TherapistHomePage from "./therapist/TherapistHomePage";
 import AddTherapist from "./admin/AddTherapist";
@@ -20,13 +23,15 @@ import PatientHomePage from "./patient/PatientHomePage";
 
 function App() {
   return (
+      <UserProvider>
     <div className="app-container">
-    
+  
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login-client" element={<LoginClient />} />
-          <Route path="/login-authorized" element={<LoginSecure />} />
+          <Route path="/login-admii" element={<LoginAdmin />} />
+          <Route path="/login-Therapist" element={<LoginTherapist />} />
           <Route path="/therapist" element={<TherapistHomePage />} />
           
            <Route path="/therapist/Patient-Management/add-patient"element={<AddingPatient/>}/>
@@ -44,9 +49,12 @@ function App() {
           <Route path="/admin" element={<AdminHomePage />} />
           <Route path="/admin/add-therapist" element={<AddTherapist />} />
           <Route path="admin/calendar" element={<Calendar />} />
+          <Route path="admin/list-of-therapists" element={<ListOfTherapists />} />
+        
         </Routes>
       </Router>
     </div>
+    </UserProvider>
   );
 }
 export default App;

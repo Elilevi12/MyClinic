@@ -19,10 +19,10 @@ input {
     width: 200px;
   }
   .app-container {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh; /* ממלא את גובה המסך */
-    text-align: center; /* מיישר טקסטים למרכז */
+    justify-content: center; */
+    /* min-height: 100vh;  */
+    /* text-align: center;  */
   }

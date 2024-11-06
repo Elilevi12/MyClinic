@@ -8,8 +8,11 @@ function LandingPage() {
       <Link to="/login-client">
         <button>כניסת לקוחות</button>
       </Link>
-      <Link to="/login-authorized">
-        <button>כניסת מורשים</button>
+      <Link to="/login-admii">
+        <button>כניסת מהנל</button>
+      </Link>
+      <Link to="/login-Therapist">
+        <button>כניסת מטפל</button>
       </Link>
     </div>
   );

@@ -1,5 +1,16 @@
+import React,{ useContext, useEffect } from 'react';
 import { Link } from "react-router-dom"
+import { UserContext } from '../UserContext';
 function LoginClient(){
+
+    const { setUser } = useContext(UserContext);
+    useEffect(() => {
+   //  setUser({type:"admin"})
+   setUser({type:"client"})
+   
+   
+    
+    },[])
 
     return(
         <div>
