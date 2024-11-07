@@ -8,13 +8,13 @@ function PatientManagement() {
         <Link to="add-patient">
           <button>הוספת לקוח</button>
         </Link>
-        <Link to="update-patient">
-          <button>עדכון פרטי לקוח</button>
+       
+        
+       
+<Link to="personal-file-patient">
+          <button>תיק רפואי</button>
         </Link>
-        <Link to="treatment-series">
-          <button>ניהול יומן טיפולים</button>
-        </Link>
-        <button>העלאת מסמכים לתיקים אישיים</button>
+
         <button>רשימת המתנה</button>
       </nav>
 

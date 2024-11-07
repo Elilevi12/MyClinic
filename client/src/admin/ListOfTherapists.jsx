@@ -36,6 +36,7 @@ function ListOfTherapists() {
                             <th>מספר רישיון</th>
                             <th>טלפון</th>
                             <th>אימייל</th>
+                            <th>תחום טיפול</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,6 +48,7 @@ function ListOfTherapists() {
                                 <td>{therapist.license_number}</td>
                                 <td>{therapist.phone_number}</td>
                                 <td>{therapist.email}</td>
+                                <td>{therapist.specialization}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -16,11 +16,10 @@ function TherapistHomePage() {
         <Link to="money-management">
           <button>ניהול כספים</button>
         </Link>
-        <button>תיעוד טיפול</button>
-        <button>כתיבת דוחות</button>
+       
       </nav>
 
-      {/* מציג את הרכיב המתאים לפי הנתיב */}
+    
       <Outlet />
     </div>
   );
