@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import AddTherapist from './AddTherapist';
 function ListOfTherapists() {
     const [therapists, setTherapists] = useState([]);
     const [error, setError] = useState(null);
@@ -46,9 +46,9 @@ function ListOfTherapists() {
                                 <td>{therapist.first_name}</td>
                                 <td>{therapist.last_name}</td>
                                 <td>{therapist.license_number}</td>
-                                <td>{therapist.phone_number}</td>
+                                <td>{therapist.phone}</td>
                                 <td>{therapist.email}</td>
-                                <td>{therapist.specialization}</td>
+                                <td>{therapist.specialty}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -56,6 +56,7 @@ function ListOfTherapists() {
             ) : (
                 <p>לא נמצאו מטפלים</p>
             )}
+            <AddTherapist/>
         </div>
     );
 }

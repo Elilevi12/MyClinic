@@ -6,11 +6,11 @@ function AddTherapist() {
     first_name: "",
     last_name: "",
     email: "",
-    phone_number: "",
+    phone: "",
     address: "",
-    specialization: "",
-    status: "active"
-  });
+    specialty: "",
+  }
+);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,9 +21,22 @@ function AddTherapist() {
   };
 
   const handleSubmit = () => {
-    // תוכל להדפיס את האובייקט לקונסול או לשלוח אותו לשרת
-    console.log(therapist);
-    // אם צריך לשלוח לשרת אפשר להשתמש ב-API או לשלוח אותו למקום אחר
+   
+    
+    fetch("http://localhost:3300/admin/addTherapist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(therapist)
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+
+
+
+
   };
 
   return (
@@ -54,13 +67,13 @@ function AddTherapist() {
       />
       <input
         type="tel"
-        name="phone_number"
+        name="phone"
         placeholder="טלפון"
         onChange={handleChange}
       />
       <input
         type="text"
-        name="specialization"
+        name="specialty"
         placeholder="תחום טיפול"
     
         onChange={handleChange}
