@@ -14,6 +14,7 @@ import TherapistHomePage from "./therapist/TherapistHomePage";
 import AddTherapist from "./admin/AddTherapist";
 import AddingPatient from "./therapist/patient management/AddingPatient";
 import UpdatingPatient from "./therapist/patient management/UpdatingPatient";
+import WaitingList from "./therapist/patient management/WaitingList";
 import PatientManagement from "./therapist/patient management/PatientManagement";
 import TreatmentSeriesInitiator from "./therapist/patient management/TreatmentSeriesInitiator";
 import MoneyManagement from "./therapist/Money Management/MoneyManagement";
@@ -40,6 +41,8 @@ function App() {
            <Route path="/therapist/patient-management/personal-file-patient/treatment-series"element={<TreatmentSeriesInitiator/>}/>
            <Route path="/therapist/patient-management/"element={<PatientManagement/>}/>
             <Route path="/therapist/calendar" element={<Calendar/>}/>
+<Route path="/therapist/patient-management/waiting-list" element={<WaitingList/>}/>
+
 
 <Route path="/therapist/money-management" element={<MoneyManagement/>}/>
 <Route path="/therapist/money-management/list-of-duties" element={<ListOfDuties/>}/>

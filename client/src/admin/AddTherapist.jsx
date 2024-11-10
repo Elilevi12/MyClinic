@@ -44,30 +44,35 @@ function AddTherapist() {
       <input
         type="number"
         name="license_number"
+        value={therapist.license_number}
         placeholder="מספר רישיון"
         onChange={handleChange}
       />
       <input
         type="text"
         name="first_name"
+        value={therapist.first_name}
         placeholder="שם פרטי"
     onChange={handleChange}
       />
       <input
         type="text"
         name="last_name"
+        value={therapist.last_name}
         placeholder="שם משפחה"
         onChange={handleChange}
       />
       <input
         type="email"
         name="email"
+        value={therapist.email}
         placeholder="אימייל"
         onChange={handleChange}
       />
       <input
         type="tel"
         name="phone"
+        value={therapist.phone}
         placeholder="טלפון"
         onChange={handleChange}
       />
@@ -75,12 +80,13 @@ function AddTherapist() {
         type="text"
         name="specialty"
         placeholder="תחום טיפול"
-    
+      value={therapist.specialty}
         onChange={handleChange}
       />
       <input
         type="text"
     name="address"    
+        value={therapist.address}
         placeholder="כתובת"
       
         onChange={handleChange}

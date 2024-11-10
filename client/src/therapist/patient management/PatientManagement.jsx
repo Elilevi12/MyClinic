@@ -8,14 +8,12 @@ function PatientManagement() {
         <Link to="add-patient">
           <button>הוספת לקוח</button>
         </Link>
-       
-        
-       
 <Link to="personal-file-patient">
           <button>תיק רפואי</button>
         </Link>
-
-        <button>רשימת המתנה</button>
+        <Link to="waiting-list">
+          <button>רשימת המתנה</button>
+        </Link>
       </nav>
 
       {/* מציג את הרכיב המתאים בהתאם לנתיב */}
