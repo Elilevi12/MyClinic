@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function AddingPatient() {
   const [patient, setPatient] = useState({
-    therapist_id: 1,
+    therapist_id: 10,
     first_name: "",
     last_name: "",
     id_number: "",

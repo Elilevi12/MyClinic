@@ -17,7 +17,7 @@ function PersonalFilePatient() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ therapist_id: 1 }),
+          body: JSON.stringify({ therapist_id: 10 }),
         }
       );
       const data = await response.json();

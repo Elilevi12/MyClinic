@@ -4,26 +4,44 @@ const db = require("../db/connection")
 router.get('/',(req,res)=>{
     res.send("I treatmentDiary")
 })
+
+const vacationDates = [
+    "2024-01-01",
+    "2024-03-15",
+    "2024-06-20",
+    "2024-09-10",
+    "2024-12-25"
+];
+
+function generateTreatmentDates(startDate, totalTreatments) {
+    const treatmentDates = [];
+    const currentDate = new Date(startDate);
+
+    while (treatmentDates.length !== totalTreatments) {
+        // שמירה על פורמט התאריך כ-YYYY-MM-DD
+        const formattedDate = currentDate.toISOString().split('T')[0];
+
+        // בדיקה אם התאריך הנוכחי לא מופיע בתאריכי החופשות
+        if (!vacationDates.includes(formattedDate)) {
+            treatmentDates.push(formattedDate);
+        }
+
+        // מזיזים את התאריך בשבוע אחד (7 ימים)
+        currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return treatmentDates;
+}
+
+// דוגמה להפעלת הפונקציה
+console.log(generateTreatmentDates("2024-01-01", 5));
+
+
 router.post("/addSeries", (req, res) => {
     const {patients_id,treatment_time,total_treatments,status,start_date,series_goals} = req.body;
-console.log(start_date);
-console.log(typeof total_treatments);
 
 
-    function generateTreatmentDates(startDate, totalTreatments) {
-        const treatmentDates = [];
-        const currentDate = new Date(startDate);
     
-        for (let i = 0; i < totalTreatments; i++) {
-            // מוסיפים את התאריך הנוכחי למערך
-            treatmentDates.push(currentDate.toISOString().split('T')[0]); // שמירה בפורמט YYYY-MM-DD
-            
-            // מזיזים את התאריך בשבוע אחד (7 ימים)
-            currentDate.setDate(currentDate.getDate() + 7);
-        }
-    
-        return treatmentDates;
-    }
   
     const treatmentDates = generateTreatmentDates(start_date, total_treatments);
 console.log(treatmentDates);
