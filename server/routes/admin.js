@@ -33,44 +33,59 @@ router.post("/addTherapist", (req, res) => {
     address,
     specialty,
   } = req.body;
-
+  
   const randomNumber = Math.floor(Math.random() * 1000000);
-  const sqlUser = `INSERT INTO users (username, password, type) VALUES ('?', 123, 'therapist')`;
-  db.query(sqlUser, [randomNumber], (err, result) => {
+
+  db.beginTransaction((err) => {
     if (err) {
-      console.error("שגיאה בהוספת המשתמש:", err);
-      return res.status(500).json({ message: "שגיאה בהוספת המשתמש" });
+      console.error("שגיאה בתחילת טרנזקציה:", err);
+      return res.status(500).json({ message: "שגיאה בהוספת המטפל" });
     }
 
-    const userId = result.insertId;
+    // הוספת המשתמש לטבלת users
+    const sqlUser = `INSERT INTO users (username, password, type) VALUES (?, 123, 'therapist')`;
+    db.query(sqlUser, [randomNumber], (err, result) => {
+      if (err) {
+        console.error("שגיאה בהוספת המשתמש:", err);
+        return db.rollback(() => res.status(500).json({ message: "שגיאה בהוספת המטפל" }));
+      }
 
-    const sqlTherapist = `
+      const userId = result.insertId;
+
+      // הוספת המטפל לטבלת therapists
+      const sqlTherapist = `
         INSERT INTO therapists (user_id, first_name, last_name, 
         license_number, phone, email, address, specialty)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
-    const values = [
-      userId,
-      first_name,
-      last_name,
-      license_number,
-      phone,
-      email,
-      address,
-      specialty,
-    ];
+      const values = [
+        userId,
+        first_name,
+        last_name,
+        license_number,
+        phone,
+        email,
+        address,
+        specialty,
+      ];
 
-    db.query(sqlTherapist, values, (err) => {
-      if (err) {
-        console.error("שגיאה בהוספת המטפל:", err);
-        return res.status(500).json({ message: "שגיאה בהוספת המטפל" });
-      }
+      db.query(sqlTherapist, values, (err) => {
+        if (err) {
+          console.error("שגיאה בהוספת המטפל:", err);
+          return db.rollback(() => res.status(500).json({ message: "שגיאה בהוספת המטפל" }));
+        }
 
-      res
-        .status(201)
-        .json({ message: "המטפל נוסף בהצלחה", therapistId: userId });
+        db.commit((err) => {
+          if (err) {
+            console.error("שגיאה בביצוע השאילתות:", err);
+            return db.rollback(() => res.status(500).json({ message: "שגיאה בהוספת המטפל" }));
+          }
+          return res.status(201).json({ message: "המטפל נוסף בהצלחה" });
+        });
+      });
     });
   });
 });
+
 
 module.exports = router;

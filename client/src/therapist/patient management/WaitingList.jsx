@@ -6,7 +6,7 @@ function WaitingList() {
   useEffect(() => {
     const fetchPatients = async () => {
       const response = await fetch(
-        "http://localhost:3300/therapist/waitingList",{
+        "http://localhost:3300/therapist/ListOfPatients",{
             method: "POST",
             headers: {
               "Content-Type": "application/json",
