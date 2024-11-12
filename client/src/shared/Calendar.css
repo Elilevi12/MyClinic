@@ -1,25 +1,66 @@
 .calendar-container {
-    max-width: 600px;
-    max-height: 900px;
-    overflow: auto;
-     margin: 20px;
-    padding: 20px;
-  }
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
 
-  /* .calendar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; 
-  }
-  
-  */
-  .calendar-container button {
-    margin: 5px;
-  }
-  
-  /* מגדיר את רוחב לוח השנה */
-  .fc {
-    width: 80%; /* אפשר לשנות לפי הצורך */
-  }
+.calendar-container button {
+  padding: 10px 15px;
+  margin: 5px;
+  font-size: 1rem;
+  color: white;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-container button:hover {
+  background-color: #45a049;
+}
+
+.calendar-container .fc {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.calendar-container .fc-toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.calendar-container .fc-toolbar h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 10px;
+}
+
+.calendar-container .fc-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.calendar-container .fc-button:hover {
+  background-color: #45a049;
+}
+
+.calendar-container .fc-daygrid-day {
+  border: 1px solid #ddd;
+}
+
+.calendar-container .fc-daygrid-event {
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-size: 0.8rem;
+}

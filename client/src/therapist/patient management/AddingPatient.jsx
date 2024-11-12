@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../css/addingPatient.css";
 
 function AddingPatient() {
   const [patient, setPatient] = useState({
@@ -13,8 +14,6 @@ function AddingPatient() {
   });
 
   const handleChange = (e) => {
-    console.log(patient.birth_date);
-    
     const { name, value } = e.target;
     setPatient((prevPatient) => ({
       ...prevPatient,
@@ -24,14 +23,11 @@ function AddingPatient() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3300/therapist/addPatient",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(patient),
-        }
-      );
+      const response = await fetch("http://localhost:3300/therapist/addPatient", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patient),
+      });
 
       if (response.ok) {
         alert("הנתונים נשלחו בהצלחה!");
@@ -45,64 +41,78 @@ function AddingPatient() {
   };
 
   return (
-    <div>
+    <div className="container">
+      <h2>הוסף מטופל חדש</h2>
+      <label className="label">שם פרטי</label>
       <input
         type="text"
         name="first_name"
         value={patient.first_name}
         onChange={handleChange}
-        placeholder="שם פרטי"
+        className="input"
+        placeholder="הכנס שם פרטי"
       />
+      
+      <label className="label">שם משפחה</label>
       <input
         type="text"
         name="last_name"
         value={patient.last_name}
         onChange={handleChange}
-        placeholder="שם משפחה"
+        className="input"
+        placeholder="הכנס שם משפחה"
       />
+      
+      <label className="label">תעודת זהות</label>
       <input
         type="text"
         name="id_number"
         value={patient.id_number}
         onChange={handleChange}
-        placeholder="תעודת זהות"
+        className="input"
+        placeholder="הכנס תעודת זהות"
       />
+      
+      <label className="label">טלפון</label>
       <input
         type="tel"
         name="phone"
         value={patient.phone}
         onChange={handleChange}
-        placeholder="טלפון"
+        className="input"
+        placeholder="הכנס מספר טלפון"
       />
+      
+      <label className="label">כתובת מייל</label>
       <input
         type="email"
         name="email"
         value={patient.email}
         onChange={handleChange}
-        placeholder="כתובת מייל"
+        className="input"
+        placeholder="הכנס כתובת מייל"
       />
+      
+      <label className="label">תאריך לידה</label>
       <input
         type="date"
         name="birth_date"
         value={patient.birth_date}
         onChange={handleChange}
-        placeholder="תאריך לידה"
+        className="input"
       />
+      
+      <label className="label">קופת חולים</label>
       <input
         type="text"
         name="healthcare_provider"
         value={patient.healthcare_provider}
         onChange={handleChange}
-        placeholder="קופת חולים"
+        className="input"
+        placeholder="הכנס קופת חולים"
       />
-      <input
-        type="number"
-        name="approved_treatments"
-        value={patient.approved_treatments}
-        onChange={handleChange}
-        placeholder="מספר טיפולים מאושר"
-      />
-      <button onClick={handleSubmit}>שלח</button>
+      
+      <button onClick={handleSubmit} className="button">שלח</button>
     </div>
   );
 }

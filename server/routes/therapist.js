@@ -12,7 +12,7 @@ const appTreatmentDiary = require("./treatmentDiary");
 router.use("/treatmentDiary", appTreatmentDiary);
 
 
-router.post("/ListOfPatients", (req, res) => {
+router.post("/ListOfPatients", (req, res) => {//רשימת מטופלים
 
   const {therapist_id}=req.body;
 console.log(therapist_id);
@@ -26,14 +26,14 @@ db.query(sql,[therapist_id],(err,result)=>{
   if (result.length === 0) {
     return res.status(404).json({ message: "לא נמצאו מטופלים" });
   }
-  console.log(result);
+
   
   res.status(200).json(result);
 })
 
 });
 
-router.post("/addPatient", (req, res) => {
+router.post("/addPatient", (req, res) => {//הוספת מטופל
   const {
     therapist_id,
     first_name,
@@ -43,7 +43,7 @@ router.post("/addPatient", (req, res) => {
     email,
     birth_date,
     healthcare_provider,
-    approved_treatments,
+
   } = req.body;
 
   const randomNumber = Math.floor(Math.random() * 1000000);
@@ -66,7 +66,7 @@ router.post("/addPatient", (req, res) => {
 
       const sqlPatient = `
         INSERT INTO patients (user_id, therapist_id, first_name, last_name, 
-                              id_number, phone, email, birth_date, healthcare_provider, approved_treatments)
+                              id_number, phone, email, birth_date, healthcare_provider)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
@@ -82,7 +82,6 @@ router.post("/addPatient", (req, res) => {
           email,
           birth_date,
           healthcare_provider,
-          approved_treatments,
         ],
         (err) => {
           if (err) {
@@ -103,6 +102,9 @@ router.post("/addPatient", (req, res) => {
   });
 });
 
+router.get('/receivingTreatmentDates', (req, res) => {//קבלת תארי טיפול להצגת יומן טיפולים
 
 
+
+});
 module.exports = router;

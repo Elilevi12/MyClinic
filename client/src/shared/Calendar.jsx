@@ -18,7 +18,7 @@ function Calendar() {
     
     try {
       const response = await fetch(
-        `http://localhost:3300/therapist/getPatientsByTherapist/${therapistId}`
+        `http://localhost:3300/therapist/receivingTreatmentDates/${therapistId}`
       );
       if (!response.ok) {
         throw new Error("שגיאה בקבלת פרטי המטופל");

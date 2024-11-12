@@ -1,39 +1,28 @@
-import React,{ useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { UserContext } from '../UserContext';
-
-function LoginTherapist(){
-
-
+import React, { useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { UserContext } from "../UserContext";
+import "./css/loginTherapist.css";
+function LoginTherapist() {
   const { setUser } = useContext(UserContext);
- useEffect(() => {
 
-setUser({type:"therapist"})
+  useEffect(() => {
+    setUser({ type: "therapist" });
+  }, []);
 
-
- 
- },[])
-
-
- 
-  const { user } = useContext(UserContext);
-
-  
-return(
-    <div>
-
-
-      <Link to="/therapist">
-        <button>מטפל</button>
+  return (
+    <div className="login-therapist-container">
+      <Link to="/therapist" className="link-button">
+        מטפל
       </Link>
-   
 
-
-<input type="text" placeholder="שם משתמש"/>
-<input type="password" placeholder="סיסמה"/>
-<input type="text" placeholder="תעודת זהות"/>
-<button>שלח</button>
+      <input type="text" placeholder="שם משתמש" />
+      <input type="password" placeholder="סיסמה" />
+      <input type="text" placeholder="תעודת זהות" />
+      <button>שלח</button>
     </div>
-)
+  );
+}
 
-}export default LoginTherapist
+export default LoginTherapist;
+
+
