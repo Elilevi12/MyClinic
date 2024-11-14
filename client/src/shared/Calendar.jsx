@@ -7,7 +7,7 @@ import rrulePlugin from "@fullcalendar/rrule";
 import "./Calendar.css";
 import { UserContext } from "../UserContext";
 function Calendar() {
-  const [display, setDisplay] = useState("dayGridMonth");
+  const [display, setDisplay] = useState("timeGridWeek");
   const [events, setEvents] = useState([]);
 
   const { user } = useContext(UserContext);
@@ -78,7 +78,9 @@ setEvents(patientEvents);
         ]}
         initialView={display}
         key={display}
-        events={events} 
+        events={events}
+        slotMinTime="08:00:00" // הזמן ההתחלתי בשעות העבודה
+        slotMaxTime="19:00:00" // הזמן הסופי בשעות העבודה 
       />
 
       <button>הוסף חופשה</button>

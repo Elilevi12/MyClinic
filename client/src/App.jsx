@@ -35,13 +35,13 @@ function App() {
           <Route path="/login-Therapist" element={<LoginTherapist />} />
           <Route path="/therapist" element={<TherapistHomePage />} />
           
-           <Route path="/therapist/Patient-Management/add-patient"element={<AddingPatient/>}/>
-           <Route path="/therapist/Patient-Management/personal-file-patient"element={<PersonalFilePatient/>}/>
+           <Route path="/therapist/add-patient"element={<AddingPatient/>}/>
+           <Route path="/therapist/personal-file-patient"element={<PersonalFilePatient/>}/>
            <Route path="/therapist/patient-management/personal-file-patient/update-patient"element={<UpdatingPatient/>}/>
-           <Route path="/therapist/patient-management/personal-file-patient/treatment-series"element={<TreatmentSeriesInitiator/>}/>
+           <Route path="/therapist/personal-file-patient/treatment-series"element={<TreatmentSeriesInitiator/>}/>
            <Route path="/therapist/patient-management/"element={<PatientManagement/>}/>
             <Route path="/therapist/calendar" element={<Calendar/>}/>
-<Route path="/therapist/patient-management/waiting-list" element={<WaitingList/>}/>
+<Route path="/therapist/waiting-list" element={<WaitingList/>}/>
 
 
 <Route path="/therapist/money-management" element={<MoneyManagement/>}/>

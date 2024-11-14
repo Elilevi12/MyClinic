@@ -10,14 +10,22 @@ function TherapistHomePage() {
         <Link to="calendar">
           <button className="nav-button">לוח שנה</button>
         </Link>
-        <Link to="patient-management">
-          <button className="nav-button">ניהול לקוחות</button>
+        <Link to="personal-file-patient">
+          <button className="nav-button">תיקי רפואי</button>
         </Link>
         <Link to="money-management">
           <button className="nav-button">ניהול כספים</button>
         </Link>
-      </nav>
+      
+<Link to={"waiting-list"}>
+<button>רשימת המתנה</button>
+</Link>
 
+<Link to={"add-patient"}>
+<button>הוספת לקוח</button>
+</Link>
+
+</nav>
       <div className="outlet-container">
         <Outlet />
       </div>

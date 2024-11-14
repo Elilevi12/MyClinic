@@ -3,7 +3,7 @@ import "../css/addingPatient.css";
 
 function AddingPatient() {
   const [patient, setPatient] = useState({
-    therapist_id: 10,
+    therapist_id: 1,
     first_name: "",
     last_name: "",
     id_number: "",
@@ -11,6 +11,8 @@ function AddingPatient() {
     email: "",
     birth_date: "",
     healthcare_provider: "",
+    total_treatments: 0,
+    comments: "",
   });
 
   const handleChange = (e) => {
@@ -19,15 +21,20 @@ function AddingPatient() {
       ...prevPatient,
       [name]: value,
     }));
+
+    
   };
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3300/therapist/addPatient", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(patient),
-      });
+      const response = await fetch(
+        "http://localhost:3300/therapist/addPatient",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(patient),
+        }
+      );
 
       if (response.ok) {
         alert("הנתונים נשלחו בהצלחה!");
@@ -52,7 +59,7 @@ function AddingPatient() {
         className="input"
         placeholder="הכנס שם פרטי"
       />
-      
+
       <label className="label">שם משפחה</label>
       <input
         type="text"
@@ -62,7 +69,7 @@ function AddingPatient() {
         className="input"
         placeholder="הכנס שם משפחה"
       />
-      
+
       <label className="label">תעודת זהות</label>
       <input
         type="text"
@@ -72,7 +79,7 @@ function AddingPatient() {
         className="input"
         placeholder="הכנס תעודת זהות"
       />
-      
+
       <label className="label">טלפון</label>
       <input
         type="tel"
@@ -82,7 +89,7 @@ function AddingPatient() {
         className="input"
         placeholder="הכנס מספר טלפון"
       />
-      
+
       <label className="label">כתובת מייל</label>
       <input
         type="email"
@@ -92,7 +99,7 @@ function AddingPatient() {
         className="input"
         placeholder="הכנס כתובת מייל"
       />
-      
+
       <label className="label">תאריך לידה</label>
       <input
         type="date"
@@ -101,7 +108,7 @@ function AddingPatient() {
         onChange={handleChange}
         className="input"
       />
-      
+
       <label className="label">קופת חולים</label>
       <input
         type="text"
@@ -111,8 +118,29 @@ function AddingPatient() {
         className="input"
         placeholder="הכנס קופת חולים"
       />
-      
-      <button onClick={handleSubmit} className="button">שלח</button>
+      <label className="label">מספר טיפולים מאושר</label>
+      <input
+        type="number"
+        name="total_treatments"
+        value={patient.total_treatments}
+        onChange={handleChange}
+        className="input"
+        placeholder="הכנס מספר טיפולים מאושר"
+      />
+      <label className="label">הערות</label>
+      <textarea
+        id="treatment-goals"
+        name="comments"
+        value={patient.comments}
+        onChange={handleChange}
+        className="textarea-field"
+        placeholder="הערות"
+        rows="5"
+      />
+
+      <button onClick={handleSubmit} className="button">
+        שלח
+      </button>
     </div>
   );
 }

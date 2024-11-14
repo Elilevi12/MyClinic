@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './css/addTherapist.css';
 
 function AddTherapist() {
   const [therapist, setTherapist] = useState({
@@ -9,8 +10,7 @@ function AddTherapist() {
     phone: "",
     address: "",
     specialty: "",
-  }
-);
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,8 +21,6 @@ function AddTherapist() {
   };
 
   const handleSubmit = () => {
-   
-    
     fetch("http://localhost:3300/admin/addTherapist", {
       method: "POST",
       headers: {
@@ -33,27 +31,26 @@ function AddTherapist() {
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error(error));
-
-
-
-
   };
 
   return (
-    <div>
+    <div className="add-therapist-container">
+      <h3>הוסף מטפל חדש</h3>
       <input
         type="number"
         name="license_number"
         value={therapist.license_number}
         placeholder="מספר רישיון"
         onChange={handleChange}
+        className="input-field"
       />
       <input
         type="text"
         name="first_name"
         value={therapist.first_name}
         placeholder="שם פרטי"
-    onChange={handleChange}
+        onChange={handleChange}
+        className="input-field"
       />
       <input
         type="text"
@@ -61,6 +58,7 @@ function AddTherapist() {
         value={therapist.last_name}
         placeholder="שם משפחה"
         onChange={handleChange}
+        className="input-field"
       />
       <input
         type="email"
@@ -68,6 +66,7 @@ function AddTherapist() {
         value={therapist.email}
         placeholder="אימייל"
         onChange={handleChange}
+        className="input-field"
       />
       <input
         type="tel"
@@ -75,23 +74,25 @@ function AddTherapist() {
         value={therapist.phone}
         placeholder="טלפון"
         onChange={handleChange}
+        className="input-field"
       />
       <input
         type="text"
         name="specialty"
+        value={therapist.specialty}
         placeholder="תחום טיפול"
-      value={therapist.specialty}
         onChange={handleChange}
+        className="input-field"
       />
       <input
         type="text"
-    name="address"    
+        name="address"
         value={therapist.address}
         placeholder="כתובת"
-      
         onChange={handleChange}
+        className="input-field"
       />
-      <button onClick={handleSubmit}>הוסף מטפל</button>
+      <button onClick={handleSubmit} className="submit-button">הוסף מטפל</button>
     </div>
   );
 }

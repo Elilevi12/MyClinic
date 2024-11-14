@@ -1,21 +1,17 @@
-const express=require('express')
-const mysql=require('mysql2')
-const router=express.Router()
-router.get('/',(req,res)=>{
-    res.send("I patient")
-})
-const db = require("../db/connection")
-
+const express = require("express");
+const mysql = require("mysql2");
+const router = express.Router();
+router.get("/", (req, res) => {
+  res.send("I patient");
+});
+const db = require("../db/connection");
 
 router.get("/getPatient/:id_number", (req, res) => {
   const idNumber = req.params.id_number;
-console.log("1234");
+  console.log("1234");
 
   const sql = `
-    SELECT first_name, last_name, id_number, phone, email, birth_date, appointment_date, health_care_provider, approved_sessions, session_price,treatment_time
-    FROM patients
-    WHERE id_number = ?
-  `;
+    SELECT  * FROM patients WHERE id_number = ?`;
 
   db.query(sql, [idNumber], (err, results) => {
     if (err) {

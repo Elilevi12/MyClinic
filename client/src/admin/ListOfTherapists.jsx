@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import AddTherapist from './AddTherapist';
+import './css/listOfTherapists.css';
+
 function ListOfTherapists() {
     const [therapists, setTherapists] = useState([]);
+    const [filteredTherapists, setFilteredTherapists] = useState([]);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    const fetchPatientDetails = async () => {
+    const fetchTherapistDetails = async () => {
         try {
             const response = await fetch("http://localhost:3300/admin/getTherapist");
             if (!response.ok) {
@@ -12,6 +16,7 @@ function ListOfTherapists() {
             }
             const data = await response.json();
             setTherapists(data);
+            setFilteredTherapists(data); // שמירת נתונים מסוננים בהתחלה
         } catch (error) {
             setError("שגיאה בקבלת פרטי המטפלים");
             console.error(error);
@@ -19,15 +24,45 @@ function ListOfTherapists() {
     };
     
     useEffect(() => {
-        fetchPatientDetails();
+        fetchTherapistDetails();
     }, []); 
 
+    // פונקציה לסינון מטפלים לפי שם או תחום טיפול
+    const handleSearch = (event) => {
+        const term = event.target.value.toLowerCase();
+        setSearchTerm(term);
+        const filtered = therapists.filter(therapist =>
+            therapist.first_name.toLowerCase().includes(term) ||
+            therapist.last_name.toLowerCase().includes(term) ||
+            therapist.specialty.toLowerCase().includes(term)
+        );
+        setFilteredTherapists(filtered);
+    };
+
     return (
-        <div>
+        <div className="therapists-container">
             <h2>רשימת מטפלים</h2>
             {error && <p>{error}</p>}
-            {therapists.length > 0 ? (
-                <table border="1" style={{ borderCollapse: "collapse", width: "50%", textAlign: "center" }}>
+            
+            {/* שדה החיפוש */}
+            <input
+                type="text"
+                placeholder="חפש מטפל לפי שם או תחום טיפול"
+                value={searchTerm}
+                onChange={handleSearch}
+                style={{
+                    marginBottom: '20px',
+                    padding: '10px',
+                    width: '100%',
+                    maxWidth: '400px',
+                    borderRadius: '5px',
+                    border: '1px solid #ccc',
+                    fontSize: '1em'
+                }}
+            />
+
+            {filteredTherapists.length > 0 ? (
+                <table className="therapists-table">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -40,7 +75,7 @@ function ListOfTherapists() {
                         </tr>
                     </thead>
                     <tbody>
-                        {therapists.map((therapist, index) => (
+                        {filteredTherapists.map((therapist, index) => (
                             <tr key={therapist.id}>
                                 <td>{index + 1}</td>
                                 <td>{therapist.first_name}</td>
@@ -56,7 +91,10 @@ function ListOfTherapists() {
             ) : (
                 <p>לא נמצאו מטפלים</p>
             )}
-            <AddTherapist/>
+
+            <div className="add-therapist-container">
+                <AddTherapist />
+            </div>
         </div>
     );
 }

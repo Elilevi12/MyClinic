@@ -6,7 +6,7 @@ function LoginTherapist() {
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    setUser({ type: "therapist" });
+    setUser({ type: "therapist", userId: 19 });
   }, []);
 
   return (

@@ -45,4 +45,24 @@
   .button:hover {
     background-color: #45a049;
   }
+  .input-field,
+  .textarea-field {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .input-field:focus,
+  .textarea-field:focus {
+    outline: none;
+    border-color: #4caf50;
+  }
+  
+  .textarea-field {
+    resize: vertical;
+    min-height: 100px;
+  }
   

@@ -1,26 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import  TreatmentSeriesInitiator  from "./TreatmentSeriesInitiator";
+import { UserContext } from "../../UserContext";
 function WaitingList() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  //   const { user } = useContext(UserContext);
+  // console.log(user.userId);
+
   useEffect(() => {
     const fetchPatients = async () => {
       const response = await fetch(
-        "http://localhost:3300/therapist/ListOfPatients",{
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },body: JSON.stringify({therapist_id:1})
-        } );
+        "http://localhost:3300/therapist/waitingList",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ therapist_id: 1 }),
+        }
+      );
       const data = await response.json();
       setPatients(data);
-console.log(data);
+      console.log(data);
 
       setLoading(false);
     };
 
     fetchPatients();
   }, []);
+
+function StartASeries(patientsId){
+  console.log(patientsId);
+
+  
+}
+
 
   return (
     <div>
@@ -46,6 +61,7 @@ console.log(data);
               <th>אימייל</th>
               <th>תאריך לידה</th>
               <th>מספר טיפולים מאושר</th>
+              <th>הערות</th>
             </tr>
           </thead>
           <tbody>
@@ -57,8 +73,12 @@ console.log(data);
                 <td>{patients.phone}</td>
                 <td>{patients.email}</td>
                 <td>{patients.birth_date}</td>
-                <td>{patients.approved_treatments
-                }</td>
+                <td>{patients.total_treatments}</td>
+                <td>{patients.comments}</td>
+                <td>
+                  <button onClick={() => StartASeries(patients.id)}>התחל סדרה</button>
+              
+                </td>
               </tr>
             ))}
           </tbody>
