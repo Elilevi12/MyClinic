@@ -1,0 +1,117 @@
+/* עיצוב כללי לדף */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  color: #333;
+}
+
+/* עיצוב לטבלה */
+table {
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* עיצוב לחלונית מודאלית */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.modal input,
+.modal textarea {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal button {
+  margin: 5px;
+  padding: 8px 15px;
+  font-size: 1em;
+}
+
+.modal button:first-child {
+  background-color: #28a745;
+}
+
+.modal button:first-child:hover {
+  background-color: #218838;
+}
+
+.modal button:last-child {
+  background-color: #dc3545;
+}
+
+.modal button:last-child:hover {
+  background-color: #c82333;
+}
+
+/* עיצוב להבהרת הרקע בזמן שהמודאל פתוח */
+.modal-backdrop ~ * {
+  filter: brightness(0.6);
+}

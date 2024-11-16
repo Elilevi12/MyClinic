@@ -5,71 +5,90 @@ router.get('/',(req,res)=>{
     res.send("I treatmentDiary")
 })
 
+// פונקציה ליצירת תאריכי טיפולים
+function generateTreatmentDates(start_date, totalTreatments, vacationDatesResult) {
+    const treatmentDates = [];
+    const vacationDates = new Set(); // שימוש ב-Set לבדיקה מהירה יותר של חופשות
 
-function generateTreatmentDates(therapist_id, startDate, totalTreatments) {// פונקציה ליצירת תאריכי טיפולים
-    const treatmentDates = []; // מערך לאחסון תאריכי הטיפולים
-    const vacationDates = []; // מערך לאחסון תאריכי החופשות
+    // הפיכת תאריכי החופשות לפורמט תאריך והוספתם ל-Set
+    vacationDatesResult.forEach(({ start_date, end_date }) => {
+        const startVacation = new Date(start_date);
+        const endVacation = new Date(end_date);
 
-    const query = 'SELECT start_date, end_date FROM vacation_days WHERE therapist_id = ?'; 
-
-    db.query(query, [therapist_id], (err, result) => {
-        if (err) {
-            console.error("שגיאה בקבלת תאריכי החופשות:", err);
-            return res.status(500).json({ message: "שגיאה בקבלת תאריכי החופשות" });
+        for (let date = new Date(startVacation); date <= endVacation; date.setDate(date.getDate() + 1)) {
+            vacationDates.add(date.toISOString().split('T')[0]);
         }
-
-        // הפיכת תאריכי החופשות לפורמט תאריך והוספתם למערך
-        result.forEach((row) => {
-            const startVacation = new Date(row.start_date);
-            const endVacation = new Date(row.end_date);
-
-
-            // הוספה של כל התאריכים בין תאריך ההתחלה לתאריך הסיום של החופשה
-            for (let date = new Date(startVacation); date <= endVacation; date.setDate(date.getDate() + 1)) {
-                vacationDates.push(date.toISOString().split('T')[0]);
-            }
-        });
-console.log("חופשות",vacationDates);
-        const currentDate = new Date(startDate);
-
-        // לולאה להוספת תאריכי הטיפולים תוך דילוג על חופשות
-        while (treatmentDates.length < totalTreatments) {
-            const formattedDate = currentDate.toISOString().split('T')[0];
-
-            // הוספה אם התאריך לא מופיע בתאריכי החופשות
-            if (!vacationDates.includes(formattedDate)) {
-                treatmentDates.push(formattedDate);
-            }
-
-            // מעבר לשבוע הבא
-            currentDate.setDate(currentDate.getDate() + 7);
-        }
-        
-        console.log("תאריכי הטיפולים:", treatmentDates);
-        return treatmentDates;
     });
+
+    let currentDate = new Date(start_date);
+
+    // יצירת תאריכי הטיפולים
+    while (treatmentDates.length < totalTreatments) {
+        const formattedDate = currentDate.toISOString().split('T')[0];
+
+        if (!vacationDates.has(formattedDate)) {
+            treatmentDates.push(formattedDate);
+        }
+
+        currentDate.setDate(currentDate.getDate() + 7); // מעבר לשבוע הבא
+    }
+
+    return treatmentDates;
 }
 
+router.post("/creatingAseriesOfTreatments", async (req, res) => {
+    const { treatment_series_id, therapist_id, start_date, treatmentTime,goals } = req.body;
+console.log(req.body);
 
+    try {
+        // שליפת מספר הטיפולים בסדרה
+        const [[{ total_treatments }]] = await db.promise().query(
+            "SELECT total_treatments FROM treatment_series WHERE id = ?",
+            [treatment_series_id]
+        );
 
-router.post("/creatingAseriesOfTreatments", (req, res) => {//יצירת סדרת טיפולים
-    const {patients_id,treatment_time,total_treatments,status,start_date,series_goals} = req.body;
+        // שליפת תאריכי החופשה של המטפל
+        const [vacationDatesResult] = await db.promise().query(
+            "SELECT start_date, end_date FROM vacation_days WHERE therapist_id = ?",
+            [therapist_id]
+        );
 
-    const treatmentDates = generateTreatmentDates(patients_id,start_date, total_treatments);
-console.log(treatmentDates);
+        // יצירת תאריכי הטיפולים
+        const treatmentDates = generateTreatmentDates(start_date, total_treatments, vacationDatesResult);
 
-const treatment_dates = treatmentDates.join(',');
-    const sql = `INSERT INTO treatment_series (patients_id,treatment_time,total_treatments,status,treatment_dates,series_goals) VALUES (?, ?, ?, ?, ?,?)`;
-    db.query(sql, [patients_id,treatment_time,total_treatments,status,treatment_dates,series_goals], (err, result) => {
-        if (err) {
-            console.error("שגיאה בהוספת סדרת טיפולים:", err);
-            return res.status(500).json({
-                
-                 message: "שגיאה בהוספת סדרת טיפולים" });
-        }
+        // התחלת טרנזקציה
+        await db.promise().beginTransaction();
+
+        // הוספת תאריכים לטבלה
+        const insertPromises = treatmentDates.map((treatmentDate) => {
+            return db.promise().query(
+                `INSERT INTO treatment_sessions (treatment_series_id, treatment_date, treatment_time) VALUES (?, ?, ?)`,
+                [treatment_series_id, treatmentDate, treatmentTime]
+            );
+        });
+
+        await Promise.all(insertPromises);
+
+        // עדכון סטטוס הסדרה
+        await db.promise().query(
+            "UPDATE treatment_series SET status = 'done',goals=? WHERE id = ?",
+            [goals,treatment_series_id]
+        );
+      
+
+        // סיום הטרנזקציה
+        await db.promise().commit();
+
         res.status(200).json({ message: "הסדרה נוספה בהצלחה" });
-    });
+    } catch (error) {
+        // ביטול טרנזקציה במקרה של שגיאה
+        await db.promise().rollback();
+        console.error("שגיאה:", error);
+        res.status(500).json({ message: "שגיאה בתהליך יצירת הסדרה", error });
+    }
 });
+
+
 
 router.post("/addingVacationays", (req, res) => {//הוספת ימי חופש
     const {therapist_id,start_date,end_date} = req.body;
