@@ -145,7 +145,34 @@ router.post("/waitingList", (req, res) => {
   });
 });
 
-router.get("/receivingTreatmentDates", (req, res) => {
+router.get("/receivingTreatmentDates/:therapistId", (req, res) => {
+  
+  const sql = `
+  SELECT p.first_name AS patient_first_name,
+         p.last_name AS patient_last_name,
+         ts.treatment_date,
+         ts.treatment_time,
+         ts.id AS treatment_id
+  FROM treatment_sessions ts
+  JOIN treatment_series tser ON ts.treatment_series_id = tser.id
+  JOIN patients p ON tser.patients_id = p.user_id
+  WHERE tser.therapist_id = ?
+  ORDER BY ts.treatment_date, ts.treatment_time
+`;
+
+
+const query = db.query(sql, [req.params.therapistId], (err, result) => {
+  if (err) {
+    console.error("שגיאה בקבלת תאריכי טיפול:", err);
+    return res.status(500).json({ message: "שגיאה בקבלת תאריכי טיפול" });
+  }
+  if (result.length === 0) {
+    return res.status(404).json({ message: "לא נמצאו תאריכי טיפול" });
+  }
+  return res.status(200).json(result);
+});
+
+
   //קבלת תארכי טיפול להצגת יומן טיפולים
 });
 module.exports = router;
