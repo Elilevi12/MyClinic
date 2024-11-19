@@ -7,12 +7,14 @@ function ActiveSeriesOfTreatments() {
   const [changeTreatmentDate, setChangeTreatmentDate] = useState(false);
   const [modalData, setModalData] = useState({ date: "", time: "" });
   const [treatmentId, setTreatmentId] = useState(null);
-const [cancelTreatment, setCancelTreatment] = useState(false);
-const [treatmentDocumentation, setTreatmentDocumentation] = useState(false);
+  const [cancelTreatment, setCancelTreatment] = useState(false);
+  const [treatmentDocumentation, setTreatmentDocumentation] = useState(false);
+
+const patient = JSON.parse(localStorage.getItem("selectedPatient"));
+    const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
 
   useEffect(() => {
-    const patient = JSON.parse(localStorage.getItem("selectedPatient"));
-    const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
+    
 
     fetch(
       "http://localhost:3300/therapist/personalFilePatient/ActiveSeriesOfTreatments",

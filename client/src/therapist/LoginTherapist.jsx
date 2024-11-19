@@ -7,8 +7,11 @@ function LoginTherapist() {
 
 const selctTarrapist={type:"therapist",therapistId:1}
 localStorage.setItem("selectedTherapist",JSON.stringify(selctTarrapist))
-
+const currentUser={type:"therapist",userId:1}
+localStorage.setItem("currentUser",JSON.stringify(currentUser))
   useEffect(() => {
+
+
     setUser({ type: "therapist", userId: 19 });
   }, []);
 

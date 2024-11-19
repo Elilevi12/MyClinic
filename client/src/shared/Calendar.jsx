@@ -14,13 +14,15 @@ function Calendar() {
   const [vacationStart, setVacationStart] = useState("");
   const [vacationEnd, setVacationEnd] = useState("");
 
-  const { user } = useContext(UserContext);
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
-    if (user.type === "therapist") {
+    
+    if (currentUser.type === "therapist") {
+      
       Promise.all([
-        fetch("http://localhost:3300/therapist/treatmentDiary/vacationays/1").then((response) => response.json()),
-        fetch("http://localhost:3300/therapist/receivingTreatmentDates/1").then((response) => response.json()),
+        fetch(`http://localhost:3300/therapist/treatmentDiary/vacationays/${(currentUser.userId)}`).then((response) => response.json()),
+        fetch(`http://localhost:3300/therapist/receivingTreatmentDates/${(currentUser.userId)}`).then((response) => response.json()),
       ])
         .then(([vacations, treatments]) => {
           const vacationEvents = vacations.map((event) => {
@@ -52,7 +54,7 @@ function Calendar() {
         })
         .catch((error) => console.error("Error fetching events:", error));
     }
-  }, [user.type]);
+  }, []);
   
 
  
@@ -134,7 +136,7 @@ function Calendar() {
 />
 
 
-        {user.type === "therapist" && (
+        {currentUser.type === "therapist" && (
           <button className="vacation-button" onClick={handleOpenModal}>
             הוסף חופשה
           </button>

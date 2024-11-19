@@ -8,7 +8,8 @@ function LoginClient(){
         userName: "",
         password: "",
     })
-
+const currentUser={type:"patient",userId:60}
+localStorage.setItem("currentUser",JSON.stringify(currentUser))
     const handleChange = (e) => {
         const { name, value } = e.target;
         setPatient((prevPatient) => ({
