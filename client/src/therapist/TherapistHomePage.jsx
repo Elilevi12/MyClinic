@@ -13,6 +13,7 @@ function TherapistHomePage() {
         <Link to="personal-file-patient">
           <button className="nav-button">תיקי רפואי</button>
         </Link>
+
         <Link to="money-management">
           <button className="nav-button">ניהול כספים</button>
         </Link>

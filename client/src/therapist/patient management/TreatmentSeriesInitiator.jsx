@@ -2,6 +2,10 @@ import React from "react";
 import "../css/treatmentSeriesInitiator.css";
 
 function TreatmentSeriesInitiator() {
+
+
+
+  
   return (
     <div className="treatment-series-container">
       <div className="form-group">

@@ -7,11 +7,10 @@ router.get('/',(req,res)=>{
 
 // פונקציה ליצירת תאריכי טיפולים
 function generateTreatmentDates(start_date, totalTreatments, vacationDatesResult) {
-    const treatmentDates = [];
-    const vacationDates = new Set(); // שימוש ב-Set לבדיקה מהירה יותר של חופשות
-
-    // הפיכת תאריכי החופשות לפורמט תאריך והוספתם ל-Set
-    vacationDatesResult.forEach(({ start_date, end_date }) => {
+    const treatmentDates = [];//מערך של תאריכי הטיפולים
+    const vacationDates = new Set(); // סט של תאריכי החופשה
+ 
+    vacationDatesResult.forEach(({ start_date, end_date }) => {// הפיכת תאריכי החופשות לפורמט תאריך והוספתם ל-Set
         const startVacation = new Date(start_date);
         const endVacation = new Date(end_date);
 
@@ -38,7 +37,7 @@ function generateTreatmentDates(start_date, totalTreatments, vacationDatesResult
 
 router.post("/creatingAseriesOfTreatments", async (req, res) => {
     const { treatment_series_id, therapist_id, start_date, treatmentTime,goals } = req.body;
-console.log(req.body);
+
 
     try {
         // שליפת מספר הטיפולים בסדרה
@@ -90,21 +89,47 @@ console.log(req.body);
 
 
 
-router.post("/addingVacationays", (req, res) => {//הוספת ימי חופש
-    const {therapist_id,start_date,end_date} = req.body;
-    console.log(start_date,end_date,therapist_id);
+router.post("/addingVacationays", (req, res) => {
+    const { therapist_id, start_date, end_date } = req.body;
+
+    const today = new Date(); 
+    const startDate = new Date(start_date);
+    const endDate = new Date(end_date);
+  
+    if (startDate < today) {
+      return res.status(400).json({ message: "תאריך ההתחלה אינו יכול להיות מוקדם מהיום הנוכחי" });
+    }
+  
+    if (endDate < startDate) {
+      return res.status(400).json({ message: "תאריך הסיום אינו יכול להיות מוקדם מתאריך ההתחלה" });
+    }
+  
+    const sql = `INSERT INTO vacation_days (therapist_id, start_date, end_date) VALUES (?, ?, ?)`;
+    db.query(sql, [therapist_id, start_date, end_date], (err, result) => {
+      if (err) {
+        console.error("שגיאה בהוספת יום חופש:", err);
+        return res.status(500).json({ message: "שגיאה בהוספת יום חופש" });
+      }
+      res.status(200).json({ message: "היום נוסף בהצלחה" });
+    });
+  });
+  
+
+router.get('/vacationays/:therapistId',(req,res)=>{//שליפת ימי חופש
     
-    const sql = `INSERT INTO vacation_days (therapist_id ,start_date ,end_date) VALUES (?,?,?)`;
-    db.query(sql, [therapist_id,start_date,end_date], (err, result) => {
+    const sql = `SELECT * FROM vacation_days WHERE therapist_id = ?`;
+    db.query(sql, [req.params.therapistId], (err, result) => {
         if (err) {
-            console.error("שגיאה בהוספת יום חופש:", err);
-            return res.status(500).json({ message: "שגיאה בהוספת יום חופש" });
+            console.error("שגיאה בשליפת ימי החופש:", err);
+            return res.status(500).json({ message: "שגיאה בשליפת ימי החופש" });
         }
-        res.status(200).json({ message: "היום נוסף בהצלחה" });
+        if (result.length === 0) {
+            return res.status(404).json({ message: "לא נמצאו ימי חופש" });
+        }
+        res.status(200).json(result);
     });
 
 });
-
 
 
 module.exports = router;

@@ -7,6 +7,9 @@ function WaitingList() {
   const [modalData, setModalData] = useState({ date: "", time: "", goals: "" });
   const [selectedPatientId, setSelectedPatientId] = useState(null);
 
+const therapist= JSON.parse(localStorage.getItem("selectedTherapist")) 
+
+
   useEffect(() => {
     const fetchPatients = async () => {
       const response = await fetch("http://localhost:3300/therapist/waitingList", {
@@ -14,7 +17,7 @@ function WaitingList() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ therapist_id: 1 }),
+        body: JSON.stringify({ therapist_id: therapist. therapistId }),
       });
       const data = await response.json();
       setPatients(data);
@@ -24,6 +27,7 @@ function WaitingList() {
     fetchPatients();
   }, []);
 
+  
   const handleModalChange = (field, value) => {
     setModalData((prev) => ({ ...prev, [field]: value }));
   };

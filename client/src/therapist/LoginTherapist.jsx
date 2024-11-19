@@ -5,6 +5,9 @@ import "./css/loginTherapist.css";
 function LoginTherapist() {
   const { setUser } = useContext(UserContext);
 
+const selctTarrapist={type:"therapist",therapistId:1}
+localStorage.setItem("selectedTherapist",JSON.stringify(selctTarrapist))
+
   useEffect(() => {
     setUser({ type: "therapist", userId: 19 });
   }, []);

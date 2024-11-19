@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import AddTherapist from './AddTherapist';
-import './css/listOfTherapists.css';
+import './css/listOfTherapists.css'; 
 
 function ListOfTherapists() {
     const [therapists, setTherapists] = useState([]);
     const [filteredTherapists, setFilteredTherapists] = useState([]);
     const [error, setError] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [nameSearchTerm, setNameSearchTerm] = useState("");
+    const [specialtySearchTerm, setSpecialtySearchTerm] = useState("");
 
     const fetchTherapistDetails = async () => {
         try {
@@ -16,50 +17,62 @@ function ListOfTherapists() {
             }
             const data = await response.json();
             setTherapists(data);
-            setFilteredTherapists(data); // שמירת נתונים מסוננים בהתחלה
+            setFilteredTherapists(data);
         } catch (error) {
             setError("שגיאה בקבלת פרטי המטפלים");
             console.error(error);
         }
     };
-    
+
     useEffect(() => {
         fetchTherapistDetails();
-    }, []); 
+    }, []);
 
-    // פונקציה לסינון מטפלים לפי שם או תחום טיפול
-    const handleSearch = (event) => {
-        const term = event.target.value.toLowerCase();
-        setSearchTerm(term);
-        const filtered = therapists.filter(therapist =>
-            therapist.first_name.toLowerCase().includes(term) ||
-            therapist.last_name.toLowerCase().includes(term) ||
-            therapist.specialty.toLowerCase().includes(term)
-        );
+    const filterTherapists = () => {
+        const filtered = therapists.filter(therapist => {
+            const matchesName = 
+                therapist.first_name.toLowerCase().includes(nameSearchTerm.toLowerCase()) ||
+                therapist.last_name.toLowerCase().includes(nameSearchTerm.toLowerCase());
+            const matchesSpecialty = 
+                therapist.specialty.toLowerCase().includes(specialtySearchTerm.toLowerCase());
+            return matchesName && matchesSpecialty;
+        });
         setFilteredTherapists(filtered);
     };
+
+    const handleNameSearch = (event) => {
+        setNameSearchTerm(event.target.value);
+    };
+
+    const handleSpecialtySearch = (event) => {
+        setSpecialtySearchTerm(event.target.value);
+    };
+
+    useEffect(() => {
+        filterTherapists();
+    }, [nameSearchTerm, specialtySearchTerm]);
 
     return (
         <div className="therapists-container">
             <h2>רשימת מטפלים</h2>
             {error && <p>{error}</p>}
-            
-            {/* שדה החיפוש */}
-            <input
-                type="text"
-                placeholder="חפש מטפל לפי שם או תחום טיפול"
-                value={searchTerm}
-                onChange={handleSearch}
-                style={{
-                    marginBottom: '20px',
-                    padding: '10px',
-                    width: '100%',
-                    maxWidth: '400px',
-                    borderRadius: '5px',
-                    border: '1px solid #ccc',
-                    fontSize: '1em'
-                }}
-            />
+
+            <div className="search-boxes">
+                <input
+                    type="text"
+                    placeholder="חפש מטפל לפי שם פרטי או משפחה"
+                    value={nameSearchTerm}
+                    onChange={handleNameSearch}
+                    className="search-input"
+                />
+                <input
+                    type="text"
+                    placeholder="חפש מטפל לפי תחום טיפול"
+                    value={specialtySearchTerm}
+                    onChange={handleSpecialtySearch}
+                    className="search-input"
+                />
+            </div>
 
             {filteredTherapists.length > 0 ? (
                 <table className="therapists-table">
