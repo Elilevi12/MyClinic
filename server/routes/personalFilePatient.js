@@ -24,7 +24,7 @@ db.query(sql, [patientId,therapistId], (err, result) => {
 
 router.post("/ActiveSeriesOfTreatments", (req, res) => {
 const { patientId, therapistId } = req.body;
-const sql = `SELECT * FROM treatment_series WHERE patients_id =? and therapist_id=? and status='done'`;
+const sql = `SELECT * FROM treatment_series WHERE patients_id =? and therapist_id=? and status='active'`;
 db.query(sql, [patientId,therapistId], (err, result) => {
   if (err) {
     console.error("שגיאה בשליפת סדרות הטיפולים:", err);
@@ -33,6 +33,8 @@ db.query(sql, [patientId,therapistId], (err, result) => {
   if (result.length === 0) {
     return res.status(404).json({ message: "לא נמצאו סדרות טיפולים" });
   }
+
+  
 const sql2=`SELECT * FROM treatment_sessions WHERE treatment_series_id=?`;
 db.query(sql2, [result[0].id], (err, result2) => {
     if (err) {

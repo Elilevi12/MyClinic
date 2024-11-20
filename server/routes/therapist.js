@@ -69,8 +69,8 @@ router.post("/addPatient", (req, res) => {
 
       const sqlPatient = `
         INSERT INTO patients (user_id, therapist_id, first_name, last_name, 
-                              id_number, phone, email, birth_date, healthcare_provider)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                              id_number, phone, email, birth_date, healthcare_provider,payments,debts)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,0,0)`;
 
       db.query(
         sqlPatient,

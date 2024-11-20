@@ -47,6 +47,7 @@ const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
             start_date: modalData.date,
             treatmentTime: modalData.time,
             goals: modalData.goals,
+            price: modalData.price,
           }),
         }
       );
@@ -134,6 +135,15 @@ const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
                 type="time"
                 value={modalData.time}
                 onChange={(e) => handleModalChange("time", e.target.value)}
+              />
+            </label>
+            
+            <label>
+              מחיר:
+              <input
+                type="number"
+                value={modalData.price}
+                onChange={(e) => handleModalChange("price", e.target.value)}
               />
             </label>
             <label>

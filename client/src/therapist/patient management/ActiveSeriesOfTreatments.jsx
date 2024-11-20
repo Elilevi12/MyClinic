@@ -9,13 +9,14 @@ function ActiveSeriesOfTreatments() {
   const [treatmentId, setTreatmentId] = useState(null);
   const [cancelTreatment, setCancelTreatment] = useState(false);
   const [treatmentDocumentation, setTreatmentDocumentation] = useState(false);
+  const [documentationText, setDocumentationText] = useState("");
+const [cancelnText, setCancelnText] = useState("");
 
-const patient = JSON.parse(localStorage.getItem("selectedPatient"));
-    const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
+
+  const patient = JSON.parse(localStorage.getItem("selectedPatient"));
+  const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
 
   useEffect(() => {
-    
-
     fetch(
       "http://localhost:3300/therapist/personalFilePatient/ActiveSeriesOfTreatments",
       {
@@ -32,31 +33,33 @@ const patient = JSON.parse(localStorage.getItem("selectedPatient"));
       .then((res) => res.json())
       .then((data) => {
         setTreatments(data);
+        console.log(data);
+        
       })
       .catch((error) => {
         console.error("Error fetching Active Series of Treatments:", error);
       });
 
-    fetch(
-      "http://localhost:3300/therapist/personalFilePatient/bringingTreatmentSeries",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          patientId: patient.patientId,
-          therapistId: therapist.therapistId,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setTreatmentSeries(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching Bringing Treatment Series:", error);
-      });
+    // fetch(
+    //   "http://localhost:3300/therapist/personalFilePatient/bringingTreatmentSeries",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       patientId: patient.patientId,
+    //       therapistId: therapist.therapistId,
+    //     }),
+    //   }
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setTreatmentSeries(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching Bringing Treatment Series:", error);
+    //   });
   }, []);
 
   const handleModalChange = (field, value) => {
@@ -64,38 +67,58 @@ const patient = JSON.parse(localStorage.getItem("selectedPatient"));
   };
 
   function handleSubmitChangeDate() {
-    console.log("Treatment ID:", treatmentId);
-    
-    // fetch(
-    //   "http://localhost:3300/therapist/personalFilePatient/changeTreatmentDate",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       treatmentId: treatments[0].id,
-    //       date: modalData.date,
-    //       time: modalData.time,
-    //     }),
-    //   }
-    // )
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log("Treatment date changed successfully:", data);
-    //     setChangeTreatmentDate(false);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error changing treatment date:", error);
-    //   });
-setTreatmentId(null);
+    fetch(
+      "http://localhost:3300/therapist/treatmentDiary/changeTreatmentDate",
+      {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          treatmentId: treatmentId,
+          date: modalData.date,
+          time: modalData.time,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data.message);
+        setChangeTreatmentDate(false);
+      })
+      .catch((error) => {
+        alert("שגיאה בשליחת הנתונים");
+      });
+    setTreatmentId(null);
     setChangeTreatmentDate(false);
   }
 
-  const openDocumentationModal = (treatmentId) => {
-setTreatmentId(treatmentId);
-    setTreatmentDocumentation(true);
+  function handleSubmitDocumentation() {
+    console.log(documentationText);
+    console.log(treatmentId);
 
+
+
+    // http://localhost:3300/therapist/treatmentDiary/documentation
+
+    setTreatmentDocumentation(false);
+    setDocumentationText("");
+    setTreatmentId(null);
+
+    //לעשות כאן שליחת תיעוד לשרת
+  }
+
+function handleSubmitCanceln() {
+console.log(cancelnText);
+console.log(treatmentId);
+setCancelTreatment(false);
+setTreatmentId(null);
+setCancelnText("");
+}
+
+  const openDocumentationModal = (treatmentId) => {
+    setTreatmentId(treatmentId);
+    setTreatmentDocumentation(true);
   };
 
   const openCancelModal = (treatmentId) => {
@@ -104,7 +127,7 @@ setTreatmentId(treatmentId);
   };
 
   const openDateChangeModal = (treatmentId) => {
-setTreatmentId(treatmentId);
+    setTreatmentId(treatmentId);
     setChangeTreatmentDate(true);
   };
 
@@ -159,6 +182,7 @@ setTreatmentId(treatmentId);
       ) : (
         <p className="treatments-no-treatments">לא נמצאו טיפולים פעילים.</p>
       )}{" "}
+     
       {changeTreatmentDate && (
         <div className="modal-backdrop">
           <div className="modal">
@@ -181,23 +205,70 @@ setTreatmentId(treatmentId);
             </label>
             <div>
               <button onClick={handleSubmitChangeDate}>שלח</button>
-              <button onClick={() => setChangeTreatmentDate(false)&&setTreatmentId(null)}>
+              <button
+                onClick={() =>
+                  setChangeTreatmentDate(false) && setTreatmentId(null)
+                }
+              >
                 ביטול
               </button>
             </div>
           </div>
         </div>
       )}
+     
+      {cancelTreatment &&  
+      <div className="modal-backdrop">
+          <div className="modal">
+            <h2>ביטול טיפול</h2>
+            <textarea
+              value={cancelnText}
+              onChange={(e) => setCancelnText(e.target.value)}
+              placeholder="הזן סיבת ביטול..."
+            />
+            <div>
+              <button onClick={handleSubmitCanceln}>שלח</button>
+              <button
+                onClick={() => {
+                  setCancelTreatment(false);
+                  setCancelnText("");
+                }}
+              >
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>}
       
-      {cancelTreatment && (
 
-<h2>ביטול טיפול</h2>
-)}
-{!treatmentDocumentation&&(
-<h2>תיעוד טיפול</h2>
-)}
+
+
+
+      {treatmentDocumentation && ( //להגדיל את חלונית התיעוד
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h2>תיעוד טיפול</h2>
+            <textarea
+              value={documentationText}
+              onChange={(e) => setDocumentationText(e.target.value)}
+              placeholder="הזן תיעוד..."
+            />
+            <div>
+              <button onClick={handleSubmitDocumentation}>שלח</button>
+              <button
+                onClick={() => {
+                  setTreatmentDocumentation(false);
+                  setDocumentationText("");
+                }}
+              >
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 export default ActiveSeriesOfTreatments;
