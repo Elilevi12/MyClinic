@@ -157,69 +157,122 @@ router.get("/vacationays/:therapistId", (req, res) => {
   });
 });
 
-router.put("/changeTreatmentDate", (req, res) => {
+router.put("/changeTreatmentDate", async (req, res) => {
   const { treatmentId, date, time } = req.body;
-  console.log(req.body);
 
-  const sql = `UPDATE treatment_sessions SET treatment_date = ?, treatment_time = ? WHERE id = ?`;
-  db.query(sql, [date, time, treatmentId], (err, result) => {
-    if (err) {
-      console.error("שגיאה בעדכון תאריך הטיפול:", err);
-      return res.status(500).json({ message: "שגיאה בעדכון תאריך הטיפול" });
+  try {
+    // בדיקת סטטוס הטיפול
+    const sql1 = "SELECT status FROM treatment_sessions WHERE id=?";
+    const [rows] = await db.promise().query(sql1, [treatmentId]);
+
+    if (rows[0].status === "done") {
+      return res.status(400).json({ message: "הטיפול כבר הושלם" });
     }
+
+    // עדכון תאריך ושעה של הטיפול
+    const sql2 = `UPDATE treatment_sessions SET treatment_date = ?, treatment_time = ? WHERE id = ?`;
+    await db.promise().query(sql2, [date, time, treatmentId]);
+
     res.status(200).json({ message: "התאריך עודכן בהצלחה" });
-  });
+  } catch (err) {
+    console.error("שגיאה בעדכון תאריך הטיפול:", err);
+    res.status(500).json({ message: "שגיאה בעדכון תאריך הטיפול" });
+  }
 });
+
+router.put("/cancellTreatment",  (req, res) => {
+const { treatmentId,serialID,cancelnText } = req.body;
+console.log(treatmentId,serialID,cancelnText);
+
+const sql1="update treatment_sessions set status='cancellation',documentation=?  where id=?";
+console.log("1111111111111");
+
+ db.query(sql1,[cancelnText,treatmentId],(err,result)=>{
+
+if(err){
+  console.error("שגיאה בביטול טיפול:", err);
+  return res.status(500).json({ message: "שגיאה בביטול טיפול" });
+}
+const sql2="select treatment_date , treatment_time from treatment_sessions where treatment_series_id=?"; 
+db.query(sql2,[serialID],(err,result)=>{
+  if(err){
+    console.error("שגיאה בשליפת תאריך ושעת הטיפול:", err);
+    return res.status(500).json({ message: "שגיאה בשליפת תאריך ושעת הטיפול" });
+}
+console.log(result);
+})
+res.status(200).json({ message: "הטיפול בוטל בהצלחה" });
+}
+
+)});
 
 router.post("/documentation", async (req, res) => {
     const { treatmentId, documentation, serialID, userId } = req.body;
   
     try {
+      // Start a transaction
+      const connection = await db.promise().getConnection();
+      await connection.beginTransaction();
+    
+      // Check if the treatment session is already done
+      const sql = "SELECT status FROM treatment_sessions WHERE id=?";
+      const [status] = await connection.query(sql, [treatmentId]);
+      if (status[0].status === "done") {
+        connection.release(); // Release connection if the condition fails
+        return res.status(400).json({ message: "הטיפול כבר הושלם" });
+      }
+    
       // Update treatment_sessions
-      await db.promise().query(
+      await connection.query(
         `UPDATE treatment_sessions SET documentation=?, status=? WHERE id=?`,
         [documentation, "done", treatmentId]
       );
-  console.log(1);
-  
+    
       // Update treatment_series
-      await db.promise().query(
+      await connection.query(
         `UPDATE treatment_series SET completed_treatments = completed_treatments + 1 WHERE id=?`,
         [serialID]
       );
-  console.log(2);
-  
+    
       // Check if all treatments are completed
-      const [rows] = await db.promise().query(
+      const [rows] = await connection.query(
         `SELECT completed_treatments, total_treatments FROM treatment_series WHERE id=?`,
         [serialID]
       );
-      console.log(3);
-      
+    
       if (rows[0].completed_treatments === rows[0].total_treatments) {
         // Update treatment_series status
-        await db.promise().query(
+        await connection.query(
           `UPDATE treatment_series SET status='finished' WHERE id=?`,
           [serialID]
         );
       }
-  console.log(4);
-  
+    
       // Update patient debts
-      await db.promise().query(
+      await connection.query(
         `UPDATE patients SET debts = debts + (
           SELECT price FROM treatment_series WHERE id=?
         ) WHERE user_id=?`,
         [serialID, userId]
       );
-  console.log(5);
-  
+    
+      // Commit the transaction
+      await connection.commit();
+    
+      // Release the connection
+      connection.release();
+    
       // Send success response
       res.status(200).json({ message: "התיעוד נשמר בהצלחה" });
     } catch (err) {
+      if (connection) {
+        // Rollback the transaction in case of error
+        await connection.rollback();
+        connection.release();
+      }
       console.error("שגיאה בשמירת התיעוד:", err);
       res.status(500).json({ message: "שגיאה בשמירת התיעוד" });
     }
-  });
+    });
   
 module.exports = router;

@@ -11,7 +11,7 @@ function ActiveSeriesOfTreatments() {
   const [treatmentDocumentation, setTreatmentDocumentation] = useState(false);
   const [documentationText, setDocumentationText] = useState("");
 const [cancelnText, setCancelnText] = useState("");
-
+const [serialID, setSerialID] = useState(null);
 
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
   const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
@@ -33,6 +33,7 @@ const [cancelnText, setCancelnText] = useState("");
       .then((res) => res.json())
       .then((data) => {
         setTreatments(data);
+        setSerialID(data[0].treatment_series_id);
         console.log(data);
         
       })
@@ -40,26 +41,7 @@ const [cancelnText, setCancelnText] = useState("");
         console.error("Error fetching Active Series of Treatments:", error);
       });
 
-    // fetch(
-    //   "http://localhost:3300/therapist/personalFilePatient/bringingTreatmentSeries",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       patientId: patient.patientId,
-    //       therapistId: therapist.therapistId,
-    //     }),
-    //   }
-    // )
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setTreatmentSeries(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching Bringing Treatment Series:", error);
-    //   });
+
   }, []);
 
   const handleModalChange = (field, value) => {
@@ -67,6 +49,7 @@ const [cancelnText, setCancelnText] = useState("");
   };
 
   function handleSubmitChangeDate() {
+
     fetch(
       "http://localhost:3300/therapist/treatmentDiary/changeTreatmentDate",
       {
@@ -94,23 +77,38 @@ const [cancelnText, setCancelnText] = useState("");
   }
 
   function handleSubmitDocumentation() {
-    console.log(documentationText);
-    console.log(treatmentId);
-
-
-
-    // http://localhost:3300/therapist/treatmentDiary/documentation
-
+    fetch("http://localhost:3300/therapist/treatmentDiary/documentation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        documentation: documentationText,
+        treatmentId: treatmentId,
+        serialID: serialID,
+        userId: patient.patientId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data.message);
+      })
+      .catch((error) => {
+        alert("שגיאה בשליחת הנתונים");
+      });
+  
     setTreatmentDocumentation(false);
     setDocumentationText("");
     setTreatmentId(null);
-
-    //לעשות כאן שליחת תיעוד לשרת
   }
+  
+
 
 function handleSubmitCanceln() {
 console.log(cancelnText);
 console.log(treatmentId);
+console.log(serialID);
+
 setCancelTreatment(false);
 setTreatmentId(null);
 setCancelnText("");
@@ -130,6 +128,7 @@ setCancelnText("");
     setTreatmentId(treatmentId);
     setChangeTreatmentDate(true);
   };
+
 
   return (
     <div className="treatments-container">
@@ -239,12 +238,8 @@ setCancelnText("");
             </div>
           </div>
         </div>}
-      
-
-
-
-
-      {treatmentDocumentation && ( //להגדיל את חלונית התיעוד
+    
+      {treatmentDocumentation && ( 
         <div className="modal-backdrop">
           <div className="modal">
             <h2>תיעוד טיפול</h2>
