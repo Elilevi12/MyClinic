@@ -88,4 +88,17 @@
     font-size: 1.2em;
     margin-top: 20px;
   }
+  .ActiveSeries-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px; /* גובה הריבוע */
+    width: 300px;  /* רוחב הריבוע */
+    margin: 0 auto;
+    background-color: #e39724; /* צבע רקע */
+    border: 2px solid #e39126;    /* מסגרת */
+    border-radius: 15px;       /* פינות מעוגלות */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* צל לריבוע */
+    position: relative;
+  }
   

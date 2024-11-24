@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../css/activeSeries.css";
+import ActiveSeries from "./ActivSeries";
 
 function ActiveSeriesOfTreatments() {
   const [treatmentSeries, setTreatmentSeries] = useState([]);
@@ -132,27 +133,36 @@ setCancelnText("");
 
   return (
     <div className="treatments-container">
+<div className="ActiveSeries-box">
+  <ActiveSeries />
+</div>
+
       {treatmentSeries.length > 0 && (
+
+
+
         <div className="treatments-goals-box">
           <h2 className="treatments-goals-title">מטרות</h2>
           <p>{treatmentSeries[0].goals}</p>
         </div>
       )}
+
+      
       {treatments.length > 0 ? (
         <div className="treatments-table-container">
           <table>
             <thead>
               <tr>
                 <th>תאריך</th>
-                <th>סטטוס</th>
                 <th>טיפולים</th>
+                <th>סטטוס</th>
               </tr>
             </thead>
             <tbody>
               {treatments.map((treatment) => (
                 <tr key={treatment.id}>
-                  <td>{treatment.treatment_date}</td>
-                  <td>{treatment.status}</td>
+                <td>{new Date(treatment.treatment_date).toLocaleDateString()}</td>
+                  
                   <td>
                     <button
                       className="treatments-button-doc"
@@ -173,6 +183,7 @@ setCancelnText("");
                       שינוי תאריך
                     </button>
                   </td>
+                  <td>{treatment.status}</td>
                 </tr>
               ))}
             </tbody>

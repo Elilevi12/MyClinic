@@ -209,70 +209,54 @@ res.status(200).json({ message: "הטיפול בוטל בהצלחה" });
 router.post("/documentation", async (req, res) => {
     const { treatmentId, documentation, serialID, userId } = req.body;
   
+    const sql="select status from treatment_sessions where id=?"
+const [status]=await db.promise().query(sql,[treatmentId])
+if(status[0].status==="done"){
+  return res.status(400).json({ message: "הטיפול כבר הושלם" });}
+
+
     try {
-      // Start a transaction
-      const connection = await db.promise().getConnection();
-      await connection.beginTransaction();
-    
-      // Check if the treatment session is already done
-      const sql = "SELECT status FROM treatment_sessions WHERE id=?";
-      const [status] = await connection.query(sql, [treatmentId]);
-      if (status[0].status === "done") {
-        connection.release(); // Release connection if the condition fails
-        return res.status(400).json({ message: "הטיפול כבר הושלם" });
-      }
-    
       // Update treatment_sessions
-      await connection.query(
-        `UPDATE treatment_sessions SET documentation=?, status=? WHERE id=?`,
+      await db.promise().query(
+        "UPDATE treatment_sessions SET documentation=?, status=? WHERE id=?",
         [documentation, "done", treatmentId]
       );
-    
+ 
       // Update treatment_series
-      await connection.query(
-        `UPDATE treatment_series SET completed_treatments = completed_treatments + 1 WHERE id=?`,
+      await db.promise().query(
+        'UPDATE treatment_series SET completed_treatments = completed_treatments + 1 WHERE id=?',
         [serialID]
       );
-    
+
+  
       // Check if all treatments are completed
-      const [rows] = await connection.query(
-        `SELECT completed_treatments, total_treatments FROM treatment_series WHERE id=?`,
+      const [rows] = await db.promise().query(
+        'SELECT completed_treatments, total_treatments FROM treatment_series WHERE id=?',
         [serialID]
       );
-    
+     
+      
       if (rows[0].completed_treatments === rows[0].total_treatments) {
         // Update treatment_series status
-        await connection.query(
-          `UPDATE treatment_series SET status='finished' WHERE id=?`,
+        await db.promise().query(
+         ' UPDATE treatment_series SET status="finished" WHERE id=?',
           [serialID]
         );
       }
-    
+
+  
       // Update patient debts
-      await connection.query(
-        `UPDATE patients SET debts = debts + (
-          SELECT price FROM treatment_series WHERE id=?
-        ) WHERE user_id=?`,
+      await db.promise().query(
+        "UPDATE patients SET debts = debts + (SELECT price FROM treatment_series WHERE id=?) WHERE user_id=?",
         [serialID, userId]
       );
-    
-      // Commit the transaction
-      await connection.commit();
-    
-      // Release the connection
-      connection.release();
-    
+  
       // Send success response
       res.status(200).json({ message: "התיעוד נשמר בהצלחה" });
     } catch (err) {
-      if (connection) {
-        // Rollback the transaction in case of error
-        await connection.rollback();
-        connection.release();
-      }
       console.error("שגיאה בשמירת התיעוד:", err);
       res.status(500).json({ message: "שגיאה בשמירת התיעוד" });
     }
-    });
+  });
   
 module.exports = router;
