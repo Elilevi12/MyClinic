@@ -10,6 +10,9 @@ router.get("/", (req, res) => {
 const appTreatmentDiary = require("./treatmentDiary");
 router.use("/treatmentDiary", appTreatmentDiary);
 
+const appTreatmentSession = require("./activSeries");
+router.use("/activSeries", appTreatmentSession);
+
 const appPersonalFilePatient= require("./personalFilePatient");
 router.use("/personalFilePatient", appPersonalFilePatient);
 

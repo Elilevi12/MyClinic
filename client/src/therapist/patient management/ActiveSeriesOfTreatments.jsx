@@ -134,7 +134,7 @@ setCancelnText("");
   return (
     <div className="treatments-container">
 <div className="ActiveSeries-box">
-  <ActiveSeries />
+  <ActiveSeries serialID={serialID} />
 </div>
 
       {treatmentSeries.length > 0 && (

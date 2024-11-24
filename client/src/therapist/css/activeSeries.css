@@ -101,4 +101,47 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* צל לריבוע */
     position: relative;
   }
-  
+  /* CSS for the modal */
+.modal {
+  display: flex;
+  flex-direction: column; /* מסדר את התוכן בעמודה */
+  justify-content: space-between; /* מרווח שווה בין התוכן לכפתור */
+  width: 60%; /* רוחב החלונית */
+  height: 60%; /* גובה החלונית */
+  background-color: #fff;
+  border-radius: 10px; /* פינות מעוגלות */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* צל עדין */
+  padding: 20px;
+  overflow-y: auto; /* גלילה במקרה של תוכן ארוך */
+}
+
+
+/* CSS for the modal content text */
+.modal pre {
+  font-size: 180%; /* הגדלת הטקט */
+  white-space: pre-wrap; /* שבירת שורות באופן אוטומטי */
+  word-wrap: break-word; /* שבירת מילים ארוכות */
+  word-break: break-word; /* שבירת שורה כאשר אין מקום */
+  line-height: 1.6; /* ריווח בין שורות */
+  color: #333;
+  flex: 1; /* תופס את כל השטח האפשרי */
+  overflow-wrap: break-word; /* תאימות נוספת לדפדפנים */
+}
+
+
+/* CSS for the close button */
+.modal button {
+  align-self: center; /* ממרכז את הכפתור */
+  margin-top: 20px; /* מרווח מעל הכפתור */
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
