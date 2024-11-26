@@ -21,8 +21,6 @@ function AddingPatient() {
       ...prevPatient,
       [name]: value,
     }));
-
-    
   };
 
   const handleSubmit = async () => {

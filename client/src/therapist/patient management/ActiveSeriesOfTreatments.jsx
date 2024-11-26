@@ -11,8 +11,8 @@ function ActiveSeriesOfTreatments() {
   const [cancelTreatment, setCancelTreatment] = useState(false);
   const [treatmentDocumentation, setTreatmentDocumentation] = useState(false);
   const [documentationText, setDocumentationText] = useState("");
-const [cancelnText, setCancelnText] = useState("");
-const [serialID, setSerialID] = useState(null);
+  const [cancelnText, setCancelnText] = useState("");
+  const [serialID, setSerialID] = useState(null);
 
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
   const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
@@ -35,14 +35,10 @@ const [serialID, setSerialID] = useState(null);
       .then((data) => {
         setTreatments(data);
         setSerialID(data[0].treatment_series_id);
-        console.log(data);
-        
       })
       .catch((error) => {
         console.error("Error fetching Active Series of Treatments:", error);
       });
-
-
   }, []);
 
   const handleModalChange = (field, value) => {
@@ -50,7 +46,6 @@ const [serialID, setSerialID] = useState(null);
   };
 
   function handleSubmitChangeDate() {
-
     fetch(
       "http://localhost:3300/therapist/treatmentDiary/changeTreatmentDate",
       {
@@ -97,23 +92,39 @@ const [serialID, setSerialID] = useState(null);
       .catch((error) => {
         alert("שגיאה בשליחת הנתונים");
       });
-  
+
     setTreatmentDocumentation(false);
     setDocumentationText("");
     setTreatmentId(null);
   }
-  
 
+  function handleSubmitCanceln() {
+    console.log(serialID);
 
-function handleSubmitCanceln() {
-console.log(cancelnText);
-console.log(treatmentId);
-console.log(serialID);
+    fetch("http://localhost:3300/therapist/treatmentDiary/cancelTreatment", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        treatmentId: treatmentId,
+        serialID: serialID,
+        cancelnText: cancelnText,
+        therapist_id: therapist.userId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data.message);
+        setCancelTreatment(false);
+      })
+      .catch((error) => {
+        alert("שגיאה בשליחת הנתונים");
+      });
 
-setCancelTreatment(false);
-setTreatmentId(null);
-setCancelnText("");
-}
+    setTreatmentId(null);
+    setCancelnText("");
+  }
 
   const openDocumentationModal = (treatmentId) => {
     setTreatmentId(treatmentId);
@@ -130,39 +141,36 @@ setCancelnText("");
     setChangeTreatmentDate(true);
   };
 
-
   return (
     <div className="treatments-container">
-<div className="ActiveSeries-box">
-  <ActiveSeries serialID={serialID} />
-</div>
-
+      <div className="ActiveSeries-box">
+        <ActiveSeries serialID={serialID} />
+      </div>
       {treatmentSeries.length > 0 && (
-
-
-
         <div className="treatments-goals-box">
           <h2 className="treatments-goals-title">מטרות</h2>
           <p>{treatmentSeries[0].goals}</p>
         </div>
       )}
-
-      
       {treatments.length > 0 ? (
         <div className="treatments-table-container">
           <table>
             <thead>
               <tr>
+                <th>#</th>
                 <th>תאריך</th>
                 <th>טיפולים</th>
                 <th>סטטוס</th>
               </tr>
             </thead>
             <tbody>
-              {treatments.map((treatment) => (
+              {treatments.map((treatment, index) => (
                 <tr key={treatment.id}>
-                <td>{new Date(treatment.treatment_date).toLocaleDateString()}</td>
-                  
+                  <td>{index + 1}</td>
+                  <td>
+                    {new Date(treatment.treatment_date).toLocaleDateString()}
+                  </td>
+
                   <td>
                     <button
                       className="treatments-button-doc"
@@ -192,7 +200,6 @@ setCancelnText("");
       ) : (
         <p className="treatments-no-treatments">לא נמצאו טיפולים פעילים.</p>
       )}{" "}
-     
       {changeTreatmentDate && (
         <div className="modal-backdrop">
           <div className="modal">
@@ -226,9 +233,8 @@ setCancelnText("");
           </div>
         </div>
       )}
-     
-      {cancelTreatment &&  
-      <div className="modal-backdrop">
+      {cancelTreatment && (
+        <div className="modal-backdrop">
           <div className="modal">
             <h2>ביטול טיפול</h2>
             <textarea
@@ -248,9 +254,9 @@ setCancelnText("");
               </button>
             </div>
           </div>
-        </div>}
-    
-      {treatmentDocumentation && ( 
+        </div>
+      )}
+      {treatmentDocumentation && (
         <div className="modal-backdrop">
           <div className="modal">
             <h2>תיעוד טיפול</h2>

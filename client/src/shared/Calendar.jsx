@@ -172,7 +172,6 @@ const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     </div>
   </div>
 )}
-
     </div>
   );
 }

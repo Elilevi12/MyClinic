@@ -16,6 +16,12 @@ router.use("/activSeries", appTreatmentSession);
 const appPersonalFilePatient= require("./personalFilePatient");
 router.use("/personalFilePatient", appPersonalFilePatient);
 
+const appMoneyManagement= require("./moneyManagement");
+router.use("/moneyManagement", appMoneyManagement);
+
+const appReports= require("./reports");
+router.use("/reports", appReports);
+
 router.post("/ListOfPatients", (req, res) => {
   //רשימת מטופלים
 

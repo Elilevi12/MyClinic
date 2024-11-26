@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import "../css/updatingPatient.css";
 
 function UpdatingPatient() {
+  const patient = JSON.parse(localStorage.getItem("selectedPatient"));
+  const therapist = JSON.parse(localStorage.getItem("currentUser"));
+
   const [fields, setFields] = useState({
     firstName: "",
     lastName: "",
@@ -9,13 +13,11 @@ function UpdatingPatient() {
     email: "",
     birthDate: "",
     healthCare: "",
-    approvedTreatments: 0,
-    price: 0,
   });
 
   const [editField, setEditField] = useState(null);
+  const inputRef = useRef(null); // יצירת רפרנס לתיבת הקלט
 
-  // מיפוי שמות השדות לעברית
   const fieldLabels = {
     firstName: "שם פרטי",
     lastName: "שם משפחה",
@@ -23,9 +25,7 @@ function UpdatingPatient() {
     phone: "טלפון",
     email: "כתובת מייל",
     birthDate: "תאריך לידה",
- healthCare: "קופת חולים",
-    approvedTreatments: "מספר טיפולים מאושר",
-    price: "מחיר",
+    healthCare: "קופת חולים",
   };
 
   const handleFieldChange = (field, value) => {
@@ -33,27 +33,75 @@ function UpdatingPatient() {
   };
 
   const handleEditClick = (field) => {
-    setEditField(field);
+    setEditField(field); 
+  };
+
+  useEffect(() => {
+    if (editField && inputRef.current) {
+      inputRef.current.focus(); 
+    }
+  }, [editField]);
+
+  const handleSubmit = async () => {
+    try {
+      const dataToSend = {
+        ...fields,
+        user_id: patient.patientId,
+        therapist_id: therapist.userId,
+      };
+      console.log(dataToSend);
+
+      const response = await fetch(
+        "http://localhost:3300/therapist/personalFilePatient/updatePatient",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dataToSend),
+        }
+      );
+
+      if (response.ok) {
+        alert("הפרטים נשמרו בהצלחה");
+      } else {
+        alert("שגיאה בשליחת הנתונים");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("שגיאה בשליחת הנתונים");
+    }
   };
 
   return (
-    <div>
-      {Object.keys(fields).map((field) => (
-        <div key={field}>
-          <label>{fieldLabels[field]}:</label>
-          <span>{fields[field]}</span>
-          <button onClick={() => handleEditClick(field)}>ערוך</button>
-          {editField === field && (
-            <input
-              type={field === "approvedTreatments" ? "number" : "text"}
-              value={fields[field]}
-              onChange={(e) => handleFieldChange(field, e.target.value)}
-              placeholder={`עדכן ${fieldLabels[field]}`}
-            />
-          )}
-        </div>
-      ))}
-      <button onClick={() => console.log(fields)}>שלח</button>
+    <div className="updating-patient-container">
+      <h1>עדכון פרטי מטופל</h1>
+      <div className="fields-container">
+        {Object.keys(fields).map((field) => (
+          <div key={field} className="field-row">
+            <label className="field-label">{fieldLabels[field]}:</label>
+            {editField === field ? (
+              <input
+                ref={inputRef} // הגדרת רפרנס לתיבת הקלט
+                className="field-input"
+                type={field === "approvedTreatments" ? "number" : "text"}
+                value={fields[field]}
+                onChange={(e) => handleFieldChange(field, e.target.value)}
+                placeholder={`עדכן ${fieldLabels[field]}`}
+              />
+            ) : (
+              <span className="field-value">{fields[field] || "לא הוזן"}</span>
+            )}
+            <button
+              className="edit-button"
+              onClick={() => handleEditClick(field)}
+            >
+              ערוך
+            </button>
+          </div>
+        ))}
+      </div>
+      <button className="submit-button" onClick={handleSubmit}>
+        שלח
+      </button>
     </div>
   );
 }

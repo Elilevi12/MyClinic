@@ -51,7 +51,7 @@ router.post("/creatingAseriesOfTreatments", async (req, res) => {
     start_date,
     treatmentTime,
     goals,
-    price
+    price,
   } = req.body;
 
   try {
@@ -97,7 +97,7 @@ router.post("/creatingAseriesOfTreatments", async (req, res) => {
       .promise()
       .query(
         "UPDATE treatment_series SET status = 'active',goals=?,price=? WHERE id = ?",
-        [goals,price, treatment_series_id]
+        [goals, price, treatment_series_id]
       );
 
     // סיום הטרנזקציה
@@ -180,83 +180,122 @@ router.put("/changeTreatmentDate", async (req, res) => {
   }
 });
 
-router.put("/cancellTreatment",  (req, res) => {
-const { treatmentId,serialID,cancelnText } = req.body;
-console.log(treatmentId,serialID,cancelnText);
+router.put("/cancelTreatment", (req, res) => {
 
-const sql1="update treatment_sessions set status='cancellation',documentation=?  where id=?";
-console.log("1111111111111");
+  console.log(treatmentId, serialID, cancelnText);
 
- db.query(sql1,[cancelnText,treatmentId],(err,result)=>{
+  const sql1 =
+    "update treatment_sessions set status='cancellation',reason_for_cancellation=?  where id=?";
 
-if(err){
-  console.error("שגיאה בביטול טיפול:", err);
-  return res.status(500).json({ message: "שגיאה בביטול טיפול" });
-}
-const sql2="select treatment_date , treatment_time from treatment_sessions where treatment_series_id=?"; 
-db.query(sql2,[serialID],(err,result)=>{
-  if(err){
-    console.error("שגיאה בשליפת תאריך ושעת הטיפול:", err);
-    return res.status(500).json({ message: "שגיאה בשליפת תאריך ושעת הטיפול" });
-}
-console.log(result);
-})
-res.status(200).json({ message: "הטיפול בוטל בהצלחה" });
-}
+  db.query(sql1, [cancelnText, treatmentId], (err, result) => {
+    if (err) {
+      console.error("שגיאה בביטול טיפול:", err);
+      return res.status(500).json({ message: "שגיאה בביטול טיפול" });
+    }
 
-)});
+    const sql2 =
+      "SELECT start_date, end_date FROM vacation_days WHERE therapist_id = ?";
+    db.query(sql2, [therapist_id], (err, result) => {
+      if (err) {
+        console.error("שגיאה בשליפת תאריכי חופשה:", err);
+        return res.status(500).json({ message: "שגיאה בשליפת תאריכי חופשה" });
+      }
+      const vacationDatesResult = result;
 
-router.post("/documentation", async (req, res) => {
-    const { treatmentId, documentation, serialID, userId } = req.body;
-  
-    const sql="select status from treatment_sessions where id=?"
-const [status]=await db.promise().query(sql,[treatmentId])
-if(status[0].status==="done"){
-  return res.status(400).json({ message: "הטיפול כבר הושלם" });}
+      const sql3 =
+        "select treatment_date , treatment_time from treatment_sessions where treatment_series_id=?";
+      db.query(sql3, [serialID], (err, result) => {
+        if (err) {
+          console.error("שגיאה בשליפת תאריך ושעת הטיפול:", err);
+          return res
+            .status(500)
+            .json({ message: "שגיאה בשליפת תאריך ושעת הטיפול" });
+        }
+        const treatments = result.sort(
+          (a, b) => b.treatment_date - a.treatment_date
+        );
 
+        const lastTreatment = new Date(treatments[0].treatment_date);
 
-    try {
-      // Update treatment_sessions
-      await db.promise().query(
+        // הוספת 7 ימים לתאריך
+        lastTreatment.setDate(lastTreatment.getDate() + 8);
+        //  יצירת תאריך טיפול
+        const newTreatmentDate = generateTreatmentDates(
+          lastTreatment,
+          1,
+          vacationDatesResult
+        );
+       
+const sql4 = `INSERT INTO treatment_sessions (treatment_series_id, treatment_date, treatment_time) VALUES (?, ?, ?)`;
+        db.query(sql4, [serialID , newTreatmentDate,treatments[0].treatment_time], (err, result) => {
+          if (err) {
+            console.error("שגיאה בהוספת טיפול חדש:", err);
+            return res.status(500).json({ message: "שגיאה בהוספת טיפול חדש" });
+          }
+      });
+    });
+      res.status(200).json({ message: "הטיפול בוטל בהצלחה" });
+    });
+  });
+});
+
+router.put("/documentation", async (req, res) => {
+  const { treatmentId, documentation, serialID, userId } = req.body;
+
+  const sql = "select status from treatment_sessions where id=?";
+  const [status] = await db.promise().query(sql, [treatmentId]);
+  if (status[0].status === "done") {
+    return res.status(400).json({ message: "הטיפול כבר הושלם" });
+  }
+
+  try {
+    // Update treatment_sessions
+    await db
+      .promise()
+      .query(
         "UPDATE treatment_sessions SET documentation=?, status=? WHERE id=?",
         [documentation, "done", treatmentId]
       );
- 
-      // Update treatment_series
-      await db.promise().query(
-        'UPDATE treatment_series SET completed_treatments = completed_treatments + 1 WHERE id=?',
+
+    // Update treatment_series
+    await db
+      .promise()
+      .query(
+        "UPDATE treatment_series SET completed_treatments = completed_treatments + 1 WHERE id=?",
         [serialID]
       );
 
-  
-      // Check if all treatments are completed
-      const [rows] = await db.promise().query(
-        'SELECT completed_treatments, total_treatments FROM treatment_series WHERE id=?',
+    // Check if all treatments are completed
+    const [rows] = await db
+      .promise()
+      .query(
+        "SELECT completed_treatments, total_treatments FROM treatment_series WHERE id=?",
         [serialID]
       );
-     
-      
-      if (rows[0].completed_treatments === rows[0].total_treatments) {
-        // Update treatment_series status
-        await db.promise().query(
-         ' UPDATE treatment_series SET status="finished" WHERE id=?',
-          [serialID]
-        );
-      }
 
-  
-      // Update patient debts
-      await db.promise().query(
+    if (rows[0].completed_treatments === rows[0].total_treatments) {
+      // Update treatment_series status
+      await db
+        .promise()
+        .query(' UPDATE treatment_series SET status="finished" WHERE id=?', [
+          serialID,
+        ]);
+    }
+
+    // Update patient debts
+    await db
+      .promise()
+      .query(
         "UPDATE patients SET debts = debts + (SELECT price FROM treatment_series WHERE id=?) WHERE user_id=?",
         [serialID, userId]
       );
-  
-      // Send success response
-      res.status(200).json({ message: "התיעוד נשמר בהצלחה" });
-    } catch (err) {
-      console.error("שגיאה בשמירת התיעוד:", err);
-      res.status(500).json({ message: "שגיאה בשמירת התיעוד" });
-    }
-  });
-  
+
+    // Send success response
+    res.status(200).json({ message: "התיעוד נשמר בהצלחה" });
+  } catch (err) {
+    console.error("שגיאה בשמירת התיעוד:", err);
+    res.status(500).json({ message: "שגיאה בשמירת התיעוד" });
+  }
+});
+
 module.exports = router;

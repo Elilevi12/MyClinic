@@ -42,4 +42,18 @@ router.get("/getGoalsActiveSession/:patientID", (req, res) => {
   });
 });
 
+router.post("/addTreatmentSession", (req, res) => {
+  const { therapistId,patientId,comments,total_treatments } = req.body;
+  console.log(req.body);
+  
+const sql = `INSERT INTO treatment_series (patients_id, therapist_id, total_treatments, comments) VALUES (?, ?, ?, ?)`;
+  db.query(sql, [patientId, therapistId, total_treatments, comments], (err) => {
+    if (err) {
+      console.error("שגיאה בהוספת סדרת טיפולים:", err);
+      return res.status(500).json({ message: "שגיאה בהוספת המטופל" });
+    }
+    res.status(201).json({ message: "המטופל נוסף בהצלחה" });
+  });
+
+});
 module.exports = router;

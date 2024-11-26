@@ -3,8 +3,7 @@ import "../css/activeSeries.css";
 import "../css/myActiveSeries.css";
 
 function ActiveSeries({ serialID }) {
-  console.log(serialID);
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
 
