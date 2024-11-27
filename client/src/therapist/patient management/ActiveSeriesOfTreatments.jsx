@@ -74,7 +74,7 @@ function ActiveSeriesOfTreatments() {
 
   function handleSubmitDocumentation() {
     fetch("http://localhost:3300/therapist/treatmentDiary/documentation", {
-      method: "POST",
+      method: "put",
       headers: {
         "Content-Type": "application/json",
       },
@@ -102,7 +102,7 @@ function ActiveSeriesOfTreatments() {
     console.log(serialID);
 
     fetch("http://localhost:3300/therapist/treatmentDiary/cancelTreatment", {
-      method: "put",
+      method: "post",
       headers: {
         "Content-Type": "application/json",
       },
@@ -110,7 +110,7 @@ function ActiveSeriesOfTreatments() {
         treatmentId: treatmentId,
         serialID: serialID,
         cancelnText: cancelnText,
-        therapist_id: therapist.userId,
+        therapistId: therapist.therapistId,
       }),
     })
       .then((res) => res.json())

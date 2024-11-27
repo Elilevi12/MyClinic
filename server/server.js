@@ -18,7 +18,7 @@ const appTherapist = require("./routes/therapist");
 app.use("/therapist", appTherapist);
 
 const appShared = require("./routes/shared");
-app.use("/shared/", appShared);
+app.use("/shared", appShared);
 
 const appPatient = require("./routes/patient");
 app.use("/patients/", appPatient);

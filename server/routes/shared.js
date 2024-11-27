@@ -19,4 +19,50 @@ router.post('/login',(req,res)=>{
     });
 })
 
+const apphebrewHolidays= require('./hebrewHolidays')
+router.use('/hebrewHolidays',apphebrewHolidays)
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+console.log("אזור הזמן שלך:", timeZone);
+console.log("השעה הנוכחית:", new Date().toLocaleString("he-IL", { timeZone }));
+
+
+
+router.get("/getHolidays", (req, res) => {
+
+    db.query('SELECT @@session.time_zone', (err, results) => {
+        if (err) {
+          console.error("שגיאה בברירת אזור הזמן:", err);
+          return;
+        }
+        console.log("אזור הזמן של החיבור הנוכחי:", results[0]['@@session.time_zone']);
+    db.end();
+      });
+
+
+      db.query('SELECT @@global.time_zone', (err, results) => {
+        if (err) {
+          console.error("שגיאה בברירת אזור הזמן הגלובלי:", err);
+          return;
+        }
+        console.log("אזור הזמן הגלובלי של השרת:", results[0]['@@global.time_zone']);
+        db.end();
+      });
+
+
+
+    const sql = "SELECT * FROM hebrew_holidays";
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.error("שגיאה בשליפת החגים:", err);
+        return res.status(500).json({ message: "שגיאה בשליפת החגים" });
+      }
+      
+      const date=new Date(result[0].date)
+  console.log( date);
+  
+      res.status(200).json(result);
+    });
+  });
+ 
+
 module.exports = router;

@@ -16,46 +16,60 @@ function Calendar() {
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  useEffect(() => {
-    
-    if (currentUser.type === "therapist") {
-      
-      Promise.all([
-        fetch(`http://localhost:3300/therapist/treatmentDiary/vacationays/${(currentUser.userId)}`).then((response) => response.json()),
-        fetch(`http://localhost:3300/therapist/receivingTreatmentDates/${(currentUser.userId)}`).then((response) => response.json()),
-      ])
-        .then(([vacations, treatments]) => {
-          const vacationEvents = vacations.map((event) => {
-            const start_date = new Date(event.start_date);
-            const end_date = new Date(event.end_date);
-            return {
-              id: event.vacation_id,
-              title: "חופשה",
-              start: start_date.toISOString(),
-              end: end_date.toISOString(),
-              color: "red"
-            };
-          });
-  
-          const treatmentEvents = treatments.map((event) => {
-            const startTime = `${event.treatment_date.substring(0, 10)}T${event.treatment_time}`;
-            const startDate = new Date(startTime);
-            const endDate = new Date(startDate.getTime() + 45 * 60 * 1000); // הוספת 45 דקות
-            return {
-              id: event.treatment_id,
-              title: `${event.patient_first_name} ${event.patient_last_name}`,
-              start: startTime,
-              end: endDate.toISOString()
-            };
-          });
-  
-          // שילוב הנתונים של החופשות והטיפולים
-          setEvents([...vacationEvents, ...treatmentEvents]);
-        })
-        .catch((error) => console.error("Error fetching events:", error));
-    }
-  }, []);
-  
+useEffect(() => {
+  if (currentUser.type === "therapist") {
+    Promise.all([
+      fetch(`http://localhost:3300/therapist/treatmentDiary/vacationays/${(currentUser.userId)}`).then((response) => response.json()),
+      fetch(`http://localhost:3300/therapist/receivingTreatmentDates/${(currentUser.userId)}`).then((response) => response.json()),
+    ])
+      .then(([vacations, treatments]) => {
+        const vacationEvents = vacations.map((event) => {
+          const start_date = new Date(event.start_date);
+          const end_date = new Date(event.end_date);
+          
+          // בדיקה אם התאריך תקין
+          if (isNaN(start_date) || isNaN(end_date)) {
+            console.error('Invalid date:', event.start_date, event.end_date);
+            return null;  // החזרה null אם יש בעיה בתאריך
+          }
+          
+          return {
+            id: event.vacation_id,
+            title: "חופשה",
+            start: start_date.toISOString(),
+            end: end_date.toISOString(),
+            color: "red"
+          };
+        }).filter(event => event !== null);  // סינון האירועים עם ערכים לא תקינים
+
+        const treatmentEvents = treatments.map((event) => {
+          const startTime = `${event.treatment_date.substring(0, 10)}T${event.treatment_time}`;
+          const startDate = new Date(startTime);
+          const endDate = new Date(startDate.getTime() + 45 * 60 * 1000); // הוספת 45 דקות
+          
+          // בדיקה אם התאריך תקין
+          if (isNaN(startDate) || isNaN(endDate)) {
+            console.error('Invalid treatment date:', startTime);
+            return null;  // החזרה null אם יש בעיה בתאריך
+          }
+          
+          return {
+            id: event.treatment_id,
+            title: `${event.patient_first_name} ${event.patient_last_name}`,
+            start: startDate.toISOString(),
+            end: endDate.toISOString()
+          };
+        }).filter(event => event !== null);  // סינון האירועים עם ערכים לא תקינים
+        
+        console.log(vacationEvents);
+        console.log(treatmentEvents);
+
+        // שילוב הנתונים של החופשות והטיפולים
+        setEvents([...vacationEvents, ...treatmentEvents]);
+      })
+      .catch((error) => console.error("Error fetching events:", error));
+  }
+}, []);
 
  
   const handleOpenModal = () => {
