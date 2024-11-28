@@ -5,7 +5,6 @@ const cron = require("node-cron");
 
 const today = new Date();
 
-
 const startDate = today.toISOString().split('T')[0];  // תאריך ההתחלה (היום)
 
 const nextYear = new Date(today);
@@ -78,10 +77,25 @@ const saveHolidaysToDatabase = async () => {
   });
 };
 
-// הגדרת משימת CRON לביצוע פעם בחודש (ביום הראשון של כל חודש בשעה 02:00)
 cron.schedule("0 0 1 * *", () => {
   console.log("מריצים את שמירת החגים למסד הנתונים...");
   saveHolidaysToDatabase();
 });
+
+
+router.get("/getHolidays", (req, res) => {
+
+  const sql = "SELECT * FROM hebrew_holidays";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("שגיאה בשליפת החגים:", err);
+      return res.status(500).json({ message: "שגיאה בשליפת החגים" });
+    }
+    
+    res.status(200).json(result);
+  });
+});
+
+
 
 module.exports = router;

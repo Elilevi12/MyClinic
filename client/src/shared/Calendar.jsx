@@ -14,64 +14,89 @@ function Calendar() {
   const [vacationStart, setVacationStart] = useState("");
   const [vacationEnd, setVacationEnd] = useState("");
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-useEffect(() => {
-  if (currentUser.type === "therapist") {
-    Promise.all([
-      fetch(`http://localhost:3300/therapist/treatmentDiary/vacationays/${(currentUser.userId)}`).then((response) => response.json()),
-      fetch(`http://localhost:3300/therapist/receivingTreatmentDates/${(currentUser.userId)}`).then((response) => response.json()),
-    ])
-      .then(([vacations, treatments]) => {
-        const vacationEvents = vacations.map((event) => {
-          const start_date = new Date(event.start_date);
-          const end_date = new Date(event.end_date);
-          
-          // בדיקה אם התאריך תקין
-          if (isNaN(start_date) || isNaN(end_date)) {
-            console.error('Invalid date:', event.start_date, event.end_date);
-            return null;  // החזרה null אם יש בעיה בתאריך
-          }
-          
-          return {
-            id: event.vacation_id,
-            title: "חופשה",
-            start: start_date.toISOString(),
-            end: end_date.toISOString(),
-            color: "red"
-          };
-        }).filter(event => event !== null);  // סינון האירועים עם ערכים לא תקינים
-
-        const treatmentEvents = treatments.map((event) => {
-          const startTime = `${event.treatment_date.substring(0, 10)}T${event.treatment_time}`;
-          const startDate = new Date(startTime);
-          const endDate = new Date(startDate.getTime() + 45 * 60 * 1000); // הוספת 45 דקות
-          
-          // בדיקה אם התאריך תקין
-          if (isNaN(startDate) || isNaN(endDate)) {
-            console.error('Invalid treatment date:', startTime);
-            return null;  // החזרה null אם יש בעיה בתאריך
-          }
-          
-          return {
-            id: event.treatment_id,
-            title: `${event.patient_first_name} ${event.patient_last_name}`,
-            start: startDate.toISOString(),
-            end: endDate.toISOString()
-          };
-        }).filter(event => event !== null);  // סינון האירועים עם ערכים לא תקינים
-        
-        console.log(vacationEvents);
-        console.log(treatmentEvents);
-
-        // שילוב הנתונים של החופשות והטיפולים
-        setEvents([...vacationEvents, ...treatmentEvents]);
+  useEffect(() => {
+    // משיכת חגים עבריים
+    fetch("http://localhost:3300/shared/hebrewHolidays/getHolidays")
+      .then((response) => response.json())
+      .then((holidays) => {
+        const holidayEvents = holidays.map((holiday) => ({
+          id: holiday.id,
+          title: holiday.title,
+          start: holiday.date,
+          allDay: true,
+          color: "green", // צבע ירוק עבור חגים
+        }));
+        setEvents((prevEvents) => [...prevEvents, ...holidayEvents]); // הוספת החגים לרשימת האירועים
       })
-      .catch((error) => console.error("Error fetching events:", error));
-  }
-}, []);
+      .catch((error) => console.error("Error fetching holidays:", error));
+  
+    if (currentUser.type === "therapist") {
+      Promise.all([
+        fetch(
+          `http://localhost:3300/therapist/treatmentDiary/vacationays/${currentUser.userId}`
+        ).then((response) => response.json()),
+        fetch(
+          `http://localhost:3300/therapist/receivingTreatmentDates/${currentUser.userId}`
+        ).then((response) => response.json()),
+      ])
+        .then(([vacations, treatments]) => {
+          const vacationEvents = vacations
+            .map((event) => {
+              const start_date = new Date(event.start_date);
+              const end_date = new Date(event.end_date);
+  
+              if (isNaN(start_date) || isNaN(end_date)) {
+                console.error(
+                  "Invalid date:",
+                  event.start_date,
+                  event.end_date
+                );
+                return null;
+              }
+  
+              return {
+                id: event.vacation_id,
+                title: "חופשה",
+                start: start_date.toISOString(),
+                end: end_date.toISOString(),
+                color: "red",
+              };
+            })
+            .filter((event) => event !== null);
+  
+          const treatmentEvents = treatments
+            .map((event) => {
+              const startTime = `${event.treatment_date.substring(0, 10)}T${event.treatment_time}`;
+              const startDate = new Date(startTime);
+              const endDate = new Date(startDate.getTime() + 45 * 60 * 1000);
+  
+              if (isNaN(startDate) || isNaN(endDate)) {
+                console.error("Invalid treatment date:", startTime);
+                return null;
+              }
+  
+              return {
+                id: event.treatment_id,
+                title: `${event.patient_first_name} ${event.patient_last_name}`,
+                start: startDate.toISOString(),
+                end: endDate.toISOString(),
+              };
+            })
+            .filter((event) => event !== null);
+  
+          setEvents((prevEvents) => [
+            ...prevEvents,
+            ...vacationEvents,
+            ...treatmentEvents,
+          ]);
+        })
+        .catch((error) => console.error("Error fetching events:", error));
+    }
+  }, []);
+  
 
- 
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -82,9 +107,7 @@ useEffect(() => {
     setVacationEnd("");
   };
 
-  const handleVacationSubmit = async ()=> {
-   
-    
+  const handleVacationSubmit = async () => {
     try {
       const response = await fetch(
         "http://localhost:3300/therapist/treatmentDiary/addingVacationays",
@@ -95,9 +118,10 @@ useEffect(() => {
             therapist_id: 1,
             start_date: vacationStart,
             end_date: vacationEnd,
+          }),
         }
-      )});
-     
+      );
+
       if (response.ok) {
         alert("הנתונים נשלחו בהצלחה!");
       } else {
@@ -108,47 +132,38 @@ useEffect(() => {
       alert("שגיאה בשליחת הנתונים");
     }
     handleCloseModal();
-    
   };
 
   return (
     <div>
       <div className="calendar-container">
-  
         <FullCalendar
-        direction="rtl"
-        headerToolbar={
-          {
-            start: 'title',
-            center: 'dayGridMonth,timeGridWeek,timeGridDay',
-            right: 'prev,next'
-          }
-        }
-        buttonText={
-          {
-            today: 'היום',
-            month: 'חודש',
-            week: 'שבוע',
-            day: 'יום',
-           
-          }
-
-        }
-  plugins={[
-    dayGridPlugin,
-    timeGridPlugin,
-    interactionPlugin,
-    rrulePlugin,
-  ]}
-  initialView={display}
-  key={display}
-  events={events}
-  slotMinTime="08:00:00"
-  slotMaxTime="16:00:00"
-  locale="he"
-  className={isModalOpen ? "dimmed" : ""} 
-/>
-
+          direction="rtl"
+          headerToolbar={{
+            start: "title",
+            center: "dayGridMonth,timeGridWeek,timeGridDay",
+            right: "prev,next",
+          }}
+          buttonText={{
+            today: "היום",
+            month: "חודש",
+            week: "שבוע",
+            day: "יום",
+          }}
+          plugins={[
+            dayGridPlugin,
+            timeGridPlugin,
+            interactionPlugin,
+            rrulePlugin,
+          ]}
+          initialView={display}
+          key={display}
+          events={events}
+          slotMinTime="08:00:00"
+          slotMaxTime="16:00:00"
+          locale="he"
+          className={isModalOpen ? "dimmed" : ""}
+        />
 
         {currentUser.type === "therapist" && (
           <button className="vacation-button" onClick={handleOpenModal}>
@@ -158,34 +173,34 @@ useEffect(() => {
       </div>
 
       {isModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal">
-      <div className="modal-content">
-        <h3>הוסף חופשה</h3>
-        <label>
-          תאריך התחלה:
-          <input
-            type="date"
-            value={vacationStart}
-            onChange={(e) => setVacationStart(e.target.value)}
-          />
-        </label>
-        <label>
-          תאריך סיום:
-          <input
-            type="date"
-            value={vacationEnd}
-            onChange={(e) => setVacationEnd(e.target.value)}
-          />
-        </label>
-        <div className="modal-buttons">
-          <button onClick={handleVacationSubmit}>שלח</button>
-          <button onClick={handleCloseModal}>ביטול</button>
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-content">
+              <h3>הוסף חופשה</h3>
+              <label>
+                תאריך התחלה:
+                <input
+                  type="date"
+                  value={vacationStart}
+                  onChange={(e) => setVacationStart(e.target.value)}
+                />
+              </label>
+              <label>
+                תאריך סיום:
+                <input
+                  type="date"
+                  value={vacationEnd}
+                  onChange={(e) => setVacationEnd(e.target.value)}
+                />
+              </label>
+              <div className="modal-buttons">
+                <button onClick={handleVacationSubmit}>שלח</button>
+                <button onClick={handleCloseModal}>ביטול</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
     </div>
   );
 }

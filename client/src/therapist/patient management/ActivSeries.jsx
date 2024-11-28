@@ -1,11 +1,12 @@
 import { useState } from "react";
 import "../css/activeSeries.css";
 import "../css/myActiveSeries.css";
+import SummaryReportForm from "./SummaryReportForm";
 
 function ActiveSeries({ serialID }) {
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
+  const [showSummaryReport, setShowSummaryReport] = useState(false); 
 
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
   const patientID = patient.patientId;
@@ -47,20 +48,29 @@ function ActiveSeries({ serialID }) {
       });
   };
 
+  const handleButtonSummaryReport = () => {
+    setShowSummaryReport(true); // הצגת הקומפוננטה SummaryReportForm
+  };
+
   const closeModal = () => {
-    setIsModalOpen(false); // סגירת ה-modal
-    setModalContent(""); // איפוס התוכן
+    setIsModalOpen(false); 
+    setModalContent(""); 
+    setShowSummaryReport(false);
   };
 
   return (
     <div>
       <button onClick={handleButtonGoals}>מטרות</button>
       <button onClick={handleButtonDocumentation}>תיעודי טיפול</button>
+      <button onClick={handleButtonSummaryReport}>דוח סיכום</button>
 
-      {isModalOpen && (
+   
+      {showSummaryReport && <SummaryReportForm />}
+
+      {isModalOpen && !showSummaryReport && (
         <div className="modal-backdrop">
           <div className="modal">
-            <pre>{modalContent}</pre> 
+            <pre>{modalContent}</pre>
             <button onClick={closeModal}>סגור</button>
           </div>
         </div>

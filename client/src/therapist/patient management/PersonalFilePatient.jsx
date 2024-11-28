@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { json, Link, useNavigate } from "react-router-dom";
-import "../css/personalFilePatient.css";
+// import "../css/personalFilePatient.css";
 
 function PersonalFilePatient() {
   const navigate = useNavigate();
