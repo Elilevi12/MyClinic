@@ -39,6 +39,7 @@ router.get("/getGoalsActiveSession/:serialId", (req, res) => {
     }
 
     res.status(200).json(result);
+    
   });
 });
 

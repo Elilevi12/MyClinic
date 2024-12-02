@@ -5,6 +5,7 @@ import SummaryReportForm from "./SummaryReportForm";
 import { useNavigate } from "react-router-dom";
 
 function ActiveSeries({ serialID }) {
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [showSummaryReport, setShowSummaryReport] = useState(false); 
@@ -16,11 +17,14 @@ const navigate=useNavigate()
 
   const handleButtonGoals = () => {
     fetch(
-      `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${25}`
+      `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${serialID}`
     )
       .then((res) => res.json())
       .then((data) => {
-        setModalContent(data[0].goals); //לעדכן כאן את פתיחת המטרות
+        const formattedGoals = data
+        .map((item, index) => `${index + 1}. ${item.goal}`)
+        .join("\n"); //לעדכן כאן את פתיחת המטרות
+        setModalContent(formattedGoals);
         setIsModalOpen(true); // פתיחת ה-modal
         console.log(data);
       })

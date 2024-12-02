@@ -5,7 +5,10 @@ import { useLocation } from "react-router-dom";
 
 
 const TreatmentForm = () => {
-  // const {serialID  } = location.state || {};
+  const location = useLocation(); // שימוש ב-useLocation כדי לקבל את ה-state
+  const { serialID } = location.state || {}; // שליפת ה-serialID מה-state
+  console.log(serialID);
+const [goals, setGoals] = useState([]);
 const [currentPatient,setCurrentPatient] = useState(null);
 const [currentTherapist, setCurrentTherapist] = useState(null);
 
@@ -32,8 +35,21 @@ console.log( data);
 
   
 }
+
+const fetchGoals = async () => {
+  const response = await fetch(
+    `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${serialID}`
+  );
+  const data = await response.json();
+  setGoals(data);
+  console.log(data);
+};
+
+
+
 fetchPatient();
 fetchTherapist();
+fetchGoals();
 
 
 }, []);
