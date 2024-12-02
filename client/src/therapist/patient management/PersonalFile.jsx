@@ -35,9 +35,7 @@ const [treatmentSeries, setTreatmentSeries] = useState([])
       <Link to="treatment-series">
         <button> סדרת טיפולים נוספת</button>
       </Link>
-      <button>אבחון</button>
-      <button>דוח סיכום</button>
-      <button>העלאת מסמכים לתיקים אישיים</button>
+   
 
 <ActiveSeriesOfTreatments/>
     </div>
