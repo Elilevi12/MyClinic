@@ -55,6 +55,7 @@ rows.forEach(({date})=>{
 }
 
 router.post("/creatingAseriesOfTreatments", async (req, res) => {
+  
   const {
     treatment_series_id,
     therapist_id,
@@ -63,6 +64,7 @@ router.post("/creatingAseriesOfTreatments", async (req, res) => {
     goals,
     price,
   } = req.body;
+console.log(goals);
 
   try {
     // שליפת מספר הטיפולים בסדרה
@@ -106,10 +108,20 @@ router.post("/creatingAseriesOfTreatments", async (req, res) => {
     await db
       .promise()
       .query(
-        "UPDATE treatment_series SET status = 'active',goals=?,price=? WHERE id = ?",
-        [goals, price, treatment_series_id]
+        "UPDATE treatment_series SET status = 'active',price=? WHERE id = ?",
+        [ price, treatment_series_id]
       );
-
+    
+      
+const insertGoals=goals.map((goal)=>{ 
+  return db
+  .promise()
+  .query(
+    "INSERT INTO  goals (serial_id, goal) VALUES (?, ?)",
+  [treatment_series_id, goal]);
+})
+await Promise.all(insertGoals);
+   
     // סיום הטרנזקציה
     await db.promise().commit();
 
@@ -168,6 +180,8 @@ router.get("/vacationays/:therapistId", (req, res) => {
 });
 
 router.put("/changeTreatmentDate", async (req, res) => {
+  console.log(req.body);
+  
   const { treatmentId, date, time } = req.body;
 
   try {

@@ -13,13 +13,13 @@ router.use("/treatmentDiary", appTreatmentDiary);
 const appTreatmentSession = require("./activSeries");
 router.use("/activSeries", appTreatmentSession);
 
-const appPersonalFilePatient= require("./personalFilePatient");
+const appPersonalFilePatient = require("./personalFilePatient");
 router.use("/personalFilePatient", appPersonalFilePatient);
 
-const appMoneyManagement= require("./moneyManagement");
+const appMoneyManagement = require("./moneyManagement");
 router.use("/moneyManagement", appMoneyManagement);
 
-const appReports= require("./reports");
+const appReports = require("./reports");
 router.use("/reports", appReports);
 
 router.post("/ListOfPatients", (req, res) => {
@@ -159,7 +159,7 @@ router.post("/waitingList", (req, res) => {
 
 router.get("/receivingTreatmentDates/:therapistId", (req, res) => {
 
-  
+
   const sql = `
 SELECT p.first_name AS patient_first_name,
        p.last_name AS patient_last_name,
@@ -174,19 +174,55 @@ ORDER BY ts.treatment_date, ts.treatment_time;
 `;
 
 
-const query = db.query(sql, [req.params.therapistId], (err, result) => {
-  if (err) {
-    console.error("שגיאה בקבלת תאריכי טיפול:", err);
-    return res.status(500).json({ message: "שגיאה בקבלת תאריכי טיפול" });
-  }
-  if (result.length === 0) {
-    return res.status(404).json({ message: "לא נמצאו תאריכי טיפול" });
-  }
+  const query = db.query(sql, [req.params.therapistId], (err, result) => {
+    if (err) {
+      console.error("שגיאה בקבלת תאריכי טיפול:", err);
+      return res.status(500).json({ message: "שגיאה בקבלת תאריכי טיפול" });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: "לא נמצאו תאריכי טיפול" });
+    }
 
-  return res.status(200).json(result);
-});
+    return res.status(200).json(result);
+  });
 
 
   //קבלת תארכי טיפול להצגת יומן טיפולים
 });
+
+router.get("/getTherapist/:therapistId", (req, res) => {
+  const sql = "SELECT * FROM therapists where user_id = ?";
+  db.query(sql, [req.params.therapistId],
+    (err, results) => {
+      if (err) {
+        console.error("שגיאה בקבלת פרטי המטפלים:", err);
+        return res.status(500).json({ message: "שגיאה בקבלת פרטי המטפלים" });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ message: "לא נמצאו מטפלים" });
+      }
+
+      res.status(200).json(results[0]);
+    });
+});
+
+router.get("/getPatient/:id", (req, res) => {
+  const sql = "SELECT * FROM patients WHERE user_id = ?";
+
+  db.query(sql, [req.params.id], (err, results) => {
+    if (err) {
+      console.error("שגיאה בקבלת פרטי המטופל:", err);
+      return res.status(500).json({ message: "שגיאה בקבלת פרטי המטופל" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "לא נמצא מטופל" });
+    }
+
+    res.status(200).json(results[0]);
+  });
+});
+
+
 module.exports = router;

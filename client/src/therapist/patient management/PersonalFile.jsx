@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import ActiveSeriesOfTreatments from "./ActiveSeriesOfTreatments";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../css/personalFilePatient.css";
 
 function PersonalFile() {
   const [selectedPatient, setSelectedPatient] = useState(null);
 const [treatmentSeries, setTreatmentSeries] = useState([])
+// const location = useLocation();
+// const { patient } = location.state || {};
+
 
 
   useEffect(() => {

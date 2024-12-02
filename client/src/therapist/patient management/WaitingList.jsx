@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "../css/waitingList.css";
+
 function WaitingList() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalData, setModalData] = useState({ date: "", time: "", goals: "" });
+  const [modalData, setModalData] = useState({ date: "", time: "", goals: [], price: "" });
   const [selectedPatientId, setSelectedPatientId] = useState(null);
 
-const therapist= JSON.parse(localStorage.getItem("selectedTherapist")) 
-
+  const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -17,7 +17,7 @@ const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ therapist_id: therapist. therapistId }),
+        body: JSON.stringify({ therapist_id: therapist.therapistId }),
       });
       const data = await response.json();
       setPatients(data);
@@ -27,12 +27,25 @@ const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
     fetchPatients();
   }, []);
 
-  
-  const handleModalChange = (field, value) => {
-    setModalData((prev) => ({ ...prev, [field]: value }));
+  const handleModalChange = (field, value, index = null) => {
+    if (field === "goals") {
+      setModalData((prev) => {
+        const updatedGoals = [...prev.goals];
+        if (index !== null) {
+          updatedGoals[index] = value;
+        } else {
+          updatedGoals.push("");
+        }
+        return { ...prev, goals: updatedGoals };
+      });
+    } else {
+      setModalData((prev) => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleSubmit = async () => {
+    console.log("פרטי הטיפול:", modalData);
+    
     try {
       const response = await fetch(
         "http://localhost:3300/therapist/treatmentDiary/creatingAseriesOfTreatments",
@@ -137,7 +150,6 @@ const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
                 onChange={(e) => handleModalChange("time", e.target.value)}
               />
             </label>
-            
             <label>
               מחיר:
               <input
@@ -148,10 +160,16 @@ const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
             </label>
             <label>
               מטרות הסדרה:
-              <textarea
-                value={modalData.goals}
-                onChange={(e) => handleModalChange("goals", e.target.value)}
-              />
+              {modalData.goals.map((goal, index) => (
+                <div key={index}>
+                  <input
+                    type="text"
+                    value={goal}
+                    onChange={(e) => handleModalChange("goals", e.target.value, index)}
+                  />
+                </div>
+              ))}
+              <button onClick={() => handleModalChange("goals")}>הוסף מטרה</button>
             </label>
             <div>
               <button onClick={handleSubmit}>שלח</button>

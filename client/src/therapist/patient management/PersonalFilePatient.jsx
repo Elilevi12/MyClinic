@@ -31,8 +31,9 @@ function PersonalFilePatient() {
       patientId: patient.user_id,
     };
 
+
     localStorage.setItem("selectedPatient", JSON.stringify(selectedPatient));
-    navigate("/therapist/personal-file");
+    navigate("/therapist/personal-file",{ state: { patient:patient}});
   };
 
   return (

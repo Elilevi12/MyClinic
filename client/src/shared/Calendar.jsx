@@ -21,6 +21,7 @@ function Calendar() {
     fetch("http://localhost:3300/shared/hebrewHolidays/getHolidays")
       .then((response) => response.json())
       .then((holidays) => {
+        
         const holidayEvents = holidays.map((holiday) => ({
           id: holiday.id,
           title: holiday.title,
@@ -28,7 +29,12 @@ function Calendar() {
           allDay: true,
           color: "green", // צבע ירוק עבור חגים
         }));
+      
+        
         setEvents((prevEvents) => [...prevEvents, ...holidayEvents]); // הוספת החגים לרשימת האירועים
+      console.log( holidayEvents);
+     console.log( events);
+      
       })
       .catch((error) => console.error("Error fetching holidays:", error));
   
@@ -66,8 +72,7 @@ function Calendar() {
             })
             .filter((event) => event !== null);
   
-          const treatmentEvents = treatments
-            .map((event) => {
+          const treatmentEvents = treatments.map((event) => {
               const startTime = `${event.treatment_date.substring(0, 10)}T${event.treatment_time}`;
               const startDate = new Date(startTime);
               const endDate = new Date(startDate.getTime() + 45 * 60 * 1000);
@@ -91,6 +96,7 @@ function Calendar() {
             ...vacationEvents,
             ...treatmentEvents,
           ]);
+      
         })
         .catch((error) => console.error("Error fetching events:", error));
     }

@@ -26,10 +26,10 @@ router.get("/getDocumentationActiveSession/:serialID", (req, res) => {
   });
 });
 
-router.get("/getGoalsActiveSession/:patientID", (req, res) => {
-  const { patientID } = req.params;
-  const sql = `SELECT goals FROM treatment_series where patients_id =? and status="active"`;
-  db.query(sql, [patientID], (err, result) => {
+router.get("/getGoalsActiveSession/:serialId", (req, res) => {
+  const { serialId } = req.params;
+  const sql = `SELECT * FROM  goals where serial_id=? `;
+  db.query(sql, [serialId], (err, result) => {
     if (err) {
       console.error("שגיאה בקבלת פרטי המטופלים:", err);
       return res.status(500).json({ message: "שגיאה בקבלת פרטי המטופלים" });

@@ -23,6 +23,8 @@ import ListOfDuties from "./therapist/Money Management/ListOfDuties";
 import PersonalFilePatient from './therapist/patient management/PersonalFilePatient';
 import PatientHomePage from "./patient/PatientHomePage";
 
+import SummaryReportForm from "./therapist/patient management/SummaryReportForm";
+
 function App() {
   return (
       <UserProvider>
@@ -44,6 +46,7 @@ function App() {
 <Route path="/therapist/waiting-list" element={<WaitingList/>}/>
 <Route path="/therapist/personal-file" element={<PersonalFile/>}/>
 
+<Route path="/therapist/money-management/summary-report" element={<SummaryReportForm/>}/>
 
 <Route path="/therapist/money-management" element={<MoneyManagement/>}/>
 <Route path="/therapist/money-management/list-of-duties" element={<ListOfDuties/>}/>

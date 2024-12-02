@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../css/activeSeries.css";
 import "../css/myActiveSeries.css";
 import SummaryReportForm from "./SummaryReportForm";
+import { useNavigate } from "react-router-dom";
 
 function ActiveSeries({ serialID }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,13 +12,15 @@ function ActiveSeries({ serialID }) {
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
   const patientID = patient.patientId;
 
+const navigate=useNavigate()
+
   const handleButtonGoals = () => {
     fetch(
-      `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${patientID}`
+      `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${25}`
     )
       .then((res) => res.json())
       .then((data) => {
-        setModalContent(data[0].goals); // עדכון תוכן ה-modal
+        setModalContent(data[0].goals); //לעדכן כאן את פתיחת המטרות
         setIsModalOpen(true); // פתיחת ה-modal
         console.log(data);
       })
@@ -49,7 +52,10 @@ function ActiveSeries({ serialID }) {
   };
 
   const handleButtonSummaryReport = () => {
-    setShowSummaryReport(true); // הצגת הקומפוננטה SummaryReportForm
+    navigate("/therapist/money-management/summary-report", { state: { serialID } });
+   
+   
+    // setShowSummaryReport(true); // הצגת הקומפוננטה SummaryReportForm
   };
 
   const closeModal = () => {
@@ -65,7 +71,7 @@ function ActiveSeries({ serialID }) {
       <button onClick={handleButtonSummaryReport}>דוח סיכום</button>
 
    
-      {showSummaryReport && <SummaryReportForm />}
+      {/* {showSummaryReport && <SummaryReportForm />} */}
 
       {isModalOpen && !showSummaryReport && (
         <div className="modal-backdrop">
