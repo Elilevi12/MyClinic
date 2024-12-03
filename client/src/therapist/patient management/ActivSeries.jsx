@@ -23,7 +23,7 @@ const navigate=useNavigate()
       .then((data) => {
         const formattedGoals = data
         .map((item, index) => `${index + 1}. ${item.goal}`)
-        .join("\n"); //לעדכן כאן את פתיחת המטרות
+        .join("\n"); 
         setModalContent(formattedGoals);
         setIsModalOpen(true); // פתיחת ה-modal
         console.log(data);

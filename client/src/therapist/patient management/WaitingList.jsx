@@ -8,7 +8,8 @@ function WaitingList() {
   const [modalData, setModalData] = useState({ date: "", time: "", goals: [], price: "" });
   const [selectedPatientId, setSelectedPatientId] = useState(null);
 
-  const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
+  const therapist = JSON.parse(localStorage.getItem("currentUser"));
+console.log("therapist",therapist);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -17,7 +18,7 @@ function WaitingList() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ therapist_id: therapist.therapistId }),
+        body: JSON.stringify({ therapist_id: therapist.id }),
       });
       const data = await response.json();
       setPatients(data);

@@ -37,14 +37,17 @@ function Calendar() {
       
       })
       .catch((error) => console.error("Error fetching holidays:", error));
+console.log("1111");
   
     if (currentUser.type === "therapist") {
+    console.log("2222");
+    
       Promise.all([
         fetch(
-          `http://localhost:3300/therapist/treatmentDiary/vacationays/${currentUser.userId}`
+          `http://localhost:3300/therapist/treatmentDiary/vacationays/${currentUser.id}`
         ).then((response) => response.json()),
         fetch(
-          `http://localhost:3300/therapist/receivingTreatmentDates/${currentUser.userId}`
+          `http://localhost:3300/therapist/receivingTreatmentDates/${currentUser.id}`
         ).then((response) => response.json()),
       ])
         .then(([vacations, treatments]) => {

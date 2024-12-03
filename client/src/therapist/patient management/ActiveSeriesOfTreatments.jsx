@@ -15,7 +15,7 @@ function ActiveSeriesOfTreatments() {
   const [serialID, setSerialID] = useState(null);
 
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
-  const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
+  const therapist = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
     fetch(
@@ -27,7 +27,7 @@ function ActiveSeriesOfTreatments() {
         },
         body: JSON.stringify({
           patientId: patient.patientId,
-          therapistId: therapist.therapistId,
+          therapistId: therapist.id,
         }),
       }
     )
@@ -110,7 +110,7 @@ function ActiveSeriesOfTreatments() {
         treatmentId: treatmentId,
         serialID: serialID,
         cancelnText: cancelnText,
-        therapistId: therapist.therapistId,
+        therapistId: therapist.id,
       }),
     })
       .then((res) => res.json())

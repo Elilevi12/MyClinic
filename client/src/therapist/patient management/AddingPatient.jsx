@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import "../css/addingPatient.css";
 
 function AddingPatient() {
+  const  therapist = JSON.parse(localStorage.getItem("currentUser"));
   const [patient, setPatient] = useState({
-    therapist_id: 1,
+    therapist_id: therapist.id,
     first_name: "",
     last_name: "",
     id_number: "",

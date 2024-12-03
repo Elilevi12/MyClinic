@@ -1,34 +1,61 @@
-import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { UserContext } from "../UserContext";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./css/loginTherapist.css";
+
 function LoginTherapist() {
-  const { setUser } = useContext(UserContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-const selctTarrapist={type:"therapist",therapistId:1}
-localStorage.setItem("selectedTherapist",JSON.stringify(selctTarrapist))
-const currentUser={type:"therapist",userId:1}
-localStorage.setItem("currentUser",JSON.stringify(currentUser))
-  useEffect(() => {
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://localhost:3300/shared/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
 
-    setUser({ type: "therapist", userId: 19 });
-  }, []);
+      const data = await response.json();
+
+      if (data && data.id && data.type) {
+        // שמירת הנתונים ב-localStorage
+        localStorage.setItem("currentUser", JSON.stringify(data));
+        // ניווט לעמוד המטפל
+        navigate("/therapist");
+      } else {
+        setErrorMessage("שם המשתמש או הסיסמה שגויים");
+      }
+    } catch (error) {
+      setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
+    }
+  };
 
   return (
     <div className="login-therapist-container">
-      <Link to="/therapist" className="link-button">
-        מטפל
-      </Link>
-
-      <input type="text" placeholder="שם משתמש" />
-      <input type="password" placeholder="סיסמה" />
-      <input type="text" placeholder="תעודת זהות" />
-      <button>שלח</button>
+      <h2>התחברות מטפל</h2>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <input
+        type="text"
+        placeholder="שם משתמש"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="סיסמה"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleSubmit}>שלח</button>
     </div>
   );
 }
 
 export default LoginTherapist;
-
-

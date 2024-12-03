@@ -3,7 +3,6 @@ import "../css/moneyManagement.css";
 
 function MoneyManagement() {
   const therapistId = JSON.parse(localStorage.getItem("currentUser"));
-  console.log(therapistId.userId);
 
   const [paymentStatus, setPaymentStatus] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -25,7 +24,7 @@ function MoneyManagement() {
 
   const getPaymentStatus = async () => {
     const response = await fetch(
-      `http://localhost:3300/therapist/moneyManagement/paymentStatus/${therapistId.userId}`
+      `http://localhost:3300/therapist/moneyManagement/paymentStatus/${therapistId.id}`
     );
     const data = await response.json();
     setPaymentStatus(data);

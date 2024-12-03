@@ -7,14 +7,20 @@ import { useLocation } from "react-router-dom";
 const TreatmentForm = () => {
   const location = useLocation(); // שימוש ב-useLocation כדי לקבל את ה-state
   const { serialID } = location.state || {}; // שליפת ה-serialID מה-state
-  console.log(serialID);
-const [goals, setGoals] = useState([]);
 const [currentPatient,setCurrentPatient] = useState(null);
 const [currentTherapist, setCurrentTherapist] = useState(null);
+const [treatmentGoals, setTreatmentGoals] = useState([]);
+const [educationalFramework, setEducationalFramework] = useState("");
+const [background, setBackground] = useState("");
+const [treatmentDocumentation, setTreatmentDocumentation] = useState("");
+  const [treatmentSummary, setTreatmentSummary] = useState("");
+const [treatmentProcess, setTreatmentProcess] = useState("");
+const [recommendations, setRecommendations] = useState("");
+
 
 useEffect(() => {
 const patient = JSON.parse(localStorage.getItem("selectedPatient"));
-const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
+const therapist= JSON.parse(localStorage.getItem("currentUser"));
 
 
 const fetchPatient = async () => {
@@ -23,15 +29,13 @@ const fetchPatient = async () => {
   );
   const data = await response.json();
   setCurrentPatient(data);
-  console.log(typeof data);
 };
 const fetchTherapist = async () => {
   const response = await fetch(
-    `http://localhost:3300/therapist/getTherapist/${therapist.therapistId}`
+    `http://localhost:3300/therapist/getTherapist/${therapist.id}`
   );
   const data = await response.json();
   setCurrentTherapist(data);  
-console.log( data);
 
   
 }
@@ -41,8 +45,17 @@ const fetchGoals = async () => {
     `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${serialID}`
   );
   const data = await response.json();
-  setGoals(data);
-  console.log(data);
+  try {
+  const formattedGoals = data.map((item) => ({
+    goal: item.goal,
+    theTreatmentProcess: "", // ברירת מחדל
+  }));
+
+  setTreatmentGoals(formattedGoals); // עדכון הסטייט
+} catch (error) {
+  console.error("Error fetching goals:", error);
+}
+  
 };
 
 
@@ -64,24 +77,12 @@ const patientAge = dateOfBirth
   : "";
 const  healthcare_provider= currentPatient ? currentPatient.healthcare_provider : "";
   const patientIdNumber= currentPatient ? currentPatient.id_number : "";
-  console.log(currentTherapist);
   
 const therapistName = currentTherapist ? `${currentTherapist.first_name} ${currentTherapist.last_name}` : "";
 const licenseNumber = currentTherapist ? currentTherapist.license_number : ""; 
 const specialty= currentTherapist ? currentTherapist.specialty : "";
-console.log(therapistName, licenseNumber, specialty);
 
 
-
-  const [educationalFramework, setEducationalFramework] = useState("");
-const [background, setBackground] = useState("");
-const [treatmentGoals, setTreatmentGoals] = useState([{goal: "גזירה",theTreatmentProcess:""},
-  {goal: "קפיצה",theTreatmentProcess:""},
-  {goal: "ישיבה",theTreatmentProcess:""}]);
-const [treatmentDocumentation, setTreatmentDocumentation] = useState("");
-  const [treatmentSummary, setTreatmentSummary] = useState("");
-const [treatmentProcess, setTreatmentProcess] = useState("");
-const [recommendations, setRecommendations] = useState("");
 
 
 const updateGoal = (index, value) => {
@@ -197,7 +198,7 @@ style={{width:"100%", padding:"8px", marginTop:"5px"}}
       <textarea
         value={goal.theTreatmentProcess}
         onChange={(e) => updateGoal(index, e.target.value)} // קריאה לפונקציה עם האינדקס והערך החדש
-        placeholder="כתוב את המטרה כאן"
+        placeholder="כתוב את התהליך כאן"
         rows="3"
         style={{ width: "100%", padding: "8px", marginTop: "5px" }}
       />

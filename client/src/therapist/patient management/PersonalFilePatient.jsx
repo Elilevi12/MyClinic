@@ -4,6 +4,7 @@ import { json, Link, useNavigate } from "react-router-dom";
 
 function PersonalFilePatient() {
   const navigate = useNavigate();
+const therapist = JSON.parse(localStorage.getItem("currentUser"));
 
   const [patients, setPatients] = useState([]);
 
@@ -14,7 +15,7 @@ function PersonalFilePatient() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ therapist_id: 1 }),
+          body: JSON.stringify({ therapist_id: therapist.id }),
         }
       );
       const data = await response.json();

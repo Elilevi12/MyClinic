@@ -3,18 +3,16 @@ import { Link } from "react-router-dom";
 import "../css/treatmentSeriesInitiator.css";
 
 function TreatmentSeriesInitiator() {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const therapist = JSON.parse(localStorage.getItem("currentUser"));
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
  
   const [treatmentSeries, setTreatmentSeries] = useState({
     patientId: patient.patientId,
-    therapistId: currentUser.userId,
+    therapistId: therapist.id,
     total_treatments : 0,
     comments: "",
   });
 
-  console.log(patient);
-  console.log(currentUser);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
