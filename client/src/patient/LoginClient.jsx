@@ -1,73 +1,62 @@
-import React,{ useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom"
+import React, {useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../UserContext';
-function LoginClient(){
-   const { setUser } = useContext(UserContext);
-   const navigate = useNavigate(); 
-    const [patient, setPatient] = useState({
-        userName: "",
-        password: "",
-    })
-const currentUser={type:"patient",userId:60}
-localStorage.setItem("currentUser",JSON.stringify(currentUser))
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setPatient((prevPatient) => ({
-          ...prevPatient,
-          [name]: value,
-        }));
-      };
- 
-    useEffect(() => {
-   
-   setUser({type:"client"})
-   },[])
 
-   const handleLogin = async () => {
+function LoginAdmin() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3300/patient/login", {
+      const response = await fetch("http://localhost:3300/shared/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(patient),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
       });
 
-      if (response.ok) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useNavigate("/client");
-        alert("הנתונים נשלחו בהצלחה!");
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+
+      const data = await response.json();
+
+      if (data && data.id && data.type==="patient") {
+        // שמירת הנתונים ב-localStorage
+        localStorage.setItem("currentUser", JSON.stringify(data));
+        // ניווט לעמוד המטפל
+        navigate("/client");
       } else {
-        alert("משתמש לא נמצא");
+        setErrorMessage("שם המשתמש או הסיסמה שגויים");
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("שגיאה בשליחת הנתונים");
+      setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
     }
   };
 
+  return (
+    <div className="login-admin-container">
+      <h2>כניסת מנהל</h2>
+   
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <input
+        type="text"
+        placeholder="שם משתמש"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="סיסמה"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleSubmit}>שלח</button>
+    </div>
+  );
+}
 
-
-
-
-    return(
-        <div>
-
-    <h1>Ny Clinic</h1>
-
-
-
-
-
-<input type="text" placeholder="name" name='userName' value={patient.userName} onChange={handleLogin}/>
-<input type="password" placeholder="password" value={patient.password} onChange={handleChange}/>
-
-<button onClick={handleLogin}> כניסה עם סיסמה</button>
-
-<Link to={"/client"}>
-<button >כניסה</button>
-</Link>
-
-
- 
-        </div>
-    )
-}export default LoginClient
+export default LoginAdmin;

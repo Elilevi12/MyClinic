@@ -1,25 +1,62 @@
-import React, { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { UserContext } from '../UserContext';
-import './css/loginAdmin.css';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './css/loginAdmin.module.css';
 
 function LoginAdmin() {
-  const { setUser } = useContext(UserContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    setUser({ type: "admin" });
-  }, []);
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://localhost:3300/shared/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+
+      const data = await response.json();
+
+      if (data && data.id && data.type === "admin") {
+        localStorage.setItem("currentUser", JSON.stringify(data));
+        navigate("/admin");
+      } else {
+        setErrorMessage("שם המשתמש או הסיסמה שגויים");
+      }
+    } catch (error) {
+      setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
+    }
+  };
 
   return (
-    <div className="login-admin-container">
+    <div className={styles["login-admin-container"]}>
       <h2>כניסת מנהל</h2>
-      <Link to="/admin" className="admin-link">
-        מנהל
-      </Link>
-      <input type="text" placeholder="שם משתמש" />
-      <input type="password" placeholder="סיסמה" />
-      <input type="text" placeholder="תעודת זהות" />
-      <button>שלח</button>
+
+      {errorMessage && <p className={styles["error-message"]}>{errorMessage}</p>}
+      <input
+        type="text"
+        placeholder="שם משתמש"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        className={styles["input-field"]}
+      />
+      <input
+        type="password"
+        placeholder="סיסמה"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className={styles["input-field"]}
+      />
+      <button onClick={handleSubmit} className={styles["submit-button"]}>
+        שלח
+      </button>
     </div>
   );
 }

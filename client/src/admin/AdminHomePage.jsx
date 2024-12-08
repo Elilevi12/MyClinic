@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom';
-import "./css/adminHomePage.css";
+import styles from './css/adminHomePage.module.css';
 
 function AdminHomePage() {
   return (
-    <div className="admin-home-container">
+    <div className={styles["admin-home-container"]}>
       <h1>דף הבית למנהל</h1>
-      <nav className="admin-home-nav">
+      <nav className={styles["admin-home-nav"]}>
         <Link to="calendar">
-          <button>לוח שנה</button>
+          <button className={styles["nav-button"]}>לוח שנה</button>
         </Link>
         <Link to="list-of-therapists">
-          <button>רשימת מטפלים</button>
+          <button className={styles["nav-button"]}>רשימת מטפלים</button>
         </Link>
       </nav>
     </div>

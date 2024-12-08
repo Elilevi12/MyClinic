@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
-import "./Calendar.css";
+import styles from "./Calendar.module.css"; // ייבוא כ-CSS מודול
 import { UserContext } from "../UserContext";
 
 function Calendar() {
@@ -51,6 +51,9 @@ console.log("1111");
         ).then((response) => response.json()),
       ])
         .then(([vacations, treatments]) => {
+          console.log(vacations);
+          
+          
           const vacationEvents = vacations
             .map((event) => {
               const start_date = new Date(event.start_date);
@@ -104,7 +107,6 @@ console.log("1111");
         .catch((error) => console.error("Error fetching events:", error));
     }
   }, []);
-  
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -124,7 +126,7 @@ console.log("1111");
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            therapist_id: 1,
+            therapist_id: currentUser.id,
             start_date: vacationStart,
             end_date: vacationEnd,
           }),
@@ -145,7 +147,7 @@ console.log("1111");
 
   return (
     <div>
-      <div className="calendar-container">
+      <div className={styles.calendarContainer}>
         <FullCalendar
           direction="rtl"
           headerToolbar={{
@@ -171,20 +173,20 @@ console.log("1111");
           slotMinTime="08:00:00"
           slotMaxTime="16:00:00"
           locale="he"
-          className={isModalOpen ? "dimmed" : ""}
+          className={isModalOpen ? styles.dimmed : ""}
         />
 
         {currentUser.type === "therapist" && (
-          <button className="vacation-button" onClick={handleOpenModal}>
+          <button className={styles.vacationButton} onClick={handleOpenModal}>
             הוסף חופשה
           </button>
         )}
       </div>
 
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-content">
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
               <h3>הוסף חופשה</h3>
               <label>
                 תאריך התחלה:
@@ -202,7 +204,7 @@ console.log("1111");
                   onChange={(e) => setVacationEnd(e.target.value)}
                 />
               </label>
-              <div className="modal-buttons">
+              <div className={styles.modalButtons}>
                 <button onClick={handleVacationSubmit}>שלח</button>
                 <button onClick={handleCloseModal}>ביטול</button>
               </div>

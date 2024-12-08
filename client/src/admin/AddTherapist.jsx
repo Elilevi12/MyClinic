@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './css/addTherapist.css';
+import styles from './css/addTherapist.module.css';
 
 function AddTherapist() {
   const [therapist, setTherapist] = useState({
@@ -34,66 +34,69 @@ function AddTherapist() {
   };
 
   return (
-    <div className="add-therapist-container">
-      <h3>הוסף מטפל חדש</h3>
-      <input
-        type="number"
-        name="license_number"
-        value={therapist.license_number}
-        placeholder="מספר רישיון"
-        onChange={handleChange}
-        className="input-field"
-      />
-      <input
-        type="text"
-        name="first_name"
-        value={therapist.first_name}
-        placeholder="שם פרטי"
-        onChange={handleChange}
-        className="input-field"
-      />
-      <input
-        type="text"
-        name="last_name"
-        value={therapist.last_name}
-        placeholder="שם משפחה"
-        onChange={handleChange}
-        className="input-field"
-      />
-      <input
-        type="email"
-        name="email"
-        value={therapist.email}
-        placeholder="אימייל"
-        onChange={handleChange}
-        className="input-field"
-      />
-      <input
-        type="tel"
-        name="phone"
-        value={therapist.phone}
-        placeholder="טלפון"
-        onChange={handleChange}
-        className="input-field"
-      />
-      <input
-        type="text"
-        name="specialty"
-        value={therapist.specialty}
-        placeholder="תחום טיפול"
-        onChange={handleChange}
-        className="input-field"
-      />
-      <input
-        type="text"
-        name="address"
-        value={therapist.address}
-        placeholder="כתובת"
-        onChange={handleChange}
-        className="input-field"
-      />
-      <button onClick={handleSubmit} className="submit-button">הוסף מטפל</button>
-    </div>
+    <div className={styles["add-therapist-container"]}>
+    <h3>הוסף מטפל חדש</h3>
+    <input
+      type="number"
+      name="license_number"
+      value={therapist.license_number}
+      placeholder="מספר רישיון"
+      onChange={handleChange}
+      className={styles["input-field"]}
+    />
+    <input
+      type="text"
+      name="first_name"
+      value={therapist.first_name}
+      placeholder="שם פרטי"
+      onChange={handleChange}
+      className={styles["input-field"]}
+    />
+    <input
+      type="text"
+      name="last_name"
+      value={therapist.last_name}
+      placeholder="שם משפחה"
+      onChange={handleChange}
+      className={styles["input-field"]}
+    />
+    <input
+      type="email"
+      name="email"
+      value={therapist.email}
+      placeholder="אימייל"
+      onChange={handleChange}
+      className={styles["input-field"]}
+    />
+    <input
+      type="tel"
+      name="phone"
+      value={therapist.phone}
+      placeholder="טלפון"
+      onChange={handleChange}
+      className={styles["input-field"]}
+    />
+    <input
+      type="text"
+      name="specialty"
+      value={therapist.specialty}
+      placeholder="תחום טיפול"
+      onChange={handleChange}
+      className={styles["input-field"]}
+    />
+    <input
+      type="text"
+      name="address"
+      value={therapist.address}
+      placeholder="כתובת"
+      onChange={handleChange}
+      className={styles["input-field"]}
+    />
+    <button onClick={handleSubmit} className={styles["submit-button"]}>
+      הוסף מטפל
+    </button>
+  </div>
+  
   );
 }
 

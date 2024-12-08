@@ -24,7 +24,7 @@ function LoginTherapist() {
 
       const data = await response.json();
 
-      if (data && data.id && data.type) {
+      if (data && data.id && data.type==="therapist") {
         // שמירת הנתונים ב-localStorage
         localStorage.setItem("currentUser", JSON.stringify(data));
         // ניווט לעמוד המטפל

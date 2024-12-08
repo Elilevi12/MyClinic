@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "../css/moneyManagement.css";
+import styles from "../css/moneyManagement.module.css";
 
 function MoneyManagement() {
   const therapistId = JSON.parse(localStorage.getItem("currentUser"));
@@ -7,27 +7,34 @@ function MoneyManagement() {
   const [paymentStatus, setPaymentStatus] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [inputValue, setInputValue] = useState("");
-  const [actionType, setActionType] = useState(""); 
+  const [actionType, setActionType] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const inputRef = useRef(null); 
+  const inputRef = useRef(null);
 
   useEffect(() => {
     getPaymentStatus();
   }, []);
 
   useEffect(() => {
-
     if (actionType && inputRef.current) {
       inputRef.current.focus();
     }
   }, [actionType]);
 
   const getPaymentStatus = async () => {
-    const response = await fetch(
-      `http://localhost:3300/therapist/moneyManagement/paymentStatus/${therapistId.id}`
-    );
-    const data = await response.json();
-    setPaymentStatus(data);
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:3300/therapist/moneyManagement/paymentStatus/${therapistId.id}`
+      );
+      const data = await response.json();
+      setPaymentStatus(data);
+    } catch (error) {
+      console.error("Error fetching payment status:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePatientSelect = (patient) => {
@@ -37,48 +44,63 @@ function MoneyManagement() {
   };
 
   const handleAddAction = async () => {
-    if (actionType === "payment") {
-      await addPayment(selectedPatient.user_id, inputValue);
-    } else if (actionType === "debt") {
-      await addDebt(selectedPatient.user_id, inputValue);
+    setLoading(true);
+    try {
+      if (actionType === "payment") {
+        await updatePatientStatus(
+          selectedPatient.user_id,
+          "addPayments",
+          inputValue
+        );
+        updateLocalPatient(selectedPatient.user_id, inputValue, "payment");
+      } else if (actionType === "debt") {
+        await updatePatientStatus(
+          selectedPatient.user_id,
+          "addDebts",
+          inputValue
+        );
+        updateLocalPatient(selectedPatient.user_id, inputValue, "debt");
+      }
+    } catch (error) {
+      console.error("Error updating patient:", error);
+    } finally {
+      setLoading(false);
+      setSelectedPatient(null);
     }
-    setSelectedPatient(null); 
   };
 
-  const addPayment = async (user_id, payment) => {
-    const response = await fetch(
-      "http://localhost:3300/therapist/moneyManagement/addPayments",
+  const updatePatientStatus = async (user_id, endpoint, amount) => {
+    await fetch(
+      `http://localhost:3300/therapist/moneyManagement/${endpoint}`,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id, payment }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id, amount }),
       }
     );
-    const data = await response.json();
-    console.log(data);
   };
 
-  const addDebt = async (user_id, debt) => {
-    const response = await fetch(
-      "http://localhost:3300/therapist/moneyManagement/addDebts",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id, debt }),
-      }
+  const updateLocalPatient = (user_id, amount, type) => {
+    setPaymentStatus((prev) =>
+      prev.map((patient) =>
+        patient.user_id === user_id
+          ? {
+              ...patient,
+              remaining_debt:
+                type === "payment"
+                  ? patient.remaining_debt - amount
+                  : patient.remaining_debt + amount,
+            }
+          : patient
+      )
     );
-    const data = await response.json();
-    console.log(data);
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>ניהול כספים</h1>
-      <table className="payment-table">
+      {loading && <p>טוען נתונים...</p>}
+      <table className={styles["payment-table"]}>
         <thead>
           <tr>
             <th>ת.ז</th>
@@ -92,31 +114,36 @@ function MoneyManagement() {
             <tr
               key={patient.user_id}
               onClick={() => handlePatientSelect(patient)}
+              className={styles.row}
             >
               <td>{patient.id_number}</td>
               <td>{patient.first_name}</td>
               <td>{patient.last_name}</td>
               <td
-  className={
-    patient.remaining_debt > 0
-      ? "debt-positive"
-      : "debt-negative"
-  }
->
-  {patient.remaining_debt}
-</td>
+                className={
+                  patient.remaining_debt > 0
+                    ? styles["debt-positive"]
+                    : styles["debt-negative"]
+                }
+              >
+                {patient.remaining_debt}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
       {selectedPatient && (
-        <div className="modal">
-          <h2>{selectedPatient.first_name} {selectedPatient.last_name}</h2>
-            <h3>יתרת חוב: {selectedPatient.remaining_debt}</h3>
+        <div className={styles.modal}>
+          <h2>
+            {selectedPatient.first_name} {selectedPatient.last_name}
+          </h2>
+          <h3>יתרת חוב: {selectedPatient.remaining_debt}</h3>
           {!actionType && (
             <div>
-              <button onClick={() => setActionType("payment")}>הוספת תשלום</button>
+              <button onClick={() => setActionType("payment")}>
+                הוספת תשלום
+              </button>
               <button onClick={() => setActionType("debt")}>הוספת חוב</button>
             </div>
           )}
@@ -128,11 +155,10 @@ function MoneyManagement() {
               <input
                 type="number"
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => setInputValue(Number(e.target.value))}
                 placeholder="הכנס סכום"
-                ref={inputRef} 
+                ref={inputRef}
               />
-              
               <div>
                 <button onClick={handleAddAction}>שלח</button>
                 <button onClick={() => setSelectedPatient(null)}>ביטול</button>

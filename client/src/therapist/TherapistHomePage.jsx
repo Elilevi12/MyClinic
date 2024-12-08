@@ -1,32 +1,28 @@
-import { useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
-import "./css/therapistHomePage.css";
+import styles from "./css/therapistHomePage.module.css";
 
 function TherapistHomePage() {
   return (
-    <div className="therapist-home-container">
+    <div className={styles.therapistHomeContainer}>
       <h1>Therapist Home Page</h1>
       <nav>
         <Link to="calendar">
-          <button className="nav-button">לוח שנה</button>
+          <button className={styles.navButton}>לוח שנה</button>
         </Link>
         <Link to="personal-file-patient">
-          <button className="nav-button">תיקי רפואי</button>
+          <button className={styles.navButton}>תיקי רפואי</button>
         </Link>
-
         <Link to="money-management">
-          <button className="nav-button">ניהול כספים</button>
+          <button className={styles.navButton}>ניהול כספים</button>
         </Link>
-
         <Link to={"waiting-list"}>
-          <button>רשימת המתנה</button>
+          <button className={styles.navButton}>רשימת המתנה</button>
         </Link>
-
         <Link to={"add-patient"}>
-          <button>הוספת לקוח</button>
+          <button className={styles.navButton}>הוספת לקוח</button>
         </Link>
       </nav>
-      <div className="outlet-container">
+      <div className={styles.outletContainer}>
         <Outlet />
       </div>
     </div>

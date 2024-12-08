@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AddTherapist from './AddTherapist';
-import './css/listOfTherapists.css'; 
+import styles from './css/listOfTherapists.module.css';
 
 function ListOfTherapists() {
     const [therapists, setTherapists] = useState([]);
@@ -53,29 +53,29 @@ function ListOfTherapists() {
     }, [nameSearchTerm, specialtySearchTerm]);
 
     return (
-        <div className="therapists-container">
+        <div className={styles["therapists-container"]}>
             <h2>רשימת מטפלים</h2>
             {error && <p>{error}</p>}
 
-            <div className="search-boxes">
+            <div className={styles["search-boxes"]}>
                 <input
                     type="text"
                     placeholder="חפש מטפל לפי שם פרטי או משפחה"
                     value={nameSearchTerm}
                     onChange={handleNameSearch}
-                    className="search-input"
+                    className={styles["search-input"]}
                 />
                 <input
                     type="text"
                     placeholder="חפש מטפל לפי תחום טיפול"
                     value={specialtySearchTerm}
                     onChange={handleSpecialtySearch}
-                    className="search-input"
+                    className={styles["search-input"]}
                 />
             </div>
 
             {filteredTherapists.length > 0 ? (
-                <table className="therapists-table">
+                <table className={styles["therapists-table"]}>
                     <thead>
                         <tr>
                             <th>#</th>
@@ -105,7 +105,7 @@ function ListOfTherapists() {
                 <p>לא נמצאו מטפלים</p>
             )}
 
-            <div className="add-therapist-container">
+            <div className={styles["add-therapist-container"]}>
                 <AddTherapist />
             </div>
         </div>
