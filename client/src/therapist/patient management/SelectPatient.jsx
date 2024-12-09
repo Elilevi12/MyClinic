@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { json, Link, useNavigate } from "react-router-dom";
-// import "../css/personalFilePatient.css";
+import { useNavigate } from "react-router-dom";
+import styles from "../css/selectPatient.module.css"; // ייבוא קובץ ה-CSS המודול
 
-function PersonalFilePatient() {
+function SelectPatient() {
   const navigate = useNavigate();
-const therapist = JSON.parse(localStorage.getItem("currentUser"));
+  const therapist = JSON.parse(localStorage.getItem("currentUser"));
 
   const [patients, setPatients] = useState([]);
 
@@ -32,17 +32,16 @@ const therapist = JSON.parse(localStorage.getItem("currentUser"));
       patientId: patient.user_id,
     };
 
-
     localStorage.setItem("selectedPatient", JSON.stringify(selectedPatient));
-    navigate("/therapist/personal-file",{ state: { patient:patient}});
+    navigate("/therapist/personal-file", { state: { patient: patient } });
   };
 
   return (
-    <div className="personal-file-container">
+    <div className={styles.personalFileContainer}>
       {patients.length === 0 ? (
-        <p className="no-patients-message">אין מטופלים</p>
+        <p className={styles.noPatientsMessage}>אין מטופלים</p>
       ) : (
-        <table className="table">
+        <table className={styles.table}>
           <thead>
             <tr>
               <th>#</th>
@@ -71,4 +70,5 @@ const therapist = JSON.parse(localStorage.getItem("currentUser"));
     </div>
   );
 }
-export default PersonalFilePatient;
+
+export default SelectPatient;

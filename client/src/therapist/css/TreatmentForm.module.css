@@ -1,0 +1,76 @@
+/* TreatmentForm.module.css */
+
+.container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    height: 50px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .formGroup {
+    margin-bottom: 10px;
+  }
+  
+  .inputField, .textareaField {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+  }
+  
+  .textareaField {
+    height: 200px;
+  }
+  
+  .buttonContainer {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .buttonPrimary {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .buttonSecondary {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .formLabel {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .textareaContainer {
+    margin-bottom: 10px;
+  }
+  
+  .goalItem {
+    margin-bottom: 10px;
+  }
+  
+  .goalTextArea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+  }
+  

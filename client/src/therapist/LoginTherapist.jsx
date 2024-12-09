@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/loginTherapist.css";
+import styles from "./css/loginTherapist.module.css";
 
 function LoginTherapist() {
   const [username, setUsername] = useState("");
@@ -24,7 +24,7 @@ function LoginTherapist() {
 
       const data = await response.json();
 
-      if (data && data.id && data.type==="therapist") {
+      if (data && data.id && data.type === "therapist") {
         // שמירת הנתונים ב-localStorage
         localStorage.setItem("currentUser", JSON.stringify(data));
         // ניווט לעמוד המטפל
@@ -38,9 +38,9 @@ function LoginTherapist() {
   };
 
   return (
-    <div className="login-therapist-container">
+    <div className={styles.loginTherapistContainer}>
       <h2>התחברות מטפל</h2>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
       <input
         type="text"
         placeholder="שם משתמש"

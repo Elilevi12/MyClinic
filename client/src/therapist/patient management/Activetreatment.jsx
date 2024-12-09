@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import "../css/activeSeries.css";
+import React, { useEffect, useState } from "react";
+import styles from "../css/activetreatment.module.css";
 import ActiveSeries from "./ActivSeries";
 
-function ActiveSeriesOfTreatments() {
+function Activetreatment() {
   const [treatmentSeries, setTreatmentSeries] = useState([]);
   const [treatments, setTreatments] = useState([]);
   const [changeTreatmentDate, setChangeTreatmentDate] = useState(false);
@@ -44,7 +44,6 @@ function ActiveSeriesOfTreatments() {
   const handleModalChange = (field, value) => {
     setModalData((prev) => ({ ...prev, [field]: value }));
   };
-
   function handleSubmitChangeDate() {
     fetch(
       "http://localhost:3300/therapist/treatmentDiary/changeTreatmentDate",
@@ -141,19 +140,20 @@ function ActiveSeriesOfTreatments() {
     setChangeTreatmentDate(true);
   };
 
+
   return (
-    <div className="treatments-container">
-      <div className="ActiveSeries-box">
+    <div className={styles.treatmentsContainer}>
+      <div className={styles.activeSeriesBox}>
         <ActiveSeries serialID={serialID} />
       </div>
       {treatmentSeries.length > 0 && (
-        <div className="treatments-goals-box">
-          <h2 className="treatments-goals-title">מטרות</h2>
+        <div className={styles.treatmentsGoalsBox}>
+          <h2 className={styles.treatmentsGoalsTitle}>מטרות</h2>
           <p>{treatmentSeries[0].goals}</p>
         </div>
       )}
       {treatments.length > 0 ? (
-        <div className="treatments-table-container">
+        <div className={styles.treatmentsTableContainer}>
           <table>
             <thead>
               <tr>
@@ -198,11 +198,11 @@ function ActiveSeriesOfTreatments() {
           </table>
         </div>
       ) : (
-        <p className="treatments-no-treatments">לא נמצאו טיפולים פעילים.</p>
+        <p className={styles.treatmentsNoTreatments}>לא נמצאו טיפולים פעילים.</p>
       )}{" "}
       {changeTreatmentDate && (
-        <div className="modal-backdrop">
-          <div className="modal">
+       <div className={styles.modalBackdrop}>
+          <div className={styles.modal}>
             <h2>תאריך טיפול חדש</h2>
             <label>
               תאריך:
@@ -283,4 +283,4 @@ function ActiveSeriesOfTreatments() {
   );
 }
 
-export default ActiveSeriesOfTreatments;
+export default Activetreatment;

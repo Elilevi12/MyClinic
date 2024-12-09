@@ -1,0 +1,71 @@
+/* personalFile.module.css */
+
+/* Container for the personal file */
+.personalFileActions {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f4f7f6;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Patient details header */
+.patientDetails {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #34495e;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Container for the buttons */
+.personalFileContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* Button styling */
+button {
+  background-color: #3498db;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Ensure buttons take up full width */
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive design for buttons to align them horizontally */
+.personalFileContainer button {
+  flex: 1;
+}
+
+/* Specific styles for the history button */
+button:first-of-type {
+  background-color: #2ecc71;
+}
+
+button:first-of-type:hover {
+  background-color: #27ae60;
+}
+
+/* Styling for active treatment section */
+.activeTreatmentSection {
+  margin-top: 30px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+

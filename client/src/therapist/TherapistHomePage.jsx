@@ -9,8 +9,8 @@ function TherapistHomePage() {
         <Link to="calendar">
           <button className={styles.navButton}>לוח שנה</button>
         </Link>
-        <Link to="personal-file-patient">
-          <button className={styles.navButton}>תיקי רפואי</button>
+        <Link to="select-patient">
+          <button className={styles.navButton}>תיק רפואי</button>
         </Link>
         <Link to="money-management">
           <button className={styles.navButton}>ניהול כספים</button>

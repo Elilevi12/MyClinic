@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../css/treatmentSeriesInitiator.css";
+import styles from "../css/treatmentSeriesInitiator.module.css";
 
 function TreatmentSeriesInitiator() {
   const therapist = JSON.parse(localStorage.getItem("currentUser"));
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
- 
+
   const [treatmentSeries, setTreatmentSeries] = useState({
     patientId: patient.patientId,
     therapistId: therapist.id,
-    total_treatments : 0,
+    total_treatments: 0,
     comments: "",
   });
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,9 +21,8 @@ function TreatmentSeriesInitiator() {
     }));
   };
 
-
   const handleSubmit = async () => {
- try {
+    try {
       const response = await fetch(
         "http://localhost:3300/therapist/activSeries/addTreatmentSession",
         {
@@ -45,14 +43,9 @@ function TreatmentSeriesInitiator() {
     }
   };
 
-
-
- 
-
-
   return (
-    <div className="treatment-series-container">
-      <div className="form-group">
+    <div className={styles.treatmentSeriesContainera}>
+      <div className={styles.formGroupa}>
         <label htmlFor="number-of-treatments">מספר טיפולים</label>
         <input
           type="number"
@@ -60,17 +53,17 @@ function TreatmentSeriesInitiator() {
           value={treatmentSeries.total_treatments}
           onChange={handleChange}
           id="treatment-number"
-          className="input-field"
+          className={styles.inputField}
         />
       </div>
 
-      <div className="form-group">
+      <div className={styles.formGroupa}>
         <label htmlFor="treatment-comments">הערות</label>
         <textarea
           id="treatment-comments"
-          className="textarea-field"
+          className={styles.textareaFielda}
           name="comments"
-          value={treatmentSeries.comments}
+          value={treatmentSeries.commentsa}
           onChange={handleChange}
           placeholder="הכנס הערות"
           rows="3"

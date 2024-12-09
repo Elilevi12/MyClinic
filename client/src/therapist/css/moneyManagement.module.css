@@ -1,47 +1,154 @@
+/* Container for the main component */
+.container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  direction: rtl; /* יישור לימין */
+  text-align: center;
+}
+
+/* Header styling */
+.container h1 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: bold;
+  background-color: #ecf0f1; /* רקע עדין לכותרת */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading message */
+.container p {
+  color: #777;
+  font-size: 1.2rem;
+}
+
+/* Table styling */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+}
+
+.payment-table th,
+.payment-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.payment-table th {
+  background-color: #dff9fb; /* רקע עדין לשורת הכותרת */
+  color: #34495e;
+  font-weight: bold;
+}
+
+.payment-table tbody tr {
+  background-color: #f8f9fa; /* רקע עדין לשורות */
+  transition: background-color 0.3s ease; /* אפקט מעבר עדין */
+}
+
 .payment-table tbody tr:hover {
-    background-color: #c9d6c9; /* צבע אפור בהיר */
-    cursor: pointer; /* להפוך את הסמן ליד */
+  background-color: #e0e0e0; /* צבע אפור בהיר בעת ריחוף */
+  cursor: pointer;
+}
+
+.payment-table .debt-positive {
+  color: red;
+  font-weight: bold;
+}
+
+.payment-table .debt-negative {
+  color: green;
+  font-weight: bold;
+}
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background-color:#bdb5b5;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.modal h2,
+.modal h3 {
+  margin: 10px 0;
+  color: #2c3e50;
+}
+
+.modal input {
+  width: 90%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Buttons inside modal */
+.modal button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:first-child {
+  background-color: #4caf50; /* Green button */
+  color: white;
+}
+
+.modal button:first-child:hover {
+  background-color: #45a049;
+}
+
+.modal button:last-child {
+  background-color: #f44336; /* Red button */
+  color: white;
+}
+
+.modal button:last-child:hover {
+  background-color: #e53935;
+}
+
+/* Modal buttons container */
+.modal div {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .payment-table th,
+  .payment-table td {
+    font-size: 0.9rem;
+    padding: 8px;
   }
+
   .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    height: 300px;
-    transform: translate(-50%, -50%);
-    background: rgba(104, 97, 97, 0.836);
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    z-index: 1000;
+    width: 95%;
   }
-  
-  .modal h2 {
-    margin-bottom: 10px;
-  }
-  
+
   .modal input {
-    margin: 10px 0;
-    
-  }
-  
-  .modal button {
-    margin: 5px;
-  }
-  
-  .modal ~ .backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
   }
-  .debt-positive {
-   background-color: rgb(240, 102, 102);
-  }
-  
-  .debt-negative {
-    background-color: rgb(131, 241, 131);
-  }
-  
+}

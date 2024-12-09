@@ -120,14 +120,14 @@ function MoneyManagement() {
               <td>{patient.first_name}</td>
               <td>{patient.last_name}</td>
               <td
-                className={
-                  patient.remaining_debt > 0
-                    ? styles["debt-positive"]
-                    : styles["debt-negative"]
-                }
-              >
-                {patient.remaining_debt}
-              </td>
+  className={
+    patient.remaining_debt > 0
+      ? styles["debt-positive"]
+      : styles["debt-negative"]
+  }
+>
+  {patient.remaining_debt > 0 ? `${patient.remaining_debt}-` : patient.remaining_debt*-1}
+</td>
             </tr>
           ))}
         </tbody>
@@ -138,7 +138,7 @@ function MoneyManagement() {
           <h2>
             {selectedPatient.first_name} {selectedPatient.last_name}
           </h2>
-          <h3>יתרת חוב: {selectedPatient.remaining_debt}</h3>
+          <h3>{selectedPatient.remaining_debt> 0 ? `יתרת חוב: ${selectedPatient.remaining_debt}` :`זכות:   ${ selectedPatient.remaining_debt*-1}`}</h3>
           {!actionType && (
             <div>
               <button onClick={() => setActionType("payment")}>

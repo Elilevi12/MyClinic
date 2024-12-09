@@ -1,43 +1,47 @@
 import React, { useState, useEffect } from "react";
-import ActiveSeriesOfTreatments from "./ActiveSeriesOfTreatments";
-import { Link, useLocation } from "react-router-dom";
-import "../css/personalFilePatient.css";
+import ActiveSeriesOfTreatments from "./Activetreatment";
+import { Link } from "react-router-dom";
+
+import styles from "../css/personalFile.module.css";
 
 function PersonalFile() {
   const [selectedPatient, setSelectedPatient] = useState(null);
-const [treatmentSeries, setTreatmentSeries] = useState([])
-// const location = useLocation();
-// const { patient } = location.state || {};
-
-
+  const [treatmentSeries, setTreatmentSeries] = useState([]);
 
   useEffect(() => {
     const patient = JSON.parse(localStorage.getItem("selectedPatient"));
     setSelectedPatient(patient);
-  const therapist= JSON.parse(localStorage.getItem("selectedTherapist"))
-
-}, []);
-
+    const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
+  }, []);
 
   if (!selectedPatient) {
     return <p>אנא בחר מטופל</p>;
   }
 
   return (
-    <div className="personal-file-actions">
-      <h1 className="patient-details">{selectedPatient.name}</h1>
-      <h2 className="patient-details">{selectedPatient.id}</h2>
-
-      <button>היסטוריה</button>
-      <Link to="update-patient">
-        <button>עדכון פרטים אישיים</button>
-      </Link>
-      <Link to="treatment-series">
-        <button> סדרת טיפולים נוספת</button>
-      </Link>
-   
-
-<ActiveSeriesOfTreatments/>
+    <div className={styles.personalFileActions}>
+      <h2>תיק אישי</h2>
+      <h1 className={styles.patientDetails}>{selectedPatient.name}</h1>
+      
+      <div className={styles.personalFileContainer}>
+        
+        <Link to="update-patient">
+          <button>עדכון פרטים אישיים</button>
+        </Link>
+        <Link to="treatment-series">
+          <button>סדרת טיפולים נוספת</button>
+        </Link>
+        <Link to="history">
+         <button>היסטוריה</button>
+        
+        </Link>
+       
+ 
+      </div>
+      
+      <div className={styles.activeTreatmentSection}>
+        <ActiveSeriesOfTreatments />
+      </div>
     </div>
   );
 }

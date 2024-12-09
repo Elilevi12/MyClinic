@@ -1,19 +1,15 @@
 import { useState } from "react";
-import "../css/activeSeries.css";
-import "../css/myActiveSeries.css";
-import SummaryReportForm from "./SummaryReportForm";
 import { useNavigate } from "react-router-dom";
 
+import styles from "../css/activeSeries.module.css";
+import SummaryReportForm from "./SummaryReportForm";
+
 function ActiveSeries({ serialID }) {
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
-  const [showSummaryReport, setShowSummaryReport] = useState(false); 
+  const [showSummaryReport, setShowSummaryReport] = useState(false);
 
-  const patient = JSON.parse(localStorage.getItem("selectedPatient"));
-  const patientID = patient.patientId;
-
-const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const handleButtonGoals = () => {
     fetch(
@@ -22,11 +18,10 @@ const navigate=useNavigate()
       .then((res) => res.json())
       .then((data) => {
         const formattedGoals = data
-        .map((item, index) => `${index + 1}. ${item.goal}`)
-        .join("\n"); 
+          .map((item, index) => `${index + 1}. ${item.goal}`)
+          .join("\n");
         setModalContent(formattedGoals);
-        setIsModalOpen(true); // פתיחת ה-modal
-        console.log(data);
+        setIsModalOpen(true);
       })
       .catch((error) => {
         console.error("Error fetching goals:", error);
@@ -41,12 +36,11 @@ const navigate=useNavigate()
     )
       .then((res) => res.json())
       .then((data) => {
-        // הצגת הרשימה עם מספור
         const formattedDocumentation = data
           .map((item, index) => `${index + 1}. ${item.documentation}`)
           .join("\n");
         setModalContent(formattedDocumentation);
-        setIsModalOpen(true); // פתיחת ה-modal
+        setIsModalOpen(true);
       })
       .catch((error) => {
         console.error("Error fetching documentation:", error);
@@ -57,14 +51,11 @@ const navigate=useNavigate()
 
   const handleButtonSummaryReport = () => {
     navigate("/therapist/money-management/summary-report", { state: { serialID } });
-   
-   
-    // setShowSummaryReport(true); // הצגת הקומפוננטה SummaryReportForm
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); 
-    setModalContent(""); 
+    setIsModalOpen(false);
+    setModalContent("");
     setShowSummaryReport(false);
   };
 
@@ -74,12 +65,9 @@ const navigate=useNavigate()
       <button onClick={handleButtonDocumentation}>תיעודי טיפול</button>
       <button onClick={handleButtonSummaryReport}>דוח סיכום</button>
 
-   
-      {/* {showSummaryReport && <SummaryReportForm />} */}
-
       {isModalOpen && !showSummaryReport && (
-        <div className="modal-backdrop">
-          <div className="modal">
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modal}>
             <pre>{modalContent}</pre>
             <button onClick={closeModal}>סגור</button>
           </div>

@@ -1,0 +1,169 @@
+/* activetreatment.module.css */
+
+/* כללי */
+.treatmentsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* קופסת הסדרה הפעילה */
+  .activeSeriesBox {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* מטרות טיפול */
+  .treatmentsGoalsBox {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .treatmentsGoalsTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* טבלה של הטיפולים */
+  .treatmentsTableContainer {
+    width: 100%;
+    max-width: 800px;
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+  
+  /* כפתורים */
+  button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .treatments-button-doc {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .treatments-button-cancel {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .treatments-button-change {
+    background-color: #ffc107;
+    color: black;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
+  /* מודאלים */
+  .modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  .modal h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .modal label {
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  
+  .modal input, .modal textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .modal textarea {
+    height: 100px;
+    resize: none;
+  }
+  
+  .modal button {
+    width: 48%;
+    margin: 1%;
+  }
+  
+  .modal button:first-child {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .modal button:last-child {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  /* הודעה כשאין טיפולים פעילים */
+  .treatmentsNoTreatments {
+    font-size: 16px;
+    color: #555;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

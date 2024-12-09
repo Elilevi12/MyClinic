@@ -1,22 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './landingPage.css';
+import styles from './landingPage.module.css';
+
 function LandingPage() {
   return (
-    <div className="landing-container">
-      <h1>ברוכים הבאים</h1>
+    <div className={styles.landingContainer}>
+      <h2>ברוכים הבאים</h2>
+      <h1>MY CLINIC</h1>
       <Link to="/login-client">
-        <button className="landing-button">כניסת לקוחות</button>
+        <button className={styles.landingButton}>כניסת לקוחות</button>
       </Link>
       <Link to="/login-admin">
-        <button className="landing-button">כניסת מנהל</button>
+        <button className={styles.landingButton}>כניסת מנהל</button>
       </Link>
       <Link to="/login-therapist">
-        <button className="landing-button">כניסת מטפל</button>
+        <button className={styles.landingButton}>כניסת מטפל</button>
       </Link>
     </div>
   );
 }
 
 export default LandingPage;
-

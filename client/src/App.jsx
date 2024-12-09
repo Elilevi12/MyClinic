@@ -1,4 +1,4 @@
-import './app.css'
+// import './app.css'
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from './UserContext';
@@ -20,7 +20,7 @@ import WaitingList from "./therapist/patient management/WaitingList";
 import TreatmentSeriesInitiator from "./therapist/patient management/TreatmentSeriesInitiator";
 import MoneyManagement from "./therapist/Money Management/MoneyManagement";
 import ListOfDuties from "./therapist/Money Management/ListOfDuties";
-import PersonalFilePatient from './therapist/patient management/PersonalFilePatient';
+import SelectPatient from './therapist/patient management/SelectPatient';
 import PatientHomePage from "./patient/PatientHomePage";
 
 import SummaryReportForm from "./therapist/patient management/SummaryReportForm";
@@ -39,7 +39,8 @@ function App() {
           <Route path="/therapist" element={<TherapistHomePage />} />
           
            <Route path="/therapist/add-patient"element={<AddingPatient/>}/>
-           <Route path="/therapist/personal-file-patient"element={<PersonalFilePatient/>}/>
+           <Route path="/therapist/select-patient"element={<SelectPatient/>}/>
+           {/* <Route path="/therapist/select-patient"element={<selectPatient/>}/> */}
            <Route path="/therapist/personal-file/update-patient"element={<UpdatingPatient/>}/>
            <Route path="/therapist/personal-file/treatment-series"element={<TreatmentSeriesInitiator/>}/>
             <Route path="/therapist/calendar" element={<Calendar/>}/>

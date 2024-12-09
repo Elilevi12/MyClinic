@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../css/waitingList.css";
+import  styles from "../css/waitingList.module.css";
 
 function WaitingList() {
   const [patients, setPatients] = useState([]);
@@ -132,52 +132,53 @@ console.log("therapist",therapist);
       )}
 
       {isModalOpen && (
-        <div className="modal-backdrop">
-          <div className="modal">
-            <h2>פרטי סדרת טיפולים</h2>
-            <label>
-              תאריך:
+      <div className={styles.modalBackdrop}>
+      <div className={styles.modal}>
+        <h2>פרטי סדרת טיפולים</h2>
+        <label>
+          תאריך:
+          <input
+            type="date"
+            value={modalData.date}
+            onChange={(e) => handleModalChange("date", e.target.value)}
+          />
+        </label>
+        <label>
+          שעה:
+          <input
+            type="time"
+            value={modalData.time}
+            onChange={(e) => handleModalChange("time", e.target.value)}
+          />
+        </label>
+        <label>
+          מחיר:
+          <input
+            type="number"
+            value={modalData.price}
+            onChange={(e) => handleModalChange("price", e.target.value)}
+          />
+        </label>
+        <label>
+          מטרות הסדרה:
+          {modalData.goals.map((goal, index) => (
+            <div key={index}>
               <input
-                type="date"
-                value={modalData.date}
-                onChange={(e) => handleModalChange("date", e.target.value)}
+                type="text"
+                value={goal}
+                onChange={(e) => handleModalChange("goals", e.target.value, index)}
               />
-            </label>
-            <label>
-              שעה:
-              <input
-                type="time"
-                value={modalData.time}
-                onChange={(e) => handleModalChange("time", e.target.value)}
-              />
-            </label>
-            <label>
-              מחיר:
-              <input
-                type="number"
-                value={modalData.price}
-                onChange={(e) => handleModalChange("price", e.target.value)}
-              />
-            </label>
-            <label>
-              מטרות הסדרה:
-              {modalData.goals.map((goal, index) => (
-                <div key={index}>
-                  <input
-                    type="text"
-                    value={goal}
-                    onChange={(e) => handleModalChange("goals", e.target.value, index)}
-                  />
-                </div>
-              ))}
-              <button onClick={() => handleModalChange("goals")}>הוסף מטרה</button>
-            </label>
-            <div>
-              <button onClick={handleSubmit}>שלח</button>
-              <button onClick={() => setIsModalOpen(false)}>ביטול</button>
             </div>
-          </div>
+          ))}
+          <button onClick={() => handleModalChange("goals")}>הוסף מטרה</button>
+        </label>
+        <div>
+          <button onClick={handleSubmit}>שלח</button>
+          <button onClick={() => setIsModalOpen(false)}>ביטול</button>
         </div>
+      </div>
+    </div>
+    
       )}
     </div>
   );

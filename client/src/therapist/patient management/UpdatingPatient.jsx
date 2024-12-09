@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "../css/updatingPatient.css";
+import styles from "../css/updatingPatient.module.css";
 
 function UpdatingPatient() {
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
@@ -72,26 +72,28 @@ function UpdatingPatient() {
   };
 
   return (
-    <div className="updating-patient-container">
+    <div className={styles.updatingPatientContainer}>
       <h1>עדכון פרטי מטופל</h1>
-      <div className="fields-container">
+      <div className={styles.fieldsContainer}>
         {Object.keys(fields).map((field) => (
-          <div key={field} className="field-row">
-            <label className="field-label">{fieldLabels[field]}:</label>
+          <div key={field} className={styles.fieldRow}>
+            <label className={styles.fieldLabel}>{fieldLabels[field]}:</label>
             {editField === field ? (
               <input
-                ref={inputRef} // הגדרת רפרנס לתיבת הקלט
-                className="field-input"
+                ref={inputRef}
+                className={styles.fieldInput}
                 type={field === "approvedTreatments" ? "number" : "text"}
                 value={fields[field]}
                 onChange={(e) => handleFieldChange(field, e.target.value)}
                 placeholder={`עדכן ${fieldLabels[field]}`}
               />
             ) : (
-              <span className="field-value">{fields[field] || "לא הוזן"}</span>
+              <span className={styles.fieldValue}>
+                {fields[field] || "לא הוזן"}
+              </span>
             )}
             <button
-              className="edit-button"
+              className={styles.editButton}
               onClick={() => handleEditClick(field)}
             >
               ערוך
@@ -99,7 +101,7 @@ function UpdatingPatient() {
           </div>
         ))}
       </div>
-      <button className="submit-button" onClick={handleSubmit}>
+      <button className={styles.submitButton} onClick={handleSubmit}>
         שלח
       </button>
     </div>
