@@ -4,8 +4,8 @@ import styles from "./css/therapistHomePage.module.css";
 function TherapistHomePage() {
   return (
     <div className={styles.therapistHomeContainer}>
-      <h1>Therapist Home Page</h1>
-      <nav>
+      <h1 className={styles.heading}>דף הבית</h1>
+      <nav className={styles.nav}>
         <Link to="calendar">
           <button className={styles.navButton}>לוח שנה</button>
         </Link>
@@ -27,6 +27,6 @@ function TherapistHomePage() {
       </div>
     </div>
   );
-}
+};
 
 export default TherapistHomePage;

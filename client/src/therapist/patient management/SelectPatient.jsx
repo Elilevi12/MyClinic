@@ -44,11 +44,11 @@ function SelectPatient() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>#</th>
-              <th>שם פרטי</th>
-              <th>שם משפחה</th>
-              <th>תעודת זהות</th>
-              <th>קופת חולים</th>
+              <th className={styles.tableHeader}>#</th>
+              <th className={styles.tableHeader}>שם פרטי</th>
+              <th className={styles.tableHeader}>שם משפחה</th>
+              <th className={styles.tableHeader}>תעודת זהות</th>
+              <th className={styles.tableHeader}>קופת חולים</th>
             </tr>
           </thead>
           <tbody>
@@ -56,6 +56,7 @@ function SelectPatient() {
               <tr
                 key={patient.user_id}
                 onClick={() => handlePatientSelect(patient)}
+                className={styles.tableRow}
               >
                 <td>{index + 1}</td>
                 <td>{patient.first_name}</td>
@@ -69,6 +70,6 @@ function SelectPatient() {
       )}
     </div>
   );
-}
+};
 
 export default SelectPatient;

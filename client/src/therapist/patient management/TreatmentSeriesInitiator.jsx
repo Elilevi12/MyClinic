@@ -44,9 +44,11 @@ function TreatmentSeriesInitiator() {
   };
 
   return (
-    <div className={styles.treatmentSeriesContainera}>
-      <div className={styles.formGroupa}>
-        <label htmlFor="number-of-treatments">מספר טיפולים</label>
+    <div className={styles.treatmentSeriesContainer}>
+      <div className={styles.formGroup}>
+        <label htmlFor="number-of-treatments" className={styles.label}>
+          מספר טיפולים
+        </label>
         <input
           type="number"
           name="total_treatments"
@@ -57,22 +59,26 @@ function TreatmentSeriesInitiator() {
         />
       </div>
 
-      <div className={styles.formGroupa}>
-        <label htmlFor="treatment-comments">הערות</label>
+      <div className={styles.formGroup}>
+        <label htmlFor="treatment-comments" className={styles.label}>
+          הערות
+        </label>
         <textarea
           id="treatment-comments"
-          className={styles.textareaFielda}
+          className={styles.textareaField}
           name="comments"
-          value={treatmentSeries.commentsa}
+          value={treatmentSeries.comments}
           onChange={handleChange}
           placeholder="הכנס הערות"
           rows="3"
         />
       </div>
 
-      <button onClick={handleSubmit}>שלח</button>
+      <button onClick={handleSubmit} className={styles.submitButton}>
+        שלח
+      </button>
       <Link to="/therapist/personal-file">
-        <button>ביטול</button>
+        <button className={styles.cancelButton}>ביטול</button>
       </Link>
     </div>
   );

@@ -15,28 +15,24 @@ function PersonalFile() {
   }, []);
 
   if (!selectedPatient) {
-    return <p>אנא בחר מטופל</p>;
+    return <p className={styles.noPatient}>אנא בחר מטופל</p>;
   }
 
   return (
     <div className={styles.personalFileActions}>
-      <h2>תיק אישי</h2>
+      <h2 className={styles.title}>תיק אישי</h2>
       <h1 className={styles.patientDetails}>{selectedPatient.name}</h1>
       
       <div className={styles.personalFileContainer}>
-        
-        <Link to="update-patient">
-          <button>עדכון פרטים אישיים</button>
+        <Link to="update-patient" className={styles.link}>
+          <button className={styles.button}>עדכון פרטים אישיים</button>
         </Link>
-        <Link to="treatment-series">
-          <button>סדרת טיפולים נוספת</button>
+        <Link to="treatment-series" className={styles.link}>
+          <button className={styles.button}>סדרת טיפולים נוספת</button>
         </Link>
-        <Link to="history">
-         <button>היסטוריה</button>
-        
+        <Link to="history" className={styles.link}>
+          <button className={styles.button}>היסטוריה</button>
         </Link>
-       
- 
       </div>
       
       <div className={styles.activeTreatmentSection}>
@@ -44,6 +40,6 @@ function PersonalFile() {
       </div>
     </div>
   );
-}
+};
 
 export default PersonalFile;

@@ -48,7 +48,8 @@ function AddingPatient() {
 
   return (
     <div className={styles.container}>
-      <h2>הוסף מטופל חדש</h2>
+      <h2 className={styles.header}>הוסף מטופל חדש</h2>
+      
       <label className={styles.label}>שם פרטי</label>
       <input
         type="text"
@@ -117,6 +118,7 @@ function AddingPatient() {
         className={styles.input}
         placeholder="הכנס קופת חולים"
       />
+
       <label className={styles.label}>מספר טיפולים מאושר</label>
       <input
         type="number"
@@ -126,6 +128,7 @@ function AddingPatient() {
         className={styles.input}
         placeholder="הכנס מספר טיפולים מאושר"
       />
+
       <label className={styles.label}>הערות</label>
       <textarea
         id="treatment-goals"
@@ -142,6 +145,6 @@ function AddingPatient() {
       </button>
     </div>
   );
-}
+};
 
 export default AddingPatient;

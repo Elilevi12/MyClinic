@@ -17,6 +17,18 @@ function Activetreatment() {
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
   const therapist = JSON.parse(localStorage.getItem("currentUser"));
 
+  const translateStatus = (status) => {
+    switch (status) {
+      case "on hold":
+        return "בהמתנה";
+      case "cancellation":
+        return "בוטל";
+      case "done":
+        return "בוצע";
+      default:
+        return "לא ידוע"; // במקרה של ערך שלא זוהה
+    }
+  };
   useEffect(() => {
     fetch(
       "http://localhost:3300/therapist/personalFilePatient/ActiveSeriesOfTreatments",
@@ -132,6 +144,8 @@ function Activetreatment() {
 
   const openCancelModal = (treatmentId) => {
     setTreatmentId(treatmentId);
+    console.log("123454321");
+    
     setCancelTreatment(true);
   };
 
@@ -170,38 +184,39 @@ function Activetreatment() {
                   <td>
                     {new Date(treatment.treatment_date).toLocaleDateString()}
                   </td>
-
                   <td>
                     <button
-                      className="treatments-button-doc"
+                      className={styles.treatmentsButtonDoc}
                       onClick={() => openDocumentationModal(treatment.id)}
                     >
                       תיעוד טיפול
                     </button>
                     <button
-                      className="treatments-button-cancel"
+                      className={styles.treatmentsButtonCancel}
                       onClick={() => openCancelModal(treatment.id)}
                     >
                       ביטול
                     </button>
                     <button
-                      className="treatments-button-change"
+                      className={styles.treatmentsButtonChange}
                       onClick={() => openDateChangeModal(treatment.id)}
                     >
                       שינוי תאריך
                     </button>
                   </td>
-                  <td>{treatment.status}</td>
+                  <td>{translateStatus(treatment.status)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       ) : (
-        <p className={styles.treatmentsNoTreatments}>לא נמצאו טיפולים פעילים.</p>
-      )}{" "}
+        <p className={styles.treatmentsNoTreatments}>
+          לא נמצאו טיפולים פעילים.
+        </p>
+      )}
       {changeTreatmentDate && (
-       <div className={styles.modalBackdrop}>
+        <div className={styles.modalBackdrop}>
           <div className={styles.modal}>
             <h2>תאריך טיפול חדש</h2>
             <label>
@@ -234,8 +249,8 @@ function Activetreatment() {
         </div>
       )}
       {cancelTreatment && (
-        <div className="modal-backdrop">
-          <div className="modal">
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modal}>
             <h2>ביטול טיפול</h2>
             <textarea
               value={cancelnText}
@@ -257,8 +272,8 @@ function Activetreatment() {
         </div>
       )}
       {treatmentDocumentation && (
-        <div className="modal-backdrop">
-          <div className="modal">
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modal}>
             <h2>תיעוד טיפול</h2>
             <textarea
               value={documentationText}
@@ -281,6 +296,6 @@ function Activetreatment() {
       )}
     </div>
   );
-}
+};
 
 export default Activetreatment;

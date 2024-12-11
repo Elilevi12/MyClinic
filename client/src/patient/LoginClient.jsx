@@ -1,8 +1,8 @@
-import React, {useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styles from "./loginclient.module.css";
 
-
-function LoginAdmin() {
+function Loginclient() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,7 +24,7 @@ function LoginAdmin() {
 
       const data = await response.json();
 
-      if (data && data.id && data.type==="patient") {
+      if (data && data.id && data.type === "patient") {
         // שמירת הנתונים ב-localStorage
         localStorage.setItem("currentUser", JSON.stringify(data));
         // ניווט לעמוד המטפל
@@ -38,25 +38,38 @@ function LoginAdmin() {
   };
 
   return (
-    <div className="login-admin-container">
-      <h2>כניסת מנהל</h2>
-   
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <input
-        type="text"
-        placeholder="שם משתמש"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="סיסמה"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleSubmit}>שלח</button>
+    <div className={styles.container}>
+      <div className={styles.loginBox}>
+        <h2 className={styles.title}>כניסת לקוח</h2>
+
+        {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+
+        <input
+          type="text"
+          placeholder="שם משתמש"
+          className={styles.inputField}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="סיסמה"
+          className={styles.inputField}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button className={styles.button} onClick={handleSubmit}>
+          שלח
+        </button>
+
+        <Link to="/" className={styles.link}>
+          חזרה לדף הבית
+        </Link>
+      </div>
     </div>
   );
 }
 
-export default LoginAdmin;
+export default Loginclient;

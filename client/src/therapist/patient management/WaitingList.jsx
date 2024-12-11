@@ -79,19 +79,12 @@ console.log("therapist",therapist);
   };
 
   return (
-    <div>
-      <h1>Waiting List</h1>
+    <div className={styles.container}>
+      <h1 className={styles.header}>רשימת המתנה</h1>
       {loading ? (
-        <p>Loading...</p>
+        <p className={styles.loading}>Loading...</p>
       ) : (
-        <table
-          border="1"
-          style={{
-            borderCollapse: "collapse",
-            width: "50%",
-            textAlign: "center",
-          }}
-        >
+        <table className={styles.table}>
           <thead>
             <tr>
               <th>#</th>
@@ -117,6 +110,7 @@ console.log("therapist",therapist);
                 <td>{patient.comments}</td>
                 <td>
                   <button
+                    className={styles.startButton}
                     onClick={() => {
                       setSelectedPatientId(patient.id);
                       setIsModalOpen(true);
@@ -132,53 +126,68 @@ console.log("therapist",therapist);
       )}
 
       {isModalOpen && (
-      <div className={styles.modalBackdrop}>
-      <div className={styles.modal}>
-        <h2>פרטי סדרת טיפולים</h2>
-        <label>
-          תאריך:
-          <input
-            type="date"
-            value={modalData.date}
-            onChange={(e) => handleModalChange("date", e.target.value)}
-          />
-        </label>
-        <label>
-          שעה:
-          <input
-            type="time"
-            value={modalData.time}
-            onChange={(e) => handleModalChange("time", e.target.value)}
-          />
-        </label>
-        <label>
-          מחיר:
-          <input
-            type="number"
-            value={modalData.price}
-            onChange={(e) => handleModalChange("price", e.target.value)}
-          />
-        </label>
-        <label>
-          מטרות הסדרה:
-          {modalData.goals.map((goal, index) => (
-            <div key={index}>
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modal}>
+            <h2 className={styles.modalHeader}>פרטי סדרת טיפולים</h2>
+            <label className={styles.modalLabel}>
+              תאריך:
               <input
-                type="text"
-                value={goal}
-                onChange={(e) => handleModalChange("goals", e.target.value, index)}
+                className={styles.modalInput}
+                type="date"
+                value={modalData.date}
+                onChange={(e) => handleModalChange("date", e.target.value)}
               />
+            </label>
+            <label className={styles.modalLabel}>
+              שעה:
+              <input
+                className={styles.modalInput}
+                type="time"
+                value={modalData.time}
+                onChange={(e) => handleModalChange("time", e.target.value)}
+              />
+            </label>
+            <label className={styles.modalLabel}>
+              מחיר:
+              <input
+                className={styles.modalInput}
+                type="number"
+                value={modalData.price}
+                onChange={(e) => handleModalChange("price", e.target.value)}
+              />
+            </label>
+            <label className={styles.modalLabel}>
+              מטרות הסדרה:
+              {modalData.goals.map((goal, index) => (
+                <div key={index}>
+                  <input
+                    className={styles.modalInput}
+                    type="text"
+                    value={goal}
+                    onChange={(e) => handleModalChange("goals", e.target.value, index)}
+                  />
+                </div>
+              ))}
+              <button
+                className={styles.addGoalButton}
+                onClick={() => handleModalChange("goals", "")}
+              >
+                הוסף מטרה
+              </button>
+            </label>
+            <div className={styles.modalActions}>
+              <button className={styles.submitButton} onClick={handleSubmit}>
+                שלח
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => setIsModalOpen(false)}
+              >
+                ביטול
+              </button>
             </div>
-          ))}
-          <button onClick={() => handleModalChange("goals")}>הוסף מטרה</button>
-        </label>
-        <div>
-          <button onClick={handleSubmit}>שלח</button>
-          <button onClick={() => setIsModalOpen(false)}>ביטול</button>
+          </div>
         </div>
-      </div>
-    </div>
-    
       )}
     </div>
   );

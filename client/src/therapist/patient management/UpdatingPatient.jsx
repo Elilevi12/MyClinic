@@ -70,10 +70,9 @@ function UpdatingPatient() {
       alert("שגיאה בשליחת הנתונים");
     }
   };
-
   return (
     <div className={styles.updatingPatientContainer}>
-      <h1>עדכון פרטי מטופל</h1>
+      <h1 className={styles.title}>עדכון פרטי מטופל</h1>
       <div className={styles.fieldsContainer}>
         {Object.keys(fields).map((field) => (
           <div key={field} className={styles.fieldRow}>

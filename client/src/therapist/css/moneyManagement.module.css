@@ -12,7 +12,7 @@
 }
 
 /* Header styling */
-.container h1 {
+.header {
   margin-bottom: 20px;
   color: #2c3e50;
   font-size: 2rem;
@@ -24,48 +24,47 @@
 }
 
 /* Loading message */
-.container p {
+.loadingText {
   color: #777;
   font-size: 1.2rem;
 }
 
 /* Table styling */
-.payment-table {
+.paymentTable {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 1rem;
 }
 
-.payment-table th,
-.payment-table td {
-  border: 1px solid #ddd;
+.tableHeader {
+  background-color: #dff9fb; /* רקע עדין לשורת הכותרת */
+  color: #34495e;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tableCell {
   padding: 10px;
   text-align: center;
 }
 
-.payment-table th {
-  background-color: #dff9fb; /* רקע עדין לשורת הכותרת */
-  color: #34495e;
-  font-weight: bold;
-}
-
-.payment-table tbody tr {
+.row {
   background-color: #f8f9fa; /* רקע עדין לשורות */
   transition: background-color 0.3s ease; /* אפקט מעבר עדין */
 }
 
-.payment-table tbody tr:hover {
+.row:hover {
   background-color: #e0e0e0; /* צבע אפור בהיר בעת ריחוף */
   cursor: pointer;
 }
 
-.payment-table .debt-positive {
+.debtPositive {
   color: red;
   font-weight: bold;
 }
 
-.payment-table .debt-negative {
+.debtNegative {
   color: green;
   font-weight: bold;
 }
@@ -75,24 +74,64 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  height: 200px;
+  height: 300px;
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 400px;
-  background-color:#bdb5b5;
+  background-color: #bdb5b5;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
-.modal h2,
-.modal h3 {
+.modalHeader,
+.modalSubHeader {
   margin: 10px 0;
   color: #2c3e50;
 }
 
-.modal input {
+.actionButtons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.actionButton {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actionButton:first-child {
+  background-color: #4caf50; /* Green button */
+  color: white;
+}
+
+.actionButton:first-child:hover {
+  background-color: #45a049;
+}
+
+.actionButton:last-child {
+  background-color: #f44336; /* Red button */
+  color: white;
+}
+
+.actionButton:last-child:hover {
+  background-color: #e53935;
+}
+
+.actionForm {
+  text-align: center;
+}
+
+.actionFormHeader {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.input {
   width: 90%;
   padding: 10px;
   margin: 15px 0;
@@ -101,45 +140,39 @@
   font-size: 1rem;
 }
 
-/* Buttons inside modal */
-.modal button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.modal button:first-child {
-  background-color: #4caf50; /* Green button */
-  color: white;
-}
-
-.modal button:first-child:hover {
-  background-color: #45a049;
-}
-
-.modal button:last-child {
-  background-color: #f44336; /* Red button */
-  color: white;
-}
-
-.modal button:last-child:hover {
-  background-color: #e53935;
-}
-
-/* Modal buttons container */
-.modal div {
+.modalButtons {
   display: flex;
   justify-content: space-around;
 }
 
+.submitButton {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: #45a049;
+}
+
+.cancelButton {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background-color: #e53935;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .payment-table th,
-  .payment-table td {
+  .paymentTable th,
+  .paymentTable td {
     font-size: 0.9rem;
     padding: 8px;
   }

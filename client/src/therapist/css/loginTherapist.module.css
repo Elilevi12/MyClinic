@@ -1,4 +1,6 @@
 /* LoginTherapist.module.css */
+
+/* General container */
 .loginTherapistContainer {
   max-width: 400px;
   margin: auto;
@@ -10,19 +12,22 @@
   text-align: center;
 }
 
-h2 {
+/* Heading */
+.heading {
   margin-bottom: 20px;
   font-size: 24px;
   color: #333;
 }
 
+/* Error message */
 .errorMessage {
   color: red;
   font-size: 14px;
   margin-bottom: 15px;
 }
 
-input {
+/* Input fields */
+.input {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -31,12 +36,13 @@ input {
   font-size: 14px;
 }
 
-input:focus {
+.input:focus {
   border-color: #4caf50;
   outline: none;
 }
 
-button {
+/* Button */
+.button {
   width: 100%;
   padding: 10px;
   background-color: #4caf50;
@@ -47,6 +53,6 @@ button {
   font-size: 16px;
 }
 
-button:hover {
+.button:hover {
   background-color: #45a049;
 }

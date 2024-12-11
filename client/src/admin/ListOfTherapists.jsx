@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import AddTherapist from './AddTherapist';
 import styles from './css/listOfTherapists.module.css';
 
 function ListOfTherapists() {
@@ -105,9 +104,7 @@ function ListOfTherapists() {
                 <p>לא נמצאו מטפלים</p>
             )}
 
-            <div className={styles["add-therapist-container"]}>
-                <AddTherapist />
-            </div>
+          
         </div>
     );
 }

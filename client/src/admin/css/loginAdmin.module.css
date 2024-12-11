@@ -1,4 +1,5 @@
-.login-admin-container {
+/* מיכל הכניסה למנהל */
+.loginAdminContainer {
   max-width: 400px;
   margin: 50px auto;
   padding: 20px;
@@ -9,21 +10,33 @@
   text-align: center;
 }
 
-h2 {
+/* כותרת */
+.header {
   margin-bottom: 20px;
   color: #333;
+  font-size: 24px;
+  font-weight: bold;
 }
 
-.input-field {
+/* שדה קלט */
+.inputField {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-.submit-button {
+.inputField:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* כפתור שליחה */
+.submitButton {
   width: 100%;
   padding: 10px;
   border: none;
@@ -31,15 +44,25 @@ h2 {
   background-color: #007bff;
   color: white;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.submit-button:hover {
+.submitButton:hover {
   background-color: #0056b3;
+  transform: scale(1.02);
 }
 
-.error-message {
+.submitButton:active {
+  background-color: #003f8c;
+  transform: scale(0.98);
+}
+
+/* הודעת שגיאה */
+.errorMessage {
   color: red;
   font-size: 14px;
   margin-bottom: 10px;
+  font-weight: bold;
 }

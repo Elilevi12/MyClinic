@@ -1,0 +1,78 @@
+.container {
+    font-family: "Assistant", sans-serif;
+    padding: 20px;
+    background-color: #f0f4f8;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    text-align: center;
+    background-color: #005b96;
+    color: white;
+    padding: 15px 0;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .section {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #005b96;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .treatmentCard {
+    background-color: #f7f9fc;
+    padding: 15px;
+    border: 1px solid #d9e2ec;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .treatmentCard h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .debt {
+    color: #d9534f;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .credit {
+    color: #5cb85c;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  

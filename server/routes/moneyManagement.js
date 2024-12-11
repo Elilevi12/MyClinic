@@ -3,23 +3,26 @@ const router = express.Router();
 const db = require('../db/connection');
 
 router.put('/addPayments', (req, res) => {
-    const { user_id, payment } = req.body;
+    
+    const { user_id,  amount } = req.body;
     const sql ="UPDATE patients SET payments = payments + ? WHERE user_id = ?";
-    db.query(sql, [payment, user_id], (err, result) => {
+    db.query(sql, [amount, user_id], (err, result) => {
         if (err) {
             console.error("שגיאה בהוספת תשלום:", err);
             return res.status(500).json({ message: "שגיאה בהוספת תשלום" });
         }
+        console.log("התשלום נוסף בהצלחה");
+        
         res.status(200).json({ message: "התשלום נוסף בהצלחה" });
     });
 });
 
 router.put("/addDebts", (req, res) => {
-    const { user_id, debt } = req.body;
-    console.log(user_id, debt);
+    const { user_id,  amount } = req.body;
+    
     
     const sql = "UPDATE patients SET debts = debts + ? WHERE user_id = ?";
-    db.query(sql, [debt, user_id], (err, result) => {
+    db.query(sql, [ amount, user_id], (err, result) => {
         if (err) {
             console.error("שגיאה בהוספת חוב:", err);
             return res.status(500).json({ message: "שגיאה בהוספת חוב" });

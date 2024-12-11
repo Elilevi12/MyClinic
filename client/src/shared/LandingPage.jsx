@@ -5,8 +5,8 @@ import styles from './landingPage.module.css';
 function LandingPage() {
   return (
     <div className={styles.landingContainer}>
-      <h2>ברוכים הבאים</h2>
-      <h1>MY CLINIC</h1>
+      <h2 className={styles.headerSecondary}>ברוכים הבאים</h2>
+      <h1 className={styles.headerPrimary}>MY CLINIC</h1>
       <Link to="/login-client">
         <button className={styles.landingButton}>כניסת לקוחות</button>
       </Link>

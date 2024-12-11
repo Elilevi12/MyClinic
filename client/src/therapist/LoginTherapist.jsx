@@ -36,26 +36,27 @@ function LoginTherapist() {
       setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
     }
   };
-
   return (
     <div className={styles.loginTherapistContainer}>
-      <h2>התחברות מטפל</h2>
+      <h2 className={styles.heading}>התחברות מטפל</h2>
       {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
       <input
+        className={styles.input}
         type="text"
         placeholder="שם משתמש"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
       <input
+        className={styles.input}
         type="password"
         placeholder="סיסמה"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleSubmit}>שלח</button>
+      <button className={styles.button} onClick={handleSubmit}>שלח</button>
     </div>
   );
-}
+};
 
 export default LoginTherapist;

@@ -36,25 +36,25 @@ function LoginAdmin() {
   };
 
   return (
-    <div className={styles["login-admin-container"]}>
-      <h2>כניסת מנהל</h2>
+    <div className={styles.loginAdminContainer}>
+      <h2 className={styles.header}>כניסת מנהל</h2>
 
-      {errorMessage && <p className={styles["error-message"]}>{errorMessage}</p>}
+      {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
       <input
         type="text"
         placeholder="שם משתמש"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        className={styles["input-field"]}
+        className={styles.inputField}
       />
       <input
         type="password"
         placeholder="סיסמה"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className={styles["input-field"]}
+        className={styles.inputField}
       />
-      <button onClick={handleSubmit} className={styles["submit-button"]}>
+      <button onClick={handleSubmit} className={styles.submitButton}>
         שלח
       </button>
     </div>

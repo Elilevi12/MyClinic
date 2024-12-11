@@ -1,5 +1,5 @@
 /* General container */
-div {
+.container {
   font-family: Arial, sans-serif;
   direction: rtl; /* יישור לימין */
   text-align: center;
@@ -7,7 +7,7 @@ div {
 }
 
 /* Page header */
-h1 {
+.header {
   color: #2c3e50;
   font-size: 2rem;
   font-weight: bold;
@@ -18,13 +18,13 @@ h1 {
 }
 
 /* Loading message */
-p {
+.loading {
   color: #777;
   font-size: 1.2rem;
 }
 
 /* Table styling */
-table {
+.table {
   width: 90%;
   margin: 20px auto;
   border-collapse: collapse;
@@ -56,7 +56,7 @@ tbody tr:hover {
   transition: background-color 0.3s ease;
 }
 
-button {
+.startButton {
   padding: 10px 20px;
   background-color: #2ecc71;
   color: white;
@@ -67,7 +67,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+.startButton:hover {
   background-color: #27ae60;
 }
 
@@ -96,22 +96,19 @@ button:hover {
   text-align: right;
 }
 
-.modal h2 {
+.modalHeader {
   margin-top: 0;
   color: #34495e;
   text-align: center;
 }
 
-.modal label {
+.modalLabel {
   display: block;
   margin-bottom: 15px;
   color: #555;
 }
 
-.modal input[type="date"],
-.modal input[type="time"],
-.modal input[type="number"],
-.modal input[type="text"] {
+.modalInput {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -121,20 +118,38 @@ button:hover {
   box-sizing: border-box;
 }
 
-.modal div {
+.modalActions {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.modal button {
+.submitButton {
   width: 48%;
 }
 
-.modal button:last-child {
+.cancelButton {
+  width: 48%;
   background-color: #e74c3c;
 }
 
-.modal button:last-child:hover {
+.submitButton:hover {
+  background-color: #27ae60;
+}
+
+.cancelButton:hover {
   background-color: #c0392b;
+}
+
+.addGoalButton {
+  margin-top: 10px;
+  background-color: #3498db;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.addGoalButton:hover {
+  background-color: #2980b9;
 }

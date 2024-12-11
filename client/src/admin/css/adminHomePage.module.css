@@ -1,17 +1,41 @@
-.admin-home-container {
+/* מיכל הדף הראשי */
+.adminHomeContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.admin-home-nav {
+/* כותרת הדף */
+.pageTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* תת כותרת */
+.pageSubtitle {
+  font-size: 18px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* תפריט ניווט */
+.adminHomeNav {
   display: flex;
   gap: 15px;
   margin-top: 20px;
 }
 
-.nav-button {
+/* כפתורי הניווט */
+.navButton {
   background-color: #007bff;
   color: white;
   border: none;
@@ -19,8 +43,23 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-.nav-button:hover {
+.navButton:hover {
   background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* התאמה למכשירים ניידים */
+@media (max-width: 600px) {
+  .adminHomeNav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navButton {
+    width: 100%;
+    text-align: center;
+  }
 }

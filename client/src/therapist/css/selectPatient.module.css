@@ -2,61 +2,62 @@
 
 /* General container for the page */
 .personalFileContainer {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    text-align: center;
-  }
-  
-  /* Message for no patients */
-  .noPatientsMessage {
-    font-size: 1.2rem;
-    color: #b0bec5;
-    margin-top: 20px;
-  }
-  
-  /* Table styling */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 1rem;
-    text-align: center;
-  }
-  
-  .table th,
-  .table td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-  }
-  
-  .table th {
-    background-color: #34495e;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  .table tbody tr {
-    background-color: #ffffff;
-    transition: background-color 0.3s ease;
-  }
-  
-  .table tbody tr:hover {
-    background-color: #f2f2f2; /* אפור בהיר בעת מעבר */
-    cursor: pointer;
-  }
-  
-  /* Table row styling */
-  .table tbody tr:nth-child(even) {
-    background-color: #f7f7f7;
-  }
-  
-  .table tbody tr:nth-child(odd) {
-    background-color: #ffffff;
-  }
-  
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  text-align: center;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Message for no patients */
+.noPatientsMessage {
+  font-size: 1.2rem;
+  color: #b0bec5;
+  margin-top: 20px;
+}
+
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #34495e;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.table tbody tr {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f2f2f2; /* אפור בהיר בעת מעבר */
+  cursor: pointer;
+}
+
+/* Table row styling */
+.table tbody tr:nth-child(even) {
+  background-color: #f7f7f7;
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}

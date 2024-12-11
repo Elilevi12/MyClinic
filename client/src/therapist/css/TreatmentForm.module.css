@@ -5,6 +5,8 @@
     font-family: Arial, sans-serif;
     max-width: 600px;
     margin: auto;
+    direction: rtl;
+    text-align: right;
   }
   
   .header {

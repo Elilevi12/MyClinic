@@ -61,20 +61,22 @@ function ActiveSeries({ serialID }) {
 
   return (
     <div>
-      <button onClick={handleButtonGoals}>מטרות</button>
-      <button onClick={handleButtonDocumentation}>תיעודי טיפול</button>
-      <button onClick={handleButtonSummaryReport}>דוח סיכום</button>
+      <div className={styles.buttonsContainer}>
+        <button className={styles.button} onClick={handleButtonGoals}>מטרות</button>
+        <button className={styles.button} onClick={handleButtonDocumentation}>תיעוד טיפול</button>
+        <button className={styles.button} onClick={handleButtonSummaryReport}>דוח סיכום</button>
+      </div>
 
       {isModalOpen && !showSummaryReport && (
         <div className={styles.modalBackdrop}>
           <div className={styles.modal}>
             <pre>{modalContent}</pre>
-            <button onClick={closeModal}>סגור</button>
+            <button className={styles.button} onClick={closeModal}>סגור</button>
           </div>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default ActiveSeries;

@@ -204,85 +204,62 @@ router.put("/changeTreatmentDate", async (req, res) => {
   }
 });
 
-router.post("/cancelTreatment", (req, res) => {
- 
+router.post("/cancelTreatment", async (req, res) => {
   const { treatmentId, serialID, cancelnText, therapistId } = req.body;
-  
 
-  db.beginTransaction((err) => {
-    if (err) {
-      console.error("שגיאה בהתחלת טרנזקציה:", err);
-      return res.status(500).json({ message: "שגיאה בהתחלת טרנזקציה" });
-    }
+  try {
+    // התחלת טרנזקציה
+    await db.promise().beginTransaction();
 
+    // שלב 1: עדכון הסטטוס והסיבה לביטול הטיפול
     const sql1 =
       "UPDATE treatment_sessions SET status='cancellation', reason_for_cancellation=? WHERE id=?";
-    db.query(sql1, [cancelnText, treatmentId], (err, result) => {
-      if (err) {
-        console.error("שגיאה בביטול טיפול:", err);
-        return db.rollback(() => {
-          res.status(500).json({ message: "שגיאה בביטול טיפול" });
-        });
-      }
+    await db.promise().query(sql1, [cancelnText, treatmentId]);
 
-      const sql2 =
-        "SELECT start_date, end_date FROM vacation_days WHERE therapist_id = ?";
-      db.query(sql2, [therapistId], (err, vacationDatesResult) => {
-        if (err) {
-          console.error("שגיאה בשליפת תאריכי חופשה:", err);
-          return db.rollback(() => {
-            res.status(500).json({ message: "שגיאה בשליפת תאריכי חופשה" });
-          });
-        }
+    // שלב 2: שליפת תאריכי חופשה
+    const sql2 =
+      "SELECT start_date, end_date FROM vacation_days WHERE therapist_id = ?";
+    const [vacationDatesResult] = await db.promise().query(sql2, [therapistId]);
 
-        const sql3 =
-          "SELECT MAX(CONCAT(treatment_date, ' ', treatment_time)) AS last_treatment_date FROM treatment_sessions WHERE treatment_series_id=?";
-        db.query(sql3, [serialID], (err, result) => {
-          if (err) {
-            console.error("שגיאה בשליפת תאריך ושעת הטיפול:", err);
-            return db.rollback(() => {
-              res
-                .status(500)
-                .json({ message: "שגיאה בשליפת תאריך ושעת הטיפול" });
-            });
-          }
+    // שלב 3: שליפת תאריך ושעת הטיפול האחרון
+    const sql3 =
+      "SELECT MAX(CONCAT(treatment_date, ' ', treatment_time)) AS last_treatment_date FROM treatment_sessions WHERE treatment_series_id=?";
+    const [result] = await db.promise().query(sql3, [serialID]);
 
-          let treatments = result[0].last_treatment_date.split(" ");
-          const lastTreatment = new Date(treatments[0]);
-          lastTreatment.setDate(lastTreatment.getDate() + 7);
+    if (!result[0].last_treatment_date) {
+      throw new Error("לא נמצא טיפול אחרון בסדרה");
+    }
 
-          const newTreatmentDate = generateTreatmentDates(
-            lastTreatment,
-            1,
-            vacationDatesResult
-          );
+    let treatments = result[0].last_treatment_date.split(" ");
+    const lastTreatment = new Date(treatments[0]);
+    lastTreatment.setDate(lastTreatment.getDate() + 7);
 
-          const sql4 =
-            "INSERT INTO treatment_sessions (treatment_series_id, treatment_date, treatment_time) VALUES (?, ?, ?)";
-          db.query(sql4, [serialID, newTreatmentDate, treatments[1]], (err) => {
-            if (err) {
-              console.error("שגיאה בהוספת טיפול חדש:", err);
-              return db.rollback(() => {
-                res.status(500).json({ message: "שגיאה בהוספת טיפול חדש" });
-              });
-            }
+    // יצירת תאריך הטיפול החדש
+    const newTreatmentDate = await generateTreatmentDates(
+      lastTreatment,
+      1,
+      vacationDatesResult
+    );
 
-            db.commit((err) => {
-              if (err) {
-                console.error("שגיאה בביצוע commit:", err);
-                return db.rollback(() => {
-                  res.status(500).json({ message: "שגיאה בביצוע טרנזקציה" });
-                });
-              }
+    if (!newTreatmentDate) {
+      throw new Error("תאריך טיפול חדש לא נוצר כראוי");
+    }
 
-              res.status(200).json({ message: "הטיפול בוטל בהצלחה" });
-            });
-          });
-        });
-      });
-    });
-  });
+    // שלב 4: הוספת טיפול חדש
+    const sql4 =
+      "INSERT INTO treatment_sessions (treatment_series_id, treatment_date, treatment_time) VALUES (?, ?, ?)";
+    await db.promise().query(sql4, [serialID, newTreatmentDate, treatments[1]]);
+
+    // סיום טרנזקציה
+    await db.promise().commit();
+    res.status(200).json({ message: "הטיפול בוטל בהצלחה" });
+  } catch (err) {
+    console.error("שגיאה במהלך ביטול טיפול:", err);
+    await db.promise().rollback();
+    res.status(500).json({ message: "שגיאה במהלך ביטול טיפול" });
+  }
 });
+
 
 
 router.put("/documentation", async (req, res) => {
