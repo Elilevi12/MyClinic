@@ -1,5 +1,6 @@
 const express = require("express");
-
+const jwt = require("jsonwebtoken");
+const authenticateToken = require("./tokenTherapist");
 const router = express.Router();
 const db = require("../db/connection");
 
@@ -19,13 +20,12 @@ router.use("/personalFilePatient", appPersonalFilePatient);
 const appMoneyManagement = require("./moneyManagement");
 router.use("/moneyManagement", appMoneyManagement);
 
-const appReports = require("./reports");
-router.use("/reports", appReports);
 
-router.post("/ListOfPatients", (req, res) => {
+
+router.post("/ListOfPatients",authenticateToken, (req, res) => {
   //רשימת מטופלים
 
-  const { therapist_id } = req.body;
+  const  therapist_id  = req.user.id;
 
   const sql = `SELECT *  FROM patients WHERE therapist_id = ?`;
   db.query(sql, [therapist_id], (err, result) => {
@@ -41,10 +41,9 @@ router.post("/ListOfPatients", (req, res) => {
   });
 });
 
-router.post("/addPatient", (req, res) => {
+router.post("/addPatient",authenticateToken ,(req, res) => {
   //הוספת מטופל
   const {
-    therapist_id,
     first_name,
     last_name,
     id_number,
@@ -55,9 +54,8 @@ router.post("/addPatient", (req, res) => {
     total_treatments,
     comments,
   } = req.body;
-
+const therapist_id = req.user.id;
   const randomNumber = Math.floor(Math.random() * 1000000);
-
   db.beginTransaction((err) => {
     if (err) {
       console.error("שגיאה בתחילת טרנזקציה:", err);
@@ -132,8 +130,11 @@ router.post("/addPatient", (req, res) => {
   });
 });
 
-router.post("/waitingList", (req, res) => {
-  const { therapist_id } = req.body;
+router.post("/waitingList",authenticateToken, (req, res) => {
+
+  const  therapist_id  = req.user.id;
+  console.log(therapist_id);
+  
   const sql = ` SELECT 
       ts.*, 
       p.* 
@@ -157,7 +158,7 @@ router.post("/waitingList", (req, res) => {
   });
 });
 
-router.get("/receivingTreatmentDates/:therapistId", (req, res) => {
+router.get("/receivingTreatmentDates",authenticateToken, (req, res) => {
 
 
   const sql = `
@@ -172,9 +173,10 @@ JOIN patients p ON tser.patients_id = p.user_id
 WHERE tser.therapist_id = ?
 ORDER BY ts.treatment_date, ts.treatment_time;
 `;
+console.log(req.user);
 
 
-  const query = db.query(sql, [req.params.therapistId], (err, result) => {
+  const query = db.query(sql, [req.user.id], (err, result) => {
     if (err) {
       console.error("שגיאה בקבלת תאריכי טיפול:", err);
       return res.status(500).json({ message: "שגיאה בקבלת תאריכי טיפול" });
@@ -190,9 +192,9 @@ ORDER BY ts.treatment_date, ts.treatment_time;
   //קבלת תארכי טיפול להצגת יומן טיפולים
 });
 
-router.get("/getTherapist/:therapistId", (req, res) => {
+router.get("/getTherapist/",authenticateToken, (req, res) => {
   const sql = "SELECT * FROM therapists where user_id = ?";
-  db.query(sql, [req.params.therapistId],
+  db.query(sql, [req.user.id], 
     (err, results) => {
       if (err) {
         console.error("שגיאה בקבלת פרטי המטפלים:", err);
@@ -207,7 +209,7 @@ router.get("/getTherapist/:therapistId", (req, res) => {
     });
 });
 
-router.get("/getPatient/:id", (req, res) => {
+router.get("/getPatient/:id",authenticateToken, (req, res) => {
   const sql = "SELECT * FROM patients WHERE user_id = ?";
 
   db.query(sql, [req.params.id], (err, results) => {

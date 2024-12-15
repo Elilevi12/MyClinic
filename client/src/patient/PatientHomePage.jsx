@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import styles from "./patientHomePage.module.css"; // ייבוא קובץ ה-CSS מודול
 
 function PatientHomePage() {
-  const patient = JSON.parse(localStorage.getItem("currentUser"));
-  console.log("patient", patient);
 
   const [treatments, setTreatments] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
@@ -12,30 +10,40 @@ function PatientHomePage() {
   const fetchTreatments = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3300/patients/getPatientTreatments/${patient.id}`
+        `http://localhost:3300/patients/getPatientTreatments`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        },
       );
       if (!response.ok) {
         throw new Error("\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05E7\u05D1\u05DC\u05EA \u05E4\u05E8\u05D8\u05D9 \u05D4\u05D8\u05D9\u05E4\u05D5\u05DC\u05D9\u05DD");
       }
       const data = await response.json();
       setTreatments(data);
-      console.log(data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchCurrentUser = async () => {
+  const fetchCurrentUser = async () => { 
     try {
       const response = await fetch(
-        `http://localhost:3300/patients/getPatient/${patient.id}`
+        `http://localhost:3300/patients/getPatient`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem("token"), 
+          }
+        },
       );
       if (!response.ok) {
         throw new Error("\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05E7\u05D1\u05DC\u05EA \u05E4\u05E8\u05D8\u05D9 \u05D4\u05D7\u05D5\u05D1\u05D5\u05EA");
       }
       const data = await response.json();
       setCurrentUser(data);
-      console.log(data);
     } catch (error) {
       console.error(error);
     }

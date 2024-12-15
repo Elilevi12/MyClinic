@@ -9,6 +9,8 @@ function Loginclient() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
+    console.log("1111");
+    
     try {
       const response = await fetch("http://localhost:3300/shared/login", {
         method: "POST",
@@ -17,21 +19,17 @@ function Loginclient() {
         },
         body: JSON.stringify({ username, password }),
       });
+console.log(2222);
 
       if (!response.ok) {
         throw new Error("Login failed");
       }
 
-      const data = await response.json();
 
-      if (data && data.id && data.type === "patient") {
-        // שמירת הנתונים ב-localStorage
-        localStorage.setItem("currentUser", JSON.stringify(data));
-        // ניווט לעמוד המטפל
-        navigate("/client");
-      } else {
-        setErrorMessage("שם המשתמש או הסיסמה שגויים");
-      }
+      const { token } = await response.json();
+      localStorage.setItem("token", token); // שמירת האסימון
+    navigate("/client");
+    
     } catch (error) {
       setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
     }

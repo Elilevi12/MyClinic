@@ -1,13 +1,40 @@
 const express = require("express");
 const mysql = require("mysql2");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
+const db = require("../db/connection");
+const SECRET_KEY = "your_secret_key_here";
+const authenticateToken = (req, res, next) => {
+  const token = req.headers["authorization"];
+  
+  if (!token) {
+      return res.status(401).json({ message: "אסימון חסר" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+      if (err) {
+          return res.status(403).json({ message: "אסימון לא חוקי" });
+      }
+      req.user = user; // המשתמש שאומת
+ if(req.user.type !== "patient"){
+  return res.status(403).json({ message: "גישה אסורה" });
+}
+ 
+      next();
+  });
+};
+
+
+
 router.get("/", (req, res) => {
   res.send("I patient");
 });
-const db = require("../db/connection");
 
-router.get("/getPatient/:id_number", (req, res) => {
-  const idNumber = req.params.id_number;
+
+router.get("/getPatient",authenticateToken, (req, res) => {
+  const idNumber = req.user.id;
+  
+  
   const sql = `
     SELECT  * FROM patients WHERE user_id = ?`;
 
@@ -27,8 +54,8 @@ router.get("/getPatient/:id_number", (req, res) => {
   });
 });
 
-router.get("/getPatientTreatments/:id_number", (req, res) => {
-  const idNumber = req.params.id_number;
+router.get("/getPatientTreatments",authenticateToken, (req, res) => {
+  const idNumber = req.user.id;
   const sql = `SELECT id FROM myclinic.treatment_series where patients_id=? and status='active';`;
   db.query(sql, [idNumber], (err, results) => {
     if (err) {
@@ -54,8 +81,6 @@ router.get("/getPatientTreatments/:id_number", (req, res) => {
       );
     }
   });
-
-
 });
 
 

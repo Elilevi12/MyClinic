@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
+const authenticateToken = require("./tokenTherapist");
 
-router.put('/addPayments', (req, res) => {
+router.put('/addPayments',authenticateToken, (req, res) => {
     
     const { user_id,  amount } = req.body;
     const sql ="UPDATE patients SET payments = payments + ? WHERE user_id = ?";
@@ -17,7 +18,7 @@ router.put('/addPayments', (req, res) => {
     });
 });
 
-router.put("/addDebts", (req, res) => {
+router.put("/addDebts",authenticateToken, (req, res) => {
     const { user_id,  amount } = req.body;
     
     
@@ -32,8 +33,8 @@ router.put("/addDebts", (req, res) => {
 });
 
 
-router.get("/paymentStatus/:therapistId", (req, res) => {
-  const { therapistId } = req.params;
+router.get("/paymentStatus",authenticateToken, (req, res) => {
+  const  therapistId  = req.user.id;
   const sql=  "SELECT user_id,first_name,last_name,id_number,(debts - payments) AS remaining_debt FROM patients WHERE therapist_id = ?";
     db.query(sql, [therapistId], (err, result) => {
         if (err) {

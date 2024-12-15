@@ -23,12 +23,23 @@ function MoneyManagement() {
 
   const getPaymentStatus = async () => {
     setLoading(true);
+  
     try {
+      console.log("Fetching payment status...");
+      
       const response = await fetch(
-        `http://localhost:3300/therapist/moneyManagement/paymentStatus/${therapistId.id}`
+        `http://localhost:3300/therapist/moneyManagement/paymentStatus`,
+        {
+          headers: {
+             Authorization: localStorage.getItem("token"),
+
+          },
+        }
       );
       const data = await response.json();
       setPaymentStatus(data);
+      console.log(data);
+      
     } catch (error) {
       console.error("Error fetching payment status:", error);
     } finally {
@@ -75,7 +86,9 @@ function MoneyManagement() {
       `http://localhost:3300/therapist/moneyManagement/${endpoint}`,
       {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token")
+         },
         body: JSON.stringify({ user_id, amount }),
       }
     );

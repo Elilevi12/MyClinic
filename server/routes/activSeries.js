@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
+const authenticateToken = require("./tokenTherapist");
 
 
 
-// router.post('/addTreatmentSession', (req, res) => {
-// });
 
-router.get("/getDocumentationActiveSession/:serialID", (req, res) => {
+router.get("/getDocumentationActiveSession/:serialID",authenticateToken, (req, res) => {
   const { serialID } = req.params;
   console.log(serialID);
 
@@ -26,7 +25,7 @@ router.get("/getDocumentationActiveSession/:serialID", (req, res) => {
   });
 });
 
-router.get("/getGoalsActiveSession/:serialId", (req, res) => {
+router.get("/getGoalsActiveSession/:serialId",authenticateToken, (req, res) => {
   const { serialId } = req.params;
   const sql = `SELECT * FROM  goals where serial_id=? `;
   db.query(sql, [serialId], (err, result) => {
@@ -43,8 +42,9 @@ router.get("/getGoalsActiveSession/:serialId", (req, res) => {
   });
 });
 
-router.post("/addTreatmentSession", (req, res) => {
-  const { therapistId,patientId,comments,total_treatments } = req.body;
+router.post("/addTreatmentSession",authenticateToken, (req, res) => {
+  const { patientId,comments,total_treatments } = req.body;
+  const therapistId = req.user.id;
   console.log(req.body);
   
 const sql = `INSERT INTO treatment_series (patients_id, therapist_id, total_treatments, comments) VALUES (?, ?, ?, ?)`;

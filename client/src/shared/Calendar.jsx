@@ -14,9 +14,13 @@ function Calendar() {
   const [vacationStart, setVacationStart] = useState("");
   const [vacationEnd, setVacationEnd] = useState("");
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
+
+    if(!localStorage.getItem("currentUser")){
+      localStorage.setItem("currentUser", JSON.stringify({id: 38, type: "therapist"}));
+    } 
     // משיכת חגים עבריים
     fetch("http://localhost:3300/shared/hebrewHolidays/getHolidays")
       .then((response) => response.json())
@@ -37,17 +41,30 @@ function Calendar() {
       
       })
       .catch((error) => console.error("Error fetching holidays:", error));
-console.log("1111");
+
   
-    if (currentUser.type === "therapist") {
-    console.log("2222");
+    if (2===2) {
     
       Promise.all([
         fetch(
-          `http://localhost:3300/therapist/treatmentDiary/vacationays/${currentUser.id}`
+          `http://localhost:3300/therapist/treatmentDiary/vacationays/`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: localStorage.getItem("token"),
+              "Content-Type": "application/json",
+            },
+
+          }
         ).then((response) => response.json()),
         fetch(
-          `http://localhost:3300/therapist/receivingTreatmentDates/${currentUser.id}`
+          `http://localhost:3300/therapist/receivingTreatmentDates`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: localStorage.getItem("token"),
+              "Content-Type": "application/json",
+            }}
         ).then((response) => response.json()),
       ])
         .then(([vacations, treatments]) => {
@@ -124,9 +141,11 @@ console.log("1111");
         "http://localhost:3300/therapist/treatmentDiary/addingVacationays",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+             "Content-Type": "application/json" ,
+             Authorization: localStorage.getItem("token")
+          },
           body: JSON.stringify({
-            therapist_id: currentUser.id,
             start_date: vacationStart,
             end_date: vacationEnd,
           }),
@@ -147,6 +166,11 @@ console.log("1111");
 
   return (
     <div>
+      <div className={styles.vacationButtonContainer}>
+   <button className={styles.vacationButton} onClick={handleOpenModal}>
+            הוסף חופשה
+          </button>
+          </div>
       <div className={styles.calendarContainer}>
         <FullCalendar
           direction="rtl"
@@ -176,11 +200,7 @@ console.log("1111");
           className={isModalOpen ? styles.dimmed : ""}
         />
 
-        {currentUser.type === "therapist" && (
-          <button className={styles.vacationButton} onClick={handleOpenModal}>
-            הוסף חופשה
-          </button>
-        )}
+      
       </div>
 
       {isModalOpen && (

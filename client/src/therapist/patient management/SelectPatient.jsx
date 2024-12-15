@@ -14,8 +14,10 @@ function SelectPatient() {
         "http://localhost:3300/therapist/ListOfPatients",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ therapist_id: therapist.id }),
+          headers: { "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token")
+           },
+          // body: JSON.stringify({ therapist_id: therapist.id }),
         }
       );
       const data = await response.json();

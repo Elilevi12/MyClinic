@@ -1,116 +1,114 @@
-/* עיצוב כללי */
-*{box-sizing: border-box;}
-
-.calendar-container {
-  max-width: 900px;
- height: auto;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  position: relative; /* להוסיף כדי לאפשר שכבות */
-}
-
-.calendar-container button {
-  padding: 10px 15px;
-  margin: 5px;
-  font-size: 1rem;
-  color: white;
-  background-color: #4CAF50;
+/* עיצוב כפתור "הוסף חופשה" */
+.vacationButton {
+  background-color: #007bff;
+  color: #fff;
   border: none;
+  padding: 10px 20px;
+  font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+}
+.vacationButtonContainer{
+  display: flex;
+  justify-content: center;
+}
+.vacationButton:hover {
+  background-color: #0056b3;
 }
 
-.calendar-container button:hover {
-  background-color: #45a049;
+/* עיצוב לוח השנה */
+.calendarContainer {
+  max-width: 700px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
 }
 
-/* כפתור "הוסף חופשה" */
-.vacation-button {
-  display: block;
-  margin: 20px auto;
-  background-color: #f39c12;
-  font-size: 1.2rem;
-  padding: 10px 20px;
-  border-radius: 8px;
-  position: relative;
-  z-index: 10; /* מעל הלוח */
+.dimmed {
+  filter: blur(3px);
+  pointer-events: none;
+  opacity: 0.7;
 }
 
-.vacation-button:hover {
-  background-color: #e67e22;
-}
-
-/* שכבה כהה */
-.modal-overlay {
+/* עיצוב לחלונית הקופצת */
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* כהות עם שקיפות */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100; /* מעל הלוח שנה */
+  z-index: 1000;
 }
 
-/* עיצוב החלונית */
 .modal {
-  background: white;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  width: 300px;
-  z-index: 200; /* מעל השכבה הכהה */
-}
-
-.modal-content h3 {
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-}
-
-.modal-content label {
-  display: block;
-  margin: 10px 0;
-}
-
-.modal-content input {
+  max-width: 400px;
   width: 100%;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalContent h3 {
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+
+.modalContent label {
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.modalContent input[type="date"] {
   padding: 5px;
-  margin-top: 5px;
-  font-size: 1rem;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.modal-buttons {
-  margin-top: 20px;
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
 }
 
-.modal-buttons button {
-  margin: 0 10px;
-  padding: 10px 15px;
-  font-size: 1rem;
-  color: white;
-  background-color: #4CAF50;
+.modalButtons button {
+  background-color: #007bff;
+  color: #fff;
   border: none;
+  padding: 10px 20px;
+  font-size: 14px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-.modal-buttons button:hover {
-  background-color: #45a049;
+.modalButtons button:hover {
+  background-color: #0056b3;
 }
 
-/* הלוח שנה חצי שקוף */
-.calendar-container .fc {
-  opacity: 1;
-  transition: opacity 0.3s ease;
+.modalButtons button:last-child {
+  background-color: #dc3545;
 }
 
-.calendar-container .fc.dimmed {
-  opacity: 0.3; /* שקיפות */
+.modalButtons button:last-child:hover {
+  background-color: #a71d2a;
 }

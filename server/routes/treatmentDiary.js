@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
+const authenticateToken=require("./tokenTherapist")
 router.get("/", (req, res) => {
   res.send("I treatmentDiary");
 });
@@ -37,9 +38,7 @@ const [rows]=await db.promise().query(sql)
 rows.forEach(({date})=>{
   vacationDates.add(new Date(date).toISOString().split("T")[0]);
 })
-
   let currentDate = new Date(start_date);
-
   // יצירת תאריכי הטיפולים
   while (treatmentDates.length < totalTreatments) {
     const formattedDate = currentDate.toISOString().split("T")[0];
@@ -54,17 +53,17 @@ rows.forEach(({date})=>{
   return treatmentDates;
 }
 
-router.post("/creatingAseriesOfTreatments", async (req, res) => {
+router.post("/creatingAseriesOfTreatments",authenticateToken, async (req, res) => {
   
   const {
     treatment_series_id,
-    therapist_id,
     start_date,
     treatmentTime,
     goals,
     price,
   } = req.body;
-console.log(goals);
+  const therapist_id=req.user.id;
+
 
   try {
     // שליפת מספר הטיפולים בסדרה
@@ -134,9 +133,9 @@ await Promise.all(insertGoals);
   }
 });
 
-router.post("/addingVacationays", (req, res) => {
-  const { therapist_id, start_date, end_date } = req.body;
-
+router.post("/addingVacationays",authenticateToken, (req, res) => {
+  const {  start_date, end_date } = req.body;
+const therapist_id=req.user.id;
   const today = new Date();
   const startDate = new Date(start_date);
   const endDate = new Date(end_date);
@@ -163,11 +162,12 @@ router.post("/addingVacationays", (req, res) => {
   });
 });
 
-router.get("/vacationays/:therapistId", (req, res) => {
+router.get("/vacationays",authenticateToken, (req, res) => {
   //שליפת ימי חופש
+console.log(req.user);
 
   const sql = `SELECT * FROM vacation_days WHERE therapist_id = ?`;
-  db.query(sql, [req.params.therapistId], (err, result) => {
+  db.query(sql, [req.user.id], (err, result) => {
     if (err) {
       console.error("שגיאה בשליפת ימי החופש:", err);
       return res.status(500).json({ message: "שגיאה בשליפת ימי החופש" });
@@ -179,8 +179,8 @@ router.get("/vacationays/:therapistId", (req, res) => {
   });
 });
 
-router.put("/changeTreatmentDate", async (req, res) => {
-  console.log(req.body);
+router.put("/changeTreatmentDate",authenticateToken, async (req, res) => {
+ 
   
   const { treatmentId, date, time } = req.body;
 
@@ -204,7 +204,7 @@ router.put("/changeTreatmentDate", async (req, res) => {
   }
 });
 
-router.post("/cancelTreatment", async (req, res) => {
+router.post("/cancelTreatment",authenticateToken, async (req, res) => {
   const { treatmentId, serialID, cancelnText, therapistId } = req.body;
 
   try {
@@ -260,9 +260,7 @@ router.post("/cancelTreatment", async (req, res) => {
   }
 });
 
-
-
-router.put("/documentation", async (req, res) => {
+router.put("/documentation",authenticateToken, async (req, res) => {
   const { treatmentId, documentation, serialID, userId } = req.body;
 
 

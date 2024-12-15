@@ -55,7 +55,9 @@ function UpdatingPatient() {
         "http://localhost:3300/therapist/personalFilePatient/updatePatient",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" ,
+            Authorization: localStorage.getItem("token")
+          },
           body: JSON.stringify(dataToSend),
         }
       );

@@ -59,7 +59,6 @@ marginBottom:4,
   goal: {
     flexDirection: "row",
     fontSize: 18,
-    color: "blue",
     textAlign: "right", // טקסט בצד ימין
   },
   textGoal: {

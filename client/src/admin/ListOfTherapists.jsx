@@ -9,18 +9,24 @@ function ListOfTherapists() {
     const [specialtySearchTerm, setSpecialtySearchTerm] = useState("");
 
     const fetchTherapistDetails = async () => {
-        try {
-            const response = await fetch("http://localhost:3300/admin/getTherapist");
+        const token = localStorage.getItem("token");
+    fetch("http://localhost:3300/admin/getTherapists", {
+        method: "GET",
+        headers: {
+            Authorization: token, // שליחת הטוקן בכותרת Authorization
+        },
+    })
+        .then((response) => {
             if (!response.ok) {
-                throw new Error("שגיאה בקבלת פרטי המטפלים");
+                throw new Error("שגיאה באימות הטוקן או בגישה לנתיב");
             }
-            const data = await response.json();
-            setTherapists(data);
-            setFilteredTherapists(data);
-        } catch (error) {
-            setError("שגיאה בקבלת פרטי המטפלים");
-            console.error(error);
-        }
+            return response.json();
+        })
+        .then((data) => {
+            setTherapists(data)
+        setFilteredTherapists(data)
+        })
+        .catch((error) => console.error("שגיאה:", error));
     };
 
     useEffect(() => {

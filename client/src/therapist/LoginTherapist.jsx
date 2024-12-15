@@ -9,6 +9,8 @@ function LoginTherapist() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
+    console.log("1111");
+    
     try {
       const response = await fetch("http://localhost:3300/shared/login", {
         method: "POST",
@@ -21,17 +23,9 @@ function LoginTherapist() {
       if (!response.ok) {
         throw new Error("Login failed");
       }
-
-      const data = await response.json();
-
-      if (data && data.id && data.type === "therapist") {
-        // שמירת הנתונים ב-localStorage
-        localStorage.setItem("currentUser", JSON.stringify(data));
-        // ניווט לעמוד המטפל
-        navigate("/therapist");
-      } else {
-        setErrorMessage("שם המשתמש או הסיסמה שגויים");
-      }
+      const { token } = await response.json();
+      localStorage.setItem("token", token); // שמירת האסימון
+      navigate("/therapist");
     } catch (error) {
       setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
     }

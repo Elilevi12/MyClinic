@@ -16,11 +16,27 @@ function AddTherapist() {
 
   // Fetch the list of therapists
   useEffect(() => {
-    fetch("http://localhost:3300/admin/getTherapists")
-      .then((response) => response.json())
-      .then((data) => setTherapists(data))
-      .catch((error) => console.error(error));
-  }, []);
+
+    const token = localStorage.getItem("token");
+console.log(token);
+
+
+    fetch("http://localhost:3300/admin/getTherapists", {
+        method: "GET",
+        headers: {
+            Authorization: token, // שליחת הטוקן בכותרת Authorization
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("שגיאה באימות הטוקן או בגישה לנתיב");
+            }
+            return response.json();
+        })
+        .then((data) => setTherapists(data))
+        .catch((error) => console.error("שגיאה:", error));
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,32 +47,23 @@ function AddTherapist() {
   };
 
   const handleSubmit = () => {
+    
     fetch("http://localhost:3300/admin/addTherapist", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
       },
       body: JSON.stringify(therapist)
     })
-      .then((response) => response.json())
+      .then((response) =>{response.json()
+        console.log(response);
+        
+      }) 
       .then(() => {
+        alert("המטפל נוסף בהצלחה");
         setShowForm(false);
-        setTherapist({
-          license_number: "",
-          first_name: "",
-          last_name: "",
-          email: "",
-          phone: "",
-          address: "",
-          specialty: "",
-        });
-        // Refresh the list of therapists
-        fetch("http://localhost:3300/admin/getTherapists")
-          .then((response) => response.json())
-          .then((data) => setTherapists(data))
-          .catch((error) => console.error(error));
-      })
-      .catch((error) => console.error(error));
+      })      
   };
 
   return (
@@ -138,13 +145,7 @@ function AddTherapist() {
           >
             הוסף מטפל
           </button>
-          <ul className={styles.therapistsList}>
-            {therapists.map((t) => (
-              <li key={t.license_number} className={styles.therapistItem}>
-                {t.first_name} {t.last_name} - {t.specialty}
-              </li>
-            ))}
-          </ul>
+        
         </div>
       )}
     </div>

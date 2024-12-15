@@ -36,10 +36,10 @@ function Activetreatment() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
         },
         body: JSON.stringify({
           patientId: patient.patientId,
-          therapistId: therapist.id,
         }),
       }
     )
@@ -63,6 +63,7 @@ function Activetreatment() {
         method: "put",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
         },
         body: JSON.stringify({
           treatmentId: treatmentId,
@@ -88,6 +89,7 @@ function Activetreatment() {
       method: "put",
       headers: {
         "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
       },
       body: JSON.stringify({
         documentation: documentationText,
@@ -116,6 +118,7 @@ function Activetreatment() {
       method: "post",
       headers: {
         "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
       },
       body: JSON.stringify({
         treatmentId: treatmentId,

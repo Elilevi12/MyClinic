@@ -25,9 +25,13 @@ function TreatmentSeriesInitiator() {
     try {
       const response = await fetch(
         "http://localhost:3300/therapist/activSeries/addTreatmentSession",
+
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+             "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token")
+           },
           body: JSON.stringify(treatmentSeries),
         }
       );

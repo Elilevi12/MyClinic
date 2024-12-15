@@ -13,7 +13,14 @@ function ActiveSeries({ serialID }) {
 
   const handleButtonGoals = () => {
     fetch(
-      `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${serialID}`
+      `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${serialID}`,
+      { method: "GET",
+        headers:{
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token")
+        }
+       }
+
     )
       .then((res) => res.json())
       .then((data) => {
@@ -32,7 +39,12 @@ function ActiveSeries({ serialID }) {
 
   const handleButtonDocumentation = () => {
     fetch(
-      `http://localhost:3300/therapist/activSeries/getDocumentationActiveSession/${serialID}`
+      `http://localhost:3300/therapist/activSeries/getDocumentationActiveSession/${serialID}`,
+      { method: "GET",
+        headers:{
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token")
+        }}
     )
       .then((res) => res.json())
       .then((data) => {

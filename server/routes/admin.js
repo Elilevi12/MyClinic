@@ -1,29 +1,53 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = "your_secret_key_here";
+const authenticateToken = (req, res, next) => {
+const token = req.headers["authorization"];  
+  if (!token) {
+      return res.status(401).json({ message: "אסימון חסר" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+      if (err) {
+          return res.status(403).json({ message: "אסימון לא חוקי" });
+      }
+      req.user = user; // המשתמש שאומת
+ console.log(req.user);
+ if (req.user.type !== "admin") {
+  return res.status(403).json({ message: "גישה אסורה" });
+}
+      next();
+  });
+};
+
+
 
 router.get("/", (req, res) => {
   res.send("I admin");
 });
 
-router.get("/getTherapist", (req, res) => {
+router.get("/getTherapists", authenticateToken, (req, res) => {
+  
+ 
   const sql = "SELECT * FROM therapists";
-
   db.query(sql, (err, results) => {
-    if (err) {
-      console.error("שגיאה בקבלת פרטי המטפלים:", err);
-      return res.status(500).json({ message: "שגיאה בקבלת פרטי המטפלים" });
-    }
+      if (err) {
+          console.error("שגיאה בקבלת פרטי המטפלים:", err);
+          return res.status(500).json({ message: "שגיאה בקבלת פרטי המטפלים" });
+      }
 
-    if (results.length === 0) {
-      return res.status(404).json({ message: "לא נמצאו מטפלים" });
-    }
+      if (results.length === 0) {
+          return res.status(404).json({ message: "לא נמצאו מטפלים" });
+      }
 
-    res.status(200).json(results);
+
+      res.status(200).json(results);
   });
 });
 
-router.post("/addTherapist", (req, res) => {
+router.post("/addTherapist",authenticateToken, (req, res) => {
   const {
     first_name,
     last_name,

@@ -23,14 +23,27 @@ const TreatmentForm = () => {
 
     const fetchPatient = async () => {
       const response = await fetch(
-        `http://localhost:3300/therapist/getPatient/${patient.patientId}`
+        `http://localhost:3300/therapist/getPatient/${patient.patientId}`,
+        { method: "GET",
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token")
+          }
+        }
       );
       const data = await response.json();
       setCurrentPatient(data);
     };
     const fetchTherapist = async () => {
       const response = await fetch(
-        `http://localhost:3300/therapist/getTherapist/${therapist.id}`
+        `http://localhost:3300/therapist/getTherapist`,
+        { method: "GET",
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token")
+          }
+        }
+
       );
       const data = await response.json();
       setCurrentTherapist(data);
@@ -38,7 +51,13 @@ const TreatmentForm = () => {
 
     const fetchGoals = async () => {
       const response = await fetch(
-        `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${serialID}`
+        `http://localhost:3300/therapist/activSeries/getGoalsActiveSession/${serialID}`,
+        { method: "GET",
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token")
+          }
+        }
       );
       const data = await response.json();
       try {

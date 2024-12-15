@@ -9,7 +9,6 @@ function WaitingList() {
   const [selectedPatientId, setSelectedPatientId] = useState(null);
 
   const therapist = JSON.parse(localStorage.getItem("currentUser"));
-console.log("therapist",therapist);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -17,10 +16,12 @@ console.log("therapist",therapist);
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),          
         },
-        body: JSON.stringify({ therapist_id: therapist.id }),
       });
       const data = await response.json();
+      console.log("המטופלים ברשימת ההמתנה:", data);
+      
       setPatients(data);
       setLoading(false);
     };
@@ -54,10 +55,10 @@ console.log("therapist",therapist);
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
           },
           body: JSON.stringify({
             treatment_series_id: selectedPatientId,
-            therapist_id: 1,
             start_date: modalData.date,
             treatmentTime: modalData.time,
             goals: modalData.goals,

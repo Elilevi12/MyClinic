@@ -10,30 +10,26 @@ function LoginAdmin() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3300/shared/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+        const response = await fetch("http://localhost:3300/shared/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
+        if (!response.ok) {
+            throw new Error("Login failed");
+        }
 
-      const data = await response.json();
-
-      if (data && data.id && data.type === "admin") {
-        localStorage.setItem("currentUser", JSON.stringify(data));
+        const { token } = await response.json();
+        localStorage.setItem("token", token); // שמירת האסימון
         navigate("/admin");
-      } else {
-        setErrorMessage("שם המשתמש או הסיסמה שגויים");
-      }
     } catch (error) {
-      setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
+        setErrorMessage("שגיאה: לא ניתן להתחבר לשרת");
     }
-  };
+};
+
 
   return (
     <div className={styles.loginAdminContainer}>

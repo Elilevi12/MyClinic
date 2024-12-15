@@ -4,7 +4,7 @@ import styles from "../css/addingPatient.module.css";
 function AddingPatient() {
   const therapist = JSON.parse(localStorage.getItem("currentUser"));
   const [patient, setPatient] = useState({
-    therapist_id: therapist.id,
+
     first_name: "",
     last_name: "",
     id_number: "",
@@ -30,7 +30,9 @@ function AddingPatient() {
         "http://localhost:3300/therapist/addPatient",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token")
+           },
           body: JSON.stringify(patient),
         }
       );

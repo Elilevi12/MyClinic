@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
-
+const authenticateToken = require("./tokenTherapist");
 router.get("/", (req, res) => {
   res.send("I personalFilePatient");
 });
 
-router.post("/bringingTreatmentSeries", (req, res) => {
-const { patientId, therapistId } = req.body;
+router.post("/bringingTreatmentSeries",authenticateToken, (req, res) => {
+const { patientId } = req.body;
+const therapistId = req.user.id;
 const sql = `SELECT * FROM treatment_series WHERE patients_id =? and therapist_id=?`;
 db.query(sql, [patientId,therapistId], (err, result) => {
   if (err) {
@@ -22,8 +23,9 @@ db.query(sql, [patientId,therapistId], (err, result) => {
 });
 });
 
-router.post("/ActiveSeriesOfTreatments", (req, res) => {
-const { patientId, therapistId } = req.body;
+router.post("/ActiveSeriesOfTreatments",authenticateToken, (req, res) => {
+const { patientId} = req.body;
+const therapistId = req.user.id;
 const sql = `SELECT * FROM treatment_series WHERE patients_id =? and therapist_id=? and status='active'`;
 db.query(sql, [patientId,therapistId], (err, result) => {
   if (err) {
@@ -98,7 +100,7 @@ function updateClient(clientData, callback) {
 }
 
 
-router.post('/updatePatient', (req, res) => {
+router.post('/updatePatient',authenticateToken, (req, res) => {
   const clientData = req.body;
 
   updateClient(clientData, (err, result) => {
