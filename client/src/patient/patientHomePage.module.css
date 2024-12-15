@@ -75,4 +75,32 @@
     font-size: 14px;
     color: #666;
   }
+  .logout {
+    display: inline-block;
+    background-color: #d9534f; /* צבע אדום */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
   
+  .logout:hover {
+    background-color: #c9302c; /* צבע אדום כהה יותר */
+    transform: scale(1.05); /* אפקט זום קל */
+  }
+  
+  .logout:active {
+    background-color: #ac2925; /* צבע לחיצה */
+    transform: scale(1); /* ביטול הזום בלחיצה */
+  }
+  .divLogout{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }

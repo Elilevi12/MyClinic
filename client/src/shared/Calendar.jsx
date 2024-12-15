@@ -15,115 +15,100 @@ function Calendar() {
   const [vacationEnd, setVacationEnd] = useState("");
 
   // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const fetchEvents = async () => {
+    try {
+      // משיכת חגים עבריים
+      const holidaysResponse = await fetch(
+        "http://localhost:3300/shared/hebrewHolidays/getHolidays"
+      );
+      const holidays = await holidaysResponse.json();
+      const holidayEvents = holidays.map((holiday) => ({
+        id: holiday.id,
+        title: holiday.title,
+        start: holiday.date,
+        allDay: true,
+        color: "green", // צבע ירוק עבור חגים
+      }));
+
+      // משיכת חופשות וטיפולים
+      const [vacationsResponse, treatmentsResponse] = await Promise.all([
+        fetch("http://localhost:3300/therapist/treatmentDiary/vacationays", {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+        }),
+        fetch("http://localhost:3300/therapist/receivingTreatmentDates", {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+        }),
+      ]);
+
+      const vacationsJson = await vacationsResponse.json();
+      const treatmentsJson = await treatmentsResponse.json();
+
+      const vacations = Array.isArray(vacationsJson) ? vacationsJson : [];
+      const treatments = Array.isArray(treatmentsJson) ? treatmentsJson : [];
+
+      // טיפול בחופשות
+      const vacationEvents = vacations
+        .map((event) => {
+          const start_date = new Date(event.start_date);
+          const end_date = new Date(event.end_date);
+
+          if (isNaN(start_date) || isNaN(end_date)) {
+            console.error("Invalid date:", event.start_date, event.end_date);
+            return null;
+          }
+
+          return {
+            id: event.vacation_id,
+            title: "חופשה",
+            start: start_date.toISOString(),
+            end: end_date.toISOString(),
+            color: "red",
+          };
+        })
+        .filter((event) => event !== null);
+
+      // טיפול בטיפולים
+      const treatmentEvents = treatments
+        .map((event) => {
+          const startTime = `${event.treatment_date.substring(0, 10)}T${event.treatment_time}`;
+          const startDate = new Date(startTime);
+          const endDate = new Date(startDate.getTime() + 45 * 60 * 1000);
+
+          if (isNaN(startDate) || isNaN(endDate)) {
+            console.error("Invalid treatment date:", startTime);
+            return null;
+          }
+
+          return {
+            id: event.treatment_id,
+            title: `${event.patient_first_name} ${event.patient_last_name}`,
+            start: startDate.toISOString(),
+            end: endDate.toISOString(),
+          };
+        })
+        .filter((event) => event !== null);
+
+      // עדכון האירועים
+      setEvents([...holidayEvents, ...vacationEvents, ...treatmentEvents]);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
   useEffect(() => {
-
-    if(!localStorage.getItem("currentUser")){
-      localStorage.setItem("currentUser", JSON.stringify({id: 38, type: "therapist"}));
-    } 
-    // משיכת חגים עבריים
-    fetch("http://localhost:3300/shared/hebrewHolidays/getHolidays")
-      .then((response) => response.json())
-      .then((holidays) => {
-        
-        const holidayEvents = holidays.map((holiday) => ({
-          id: holiday.id,
-          title: holiday.title,
-          start: holiday.date,
-          allDay: true,
-          color: "green", // צבע ירוק עבור חגים
-        }));
-      
-        
-        setEvents((prevEvents) => [...prevEvents, ...holidayEvents]); // הוספת החגים לרשימת האירועים
-      console.log( holidayEvents);
-     console.log( events);
-      
-      })
-      .catch((error) => console.error("Error fetching holidays:", error));
-
-  
-    if (2===2) {
-    
-      Promise.all([
-        fetch(
-          `http://localhost:3300/therapist/treatmentDiary/vacationays/`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: localStorage.getItem("token"),
-              "Content-Type": "application/json",
-            },
-
-          }
-        ).then((response) => response.json()),
-        fetch(
-          `http://localhost:3300/therapist/receivingTreatmentDates`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: localStorage.getItem("token"),
-              "Content-Type": "application/json",
-            }}
-        ).then((response) => response.json()),
-      ])
-        .then(([vacations, treatments]) => {
-          console.log(vacations);
-          
-          
-          const vacationEvents = vacations
-            .map((event) => {
-              const start_date = new Date(event.start_date);
-              const end_date = new Date(event.end_date);
-  
-              if (isNaN(start_date) || isNaN(end_date)) {
-                console.error(
-                  "Invalid date:",
-                  event.start_date,
-                  event.end_date
-                );
-                return null;
-              }
-  
-              return {
-                id: event.vacation_id,
-                title: "חופשה",
-                start: start_date.toISOString(),
-                end: end_date.toISOString(),
-                color: "red",
-              };
-            })
-            .filter((event) => event !== null);
-  
-          const treatmentEvents = treatments.map((event) => {
-              const startTime = `${event.treatment_date.substring(0, 10)}T${event.treatment_time}`;
-              const startDate = new Date(startTime);
-              const endDate = new Date(startDate.getTime() + 45 * 60 * 1000);
-  
-              if (isNaN(startDate) || isNaN(endDate)) {
-                console.error("Invalid treatment date:", startTime);
-                return null;
-              }
-  
-              return {
-                id: event.treatment_id,
-                title: `${event.patient_first_name} ${event.patient_last_name}`,
-                start: startDate.toISOString(),
-                end: endDate.toISOString(),
-              };
-            })
-            .filter((event) => event !== null);
-  
-          setEvents((prevEvents) => [
-            ...prevEvents,
-            ...vacationEvents,
-            ...treatmentEvents,
-          ]);
-      
-        })
-        .catch((error) => console.error("Error fetching events:", error));
-    }
+   
+    fetchEvents();
   }, []);
+  
+  
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -154,6 +139,7 @@ function Calendar() {
 
       if (response.ok) {
         alert("הנתונים נשלחו בהצלחה!");
+          fetchEvents();
       } else {
         alert("שגיאה בשליחת הנתונים");
       }
@@ -172,33 +158,33 @@ function Calendar() {
           </button>
           </div>
       <div className={styles.calendarContainer}>
-        <FullCalendar
-          direction="rtl"
-          headerToolbar={{
-            start: "title",
-            center: "dayGridMonth,timeGridWeek,timeGridDay",
-            right: "prev,next",
-          }}
-          buttonText={{
-            today: "היום",
-            month: "חודש",
-            week: "שבוע",
-            day: "יום",
-          }}
-          plugins={[
-            dayGridPlugin,
-            timeGridPlugin,
-            interactionPlugin,
-            rrulePlugin,
-          ]}
-          initialView={display}
-          key={display}
-          events={events}
-          slotMinTime="08:00:00"
-          slotMaxTime="16:00:00"
-          locale="he"
-          className={isModalOpen ? styles.dimmed : ""}
-        />
+      <FullCalendar
+  direction="rtl"
+  headerToolbar={{
+    start: "title",
+    center: "timeGridWeek,timeGridDay,dayGridMonth",
+    right: "prev,next",
+  }}
+  buttonText={{
+    today: "היום",
+    month: "חודש",
+    week: "שבוע",
+    day: "יום",
+  }}
+  plugins={[
+    dayGridPlugin,
+    timeGridPlugin,
+    interactionPlugin,
+    rrulePlugin,
+  ]}
+  initialView="timeGridWeek"
+  key="timeGridWeek"
+  events={events}
+  slotMinTime="08:00:00"
+  slotMaxTime="16:00:00"
+  locale="he"
+  className={isModalOpen ? styles.dimmed : ""}
+/>
 
       
       </div>

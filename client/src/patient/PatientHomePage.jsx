@@ -6,6 +6,10 @@ function PatientHomePage() {
 
   const [treatments, setTreatments] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+   
+  };
 
   const fetchTreatments = async () => {
     try {
@@ -77,10 +81,13 @@ function PatientHomePage() {
             <h3>שעה: {treatment.treatment_time}</h3>
           </div>
         ))}
-      </div>
 
+            <div className={styles.divLogout} ></div>
+<Link to="/" onClick={handleLogout} className={styles.logout}>התנתקות</Link>
    
     </div>
+      </div>
+  
   );
 }
 

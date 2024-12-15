@@ -13,8 +13,6 @@ const token = req.headers["authorization"];
           return res.status(403).json({ message: "אסימון לא חוקי" });
       }
       req.user = user; // המשתמש שאומת
- console.log(req.user);
- 
  if (req.user.type !== "therapist") {
   return res.status(403).json({ message: "גישה אסורה" });
 }

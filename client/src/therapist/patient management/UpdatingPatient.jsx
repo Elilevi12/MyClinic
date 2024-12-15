@@ -64,6 +64,7 @@ function UpdatingPatient() {
 
       if (response.ok) {
         alert("הפרטים נשמרו בהצלחה");
+        window.location.reload()
       } else {
         alert("שגיאה בשליחת הנתונים");
       }

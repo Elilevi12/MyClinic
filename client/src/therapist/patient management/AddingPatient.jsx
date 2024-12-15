@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../css/addingPatient.module.css";
 
 function AddingPatient() {
-  const therapist = JSON.parse(localStorage.getItem("currentUser"));
+
   const [patient, setPatient] = useState({
 
     first_name: "",
@@ -39,6 +39,7 @@ function AddingPatient() {
 
       if (response.ok) {
         alert("הנתונים נשלחו בהצלחה!");
+        window.location.reload();
       } else {
         alert("שגיאה בשליחת הנתונים");
       }

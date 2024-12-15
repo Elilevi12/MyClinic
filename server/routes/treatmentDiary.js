@@ -164,16 +164,19 @@ const therapist_id=req.user.id;
 
 router.get("/vacationays",authenticateToken, (req, res) => {
   //שליפת ימי חופש
-console.log(req.user);
+
 
   const sql = `SELECT * FROM vacation_days WHERE therapist_id = ?`;
   db.query(sql, [req.user.id], (err, result) => {
+      
     if (err) {
+   
+      
       console.error("שגיאה בשליפת ימי החופש:", err);
       return res.status(500).json({ message: "שגיאה בשליפת ימי החופש" });
     }
     if (result.length === 0) {
-      return res.status(404).json({ message: "לא נמצאו ימי חופש" });
+      return res.status(200).json({ message: "לא נמצאו ימי חופש" });
     }
     res.status(200).json(result);
   });

@@ -16,6 +16,30 @@ function Activetreatment() {
 
   const patient = JSON.parse(localStorage.getItem("selectedPatient"));
   const therapist = JSON.parse(localStorage.getItem("currentUser"));
+const fetchTreatmentSeries = async () => {
+
+  fetch(
+    "http://localhost:3300/therapist/personalFilePatient/ActiveSeriesOfTreatments",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        patientId: patient.patientId,
+      }),
+    }
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      setTreatments(data);
+      setSerialID(data[0].treatment_series_id);
+    })
+    .catch((error) => {
+      console.error("Error fetching Active Series of Treatments:", error);
+    });
+}
 
   const translateStatus = (status) => {
     switch (status) {
@@ -30,28 +54,9 @@ function Activetreatment() {
     }
   };
   useEffect(() => {
-    fetch(
-      "http://localhost:3300/therapist/personalFilePatient/ActiveSeriesOfTreatments",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-        body: JSON.stringify({
-          patientId: patient.patientId,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setTreatments(data);
-        setSerialID(data[0].treatment_series_id);
-      })
-      .catch((error) => {
-        console.error("Error fetching Active Series of Treatments:", error);
-      });
-  }, []);
+    fetchTreatmentSeries();
+  }
+  , []);
 
   const handleModalChange = (field, value) => {
     setModalData((prev) => ({ ...prev, [field]: value }));
@@ -82,6 +87,7 @@ function Activetreatment() {
       });
     setTreatmentId(null);
     setChangeTreatmentDate(false);
+    fetchTreatmentSeries();
   }
 
   function handleSubmitDocumentation() {
@@ -109,6 +115,7 @@ function Activetreatment() {
     setTreatmentDocumentation(false);
     setDocumentationText("");
     setTreatmentId(null);
+    fetchTreatmentSeries();
   }
 
   function handleSubmitCanceln() {
@@ -138,6 +145,7 @@ function Activetreatment() {
 
     setTreatmentId(null);
     setCancelnText("");
+    fetchTreatmentSeries();
   }
 
   const openDocumentationModal = (treatmentId) => {

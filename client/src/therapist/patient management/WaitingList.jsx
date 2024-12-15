@@ -7,25 +7,24 @@ function WaitingList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({ date: "", time: "", goals: [], price: "" });
   const [selectedPatientId, setSelectedPatientId] = useState(null);
-
-  const therapist = JSON.parse(localStorage.getItem("currentUser"));
+  const fetchPatients = async () => {
+    const response = await fetch("http://localhost:3300/therapist/waitingList", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),          
+      },
+    });
+    const data = await response.json();
+    console.log("המטופלים ברשימת ההמתנה:", data);
+    
+    setPatients(data);
+    setLoading(false);
+  };
+ 
 
   useEffect(() => {
-    const fetchPatients = async () => {
-      const response = await fetch("http://localhost:3300/therapist/waitingList", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),          
-        },
-      });
-      const data = await response.json();
-      console.log("המטופלים ברשימת ההמתנה:", data);
-      
-      setPatients(data);
-      setLoading(false);
-    };
-
+  
     fetchPatients();
   }, []);
 
@@ -72,8 +71,12 @@ function WaitingList() {
       }
 
       const data = await response.json();
-      console.log("סדרת הטיפולים התחילה בהצלחה:", data);
+alert("הטיפולים נוצרו בהצלחה!");
       setIsModalOpen(false); // סגירת החלונית
+      fetchPatients();
+      setLoading(true);
+   
+    
     } catch (error) {
       console.error("שגיאה במהלך התחלת סדרת טיפולים:", error);
     }
@@ -84,7 +87,7 @@ function WaitingList() {
       <h1 className={styles.header}>רשימת המתנה</h1>
       {loading ? (
         <p className={styles.loading}>Loading...</p>
-      ) : (
+      ) : Array.isArray(patients) && patients.length > 0 ? (
         <table className={styles.table}>
           <thead>
             <tr>
@@ -96,6 +99,7 @@ function WaitingList() {
               <th>תאריך לידה</th>
               <th>מספר טיפולים מאושר</th>
               <th>הערות</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -124,8 +128,9 @@ function WaitingList() {
             ))}
           </tbody>
         </table>
+      ) : (
+        <p className={styles.noPatients}>אין מטופלים ברשימת ההמתנה</p>
       )}
-
       {isModalOpen && (
         <div className={styles.modalBackdrop}>
           <div className={styles.modal}>
@@ -193,5 +198,4 @@ function WaitingList() {
     </div>
   );
 }
-
 export default WaitingList;

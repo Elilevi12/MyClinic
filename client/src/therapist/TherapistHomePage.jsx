@@ -1,7 +1,12 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link,  Outlet } from "react-router-dom";
 import styles from "./css/therapistHomePage.module.css";
 
 function TherapistHomePage() {
+const handleLogout = () => {
+    localStorage.removeItem("token");
+   
+  };
+
   return (
     <div className={styles.therapistHomeContainer}>
       <h1 className={styles.heading}>דף הבית</h1>
@@ -21,6 +26,9 @@ function TherapistHomePage() {
         <Link to={"add-patient"}>
           <button className={styles.navButton}>הוספת לקוח</button>
         </Link>
+        <Link to={"/"}>
+           <button className={styles.navButton} onClick={handleLogout}>יציאה מהאתר</button>
+       </Link>
       </nav>
       <div className={styles.outletContainer}>
         <Outlet />
