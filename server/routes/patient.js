@@ -3,10 +3,9 @@ const mysql = require("mysql2");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const db = require("../db/connection");
-const SECRET_KEY = "your_secret_key_here";
+const SECRET_KEY = process.env.SECRET_KEY;
 const authenticateToken = (req, res, next) => {
   const token = req.headers["authorization"];
-  
   if (!token) {
       return res.status(401).json({ message: "אסימון חסר" });
   }
@@ -19,7 +18,7 @@ const authenticateToken = (req, res, next) => {
  if(req.user.type !== "patient"){
   return res.status(403).json({ message: "גישה אסורה" });
 }
- 
+
       next();
   });
 };
@@ -31,7 +30,7 @@ router.get("/", (req, res) => {
 });
 
 
-router.get("/getPatient",authenticateToken, (req, res) => {
+router.get("/getPatient",authenticateToken,  (req, res) => {
   const idNumber = req.user.id;
   
   

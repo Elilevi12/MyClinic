@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "./History.module.css"; // ייבוא קובץ ה-CSS
+import styles from "../css/history.module.css" // ייבוא קובץ ה-CSS
 
 function History() {
   const [history, setHistory] = useState([]); // שמירת ההיסטוריה ב-state
@@ -22,7 +22,9 @@ function History() {
       }
 
       const data = await response.json();
-      setHistory(data); // עדכון ההיסטוריה ב-state
+console.log(data);
+
+      setHistory(data); 
     } catch (error) {
       console.error("Error fetching history:", error);
     }
@@ -49,16 +51,17 @@ function History() {
               <td>{new Date(treatment.treatment_date).toLocaleDateString()}</td>
               <td>{treatment.status}</td>
               <td>
-                <div className={styles.textBox}>
-                  {treatment.status === "done" ? (
-                    treatment.documentation // הצגת תיעוד
-                  ) : treatment.status === "cancellation" ? (
-                    treatment.cancellation_reason // סיבת ביטול
-                  ) : (
-                    "אין פרטים זמינים"
-                  )}
-                </div>
-              </td>
+  <div className={styles.textBox}>
+    {treatment.status === "done" ? (
+      treatment.documentation // הצגת תיעוד
+    ) : treatment.status === "cancellation" ? (
+      treatment.reason_for_cancellation // סיבת ביטול
+    ) : (
+      "אין פרטים זמינים"
+    )}
+  </div>
+</td>
+
             </tr>
           ))}
         </tbody>

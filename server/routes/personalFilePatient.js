@@ -33,7 +33,7 @@ db.query(sql, [patientId,therapistId], (err, result) => {
     return res.status(500).json({ message: "שגיאה בשליפת סדרות הטיפולים" });
   }
   if (result.length === 0) {
-    return res.status(404).json({ message: "לא נמצאו סדרות טיפולים" });
+    return res.status(200).json({ message: "לא נמצאו סדרות טיפולים" });
   }
 
   
@@ -113,5 +113,29 @@ router.post('/updatePatient',authenticateToken, (req, res) => {
   });
 });
 
+router.get("/history/:patienstId",authenticateToken, (req, res) => {
+  const patienstId=req.params.patienstId; 
+  const sql  = `
+  SELECT * 
+  FROM treatment_sessions 
+  WHERE treatment_series_id IN (
+      SELECT id 
+      FROM treatment_series 
+      WHERE patients_id = ? 
+        AND status = 'finished'
+  );
+`;
 
+  db.query(sql, patienstId, (err, result) => {
+    if (err) {
+      console.error("שגיאה בשליפת היסטוריית טיפולים:", err);
+      return res.status(500).json({ message: "שגיאה בשליפת היסטוריית טיפולים" });
+    }
+    if (result.length === 0) {
+      return res.status(200).json({ message: "לא נמצאה היסטוריית טיפולים" });
+    }
+
+    res.status(200).json(result);
+  });
+});
 module.exports = router;

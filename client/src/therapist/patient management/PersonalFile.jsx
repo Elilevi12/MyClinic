@@ -11,7 +11,7 @@ function PersonalFile() {
   useEffect(() => {
     const patient = JSON.parse(localStorage.getItem("selectedPatient"));
     setSelectedPatient(patient);
-    const therapist = JSON.parse(localStorage.getItem("selectedTherapist"));
+    
   }, []);
 
   if (!selectedPatient) {

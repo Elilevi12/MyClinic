@@ -1,0 +1,70 @@
+/* History.module.css */
+
+/* עיצוב למעטפת הראשית */
+.historyContainer {
+    direction: rtl; /* יישור הטבלה מימין לשמאל */
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    max-width: 90%;
+    text-align: center;
+  }
+  
+  /* עיצוב לכותרת הראשית */
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* עיצוב לטבלה */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+  }
+  .table tbody td {
+    word-wrap: break-word; /* מאפשר שבירת מילים */
+    white-space: normal;   /* מאפשר שבירת שורות */
+    max-width: 200px;      /* קובע רוחב מקסימלי לכל תא */
+  }
+  
+  .textBox {
+    word-wrap: break-word; /* מאפשר שבירת מילים */
+    white-space: normal;   /* מאפשר שבירת שורות */
+    max-width: 100%;       /* תופס את מלוא הרוחב של התא */
+  }  
+  /* עיצוב לשורות הראש */
+  .table thead th {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+  }
+  
+  /* עיצוב לשורות הטבלה */
+  .table tbody td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* עיצוב לשורות לסירוגין */
+  .table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  /* עיצוב לתיבות טקסט ארוכות */
+  .textBox {
+    padding: 5px 10px;
+    background-color: #eef;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    text-align: right;
+    color: #333;
+  }
+  

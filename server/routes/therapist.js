@@ -1,5 +1,4 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const authenticateToken = require("./tokenTherapist");
 const router = express.Router();
 const db = require("../db/connection");

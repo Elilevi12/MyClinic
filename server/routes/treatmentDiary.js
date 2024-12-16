@@ -265,8 +265,7 @@ router.post("/cancelTreatment",authenticateToken, async (req, res) => {
 
 router.put("/documentation",authenticateToken, async (req, res) => {
   const { treatmentId, documentation, serialID, userId } = req.body;
-
-
+  
   const sql = "select status from treatment_sessions where id=?";
   const [status] = await db.promise().query(sql, [treatmentId]);
   if (status[0].status === "done") {
