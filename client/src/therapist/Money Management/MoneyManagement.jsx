@@ -120,7 +120,7 @@ function MoneyManagement() {
             <th className={styles.tableHeader}>ת.ז</th>
             <th className={styles.tableHeader}>שם פרטי</th>
             <th className={styles.tableHeader}>שם משפחה</th>
-            <th className={styles.tableHeader}>יתרת חוב</th>
+            <th className={styles.tableHeader}> יתרת חוב/זכות</th>
           </tr>
         </thead>
         <tbody>

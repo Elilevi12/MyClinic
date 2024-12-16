@@ -10,24 +10,33 @@ function SelectPatient() {
 
   useEffect(() => {
     const fetchPatients = async () => {
-      const response = await fetch(
-        "http://localhost:3300/therapist/ListOfPatients",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token")
-           },
-          // body: JSON.stringify({ therapist_id: therapist.id }),
+      try {
+        const response = await fetch(
+          "http://localhost:3300/therapist/ListOfPatients",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+  
+        const data = await response.json();
+  
+        if (data.message === "לא נמצאו מטופלים") {
+          setPatients([]);
+        } else {
+          setPatients(data);
         }
-      );
-      const data = await response.json();
-
-      setPatients(data);
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+        setPatients([]);
+      }
     };
-
+  
     fetchPatients();
   }, []);
-
   const handlePatientSelect = (patient) => {
     const selectedPatient = {
       name: `${patient.first_name} ${patient.last_name}`,
@@ -40,8 +49,11 @@ function SelectPatient() {
 
   return (
     <div className={styles.personalFileContainer}>
+      <h1 className={styles.h1}>בחירת מטופל</h1>
       {patients.length === 0 ? (
-        <p className={styles.noPatientsMessage}>אין מטופלים</p>
+        <p className={styles.noPatientsMessage}>
+          {patients.length === 0 ? "לא נמצאו מטופלים" : "אין מטופלים"}
+        </p>
       ) : (
         <table className={styles.table}>
           <thead>
@@ -50,7 +62,6 @@ function SelectPatient() {
               <th className={styles.tableHeader}>שם פרטי</th>
               <th className={styles.tableHeader}>שם משפחה</th>
               <th className={styles.tableHeader}>תעודת זהות</th>
-              <th className={styles.tableHeader}>קופת חולים</th>
             </tr>
           </thead>
           <tbody>
@@ -64,7 +75,6 @@ function SelectPatient() {
                 <td>{patient.first_name}</td>
                 <td>{patient.last_name}</td>
                 <td>{patient.id_number}</td>
-                <td>{patient.healthcare_provider}</td>
               </tr>
             ))}
           </tbody>
@@ -72,6 +82,7 @@ function SelectPatient() {
       )}
     </div>
   );
+  
 };
 
 export default SelectPatient;

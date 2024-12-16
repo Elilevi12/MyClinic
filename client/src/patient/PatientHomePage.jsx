@@ -23,10 +23,11 @@ function PatientHomePage() {
         },
       );
       if (!response.ok) {
-        throw new Error("\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05E7\u05D1\u05DC\u05EA \u05E4\u05E8\u05D8\u05D9 \u05D4\u05D8\u05D9\u05E4\u05D5\u05DC\u05D9\u05DD");
+        throw new Error("there was a problem fetching the treatments");
       }
       const data = await response.json();
       setTreatments(data);
+    
     } catch (error) {
       console.error(error);
     }
@@ -44,10 +45,13 @@ function PatientHomePage() {
         },
       );
       if (!response.ok) {
-        throw new Error("\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05E7\u05D1\u05DC\u05EA \u05E4\u05E8\u05D8\u05D9 \u05D4\u05D7\u05D5\u05D1\u05D5\u05EA");
+        throw new Error("there was a problem fetching the user");
       }
       const data = await response.json();
       setCurrentUser(data);
+      console.log(data.debts);
+      console.log(data.payments);
+      
     } catch (error) {
       console.error(error);
     }
@@ -67,10 +71,10 @@ function PatientHomePage() {
       </div>
       <div className={styles.section}>
         <h2 className={styles.title}>מצב חשבון</h2>
-        {currentUser.debts - currentUser.Payments > 0 ? (
-          <h3 className={styles.debt}>יתרת חוב: {currentUser.debts - currentUser.Payments}</h3>
+        {currentUser.debts - currentUser.payments > 0 ? (
+          <h3 className={styles.debt}>יתרת חוב: {currentUser.debts - currentUser.payments}</h3>
         ) : (
-          <h3 className={styles.credit}>יתרת זכות: {currentUser.Payments - currentUser.debts}</h3>
+          <h3 className={styles.credit}>יתרת זכות: {currentUser.payments - currentUser.debts}</h3>
         )}
       </div>
       <div className={styles.section}>
@@ -82,9 +86,9 @@ function PatientHomePage() {
           </div>
         ))}
 
-            <div className={styles.divLogout} ></div>
+            <div className={styles.divLogout} >
 <Link to="/" onClick={handleLogout} className={styles.logout}>התנתקות</Link>
-   
+</div>
     </div>
       </div>
   

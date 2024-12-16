@@ -7,7 +7,7 @@ router.get('/',(req,res)=>{
     res.send("I shared")
 })
 router.post('/login', (req, res) => {
-    const { username, password } = req.body;
+    const { username, password,type } = req.body;
     const sql = `SELECT id, type FROM users WHERE username = ? AND password = ?`;
     db.query(sql, [username, password], (err, result) => {
         if (err) {
@@ -17,6 +17,9 @@ router.post('/login', (req, res) => {
         if (result.length === 0) {
             return res.status(404).json({ message: "שם משתמש או סיסמה שגויים" });
         }
+if(result[0].type!==type){
+    return res.status(404).json({ message: "משתמש לא מורשה" });}
+
 
         const user = result[0];
         const token = jwt.sign(

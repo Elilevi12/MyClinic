@@ -99,8 +99,10 @@
     background-color: #ac2925; /* צבע לחיצה */
     transform: scale(1); /* ביטול הזום בלחיצה */
   }
-  .divLogout{
+  .divLogout {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* מרכז את הכפתור אופקית */
+    align-items: center; /* מרכז את הכפתור אנכית */
     text-align: center;
+    margin-top: 20px; /* מוסיף מרווח מעל הכפתור */
   }

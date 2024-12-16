@@ -17,7 +17,7 @@ function LoginTherapist() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({type:"therapist", username, password }),
       });
 
       if (!response.ok) {

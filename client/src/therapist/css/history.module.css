@@ -67,4 +67,24 @@
     text-align: right;
     color: #333;
   }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    table-layout: fixed; /* מאפשר שליטה על רוחב עמודות */
+  }
   
+  .table thead th:nth-child(1),
+  .table tbody td:nth-child(1) {
+    width: 10%; /* קובע רוחב צר לעמודת תאריך */
+  }
+  
+  .table thead th:nth-child(2),
+  .table tbody td:nth-child(2) {
+    width: 10%; /* קובע רוחב צר לעמודת סטטוס */
+  }
+  
+  .table thead th:nth-child(3),
+  .table tbody td:nth-child(3) {
+    width: 80%; /* מרחיב את עמודת תיעוד */
+  }

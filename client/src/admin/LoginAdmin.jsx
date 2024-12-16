@@ -15,7 +15,7 @@ function LoginAdmin() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({type:"admin", username, password }),
         });
 
         if (!response.ok) {

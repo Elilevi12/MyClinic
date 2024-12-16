@@ -1,5 +1,6 @@
 const express = require("express");
 const authenticateToken = require("./tokenTherapist");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const db = require("../db/connection");
 
@@ -33,7 +34,7 @@ router.post("/ListOfPatients",authenticateToken, (req, res) => {
       return res.status(500).json({ message: "שגיאה בקבלת פרטי המטופלים" });
     }
     if (result.length === 0) {
-      return res.status(404).json({ message: "לא נמצאו מטופלים" });
+      return res.status(200).json({ message: "לא נמצאו מטופלים" });
     }
 
     res.status(200).json(result);

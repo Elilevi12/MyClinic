@@ -143,3 +143,43 @@ button {
   background-color: #dc3545;
   color: white;
 }
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
+
+.modal.treatment-documentation {
+  width: 850px;
+}
+
+.modal textarea {
+  width: 90%;
+  height: 100px;
+  padding: 10px;
+  resize: none;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.modal.treatment-documentation textarea {
+  width: 400px;
+  height: 300px;
+}

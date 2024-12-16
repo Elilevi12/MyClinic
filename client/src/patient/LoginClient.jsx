@@ -17,7 +17,7 @@ function Loginclient() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({type:"patient", username, password }),
       });
 console.log(2222);
 

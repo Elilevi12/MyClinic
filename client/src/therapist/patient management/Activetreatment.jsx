@@ -120,6 +120,7 @@ const fetchTreatmentSeries = async () => {
 
   function handleSubmitCanceln() {
     console.log(serialID);
+console.log(treatmentId);
 
     fetch("http://localhost:3300/therapist/treatmentDiary/cancelTreatment", {
       method: "post",
@@ -131,7 +132,7 @@ const fetchTreatmentSeries = async () => {
         treatmentId: treatmentId,
         serialID: serialID,
         cancelnText: cancelnText,
-        therapistId: therapist.id,
+      
       }),
     })
       .then((res) => res.json())
@@ -155,7 +156,8 @@ const fetchTreatmentSeries = async () => {
 
   const openCancelModal = (treatmentId) => {
     setTreatmentId(treatmentId);
-    console.log("123454321");
+   console.log(treatmentId);
+   
     
     setCancelTreatment(true);
   };
@@ -283,28 +285,29 @@ const fetchTreatmentSeries = async () => {
         </div>
       )}
       {treatmentDocumentation && (
-        <div className={styles.modalBackdrop}>
-          <div className={styles.modal}>
-            <h2>תיעוד טיפול</h2>
-            <textarea
-              value={documentationText}
-              onChange={(e) => setDocumentationText(e.target.value)}
-              placeholder="הזן תיעוד..."
-            />
-            <div>
-              <button onClick={handleSubmitDocumentation}>שלח</button>
-              <button
-                onClick={() => {
-                  setTreatmentDocumentation(false);
-                  setDocumentationText("");
-                }}
-              >
-                ביטול
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className={styles.modalBackdrop}>
+    <div className={`${styles.modal} ${styles['treatment-documentation']}`}>
+      <h2>תיעוד טיפול</h2>
+      <textarea
+        value={documentationText}
+        onChange={(e) => setDocumentationText(e.target.value)}
+        placeholder="הזן תיעוד..."
+      />
+      <div>
+        <button onClick={handleSubmitDocumentation}>שלח</button>
+        <button
+          onClick={() => {
+            setTreatmentDocumentation(false);
+            setDocumentationText("");
+          }}
+        >
+          ביטול
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

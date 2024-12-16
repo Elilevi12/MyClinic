@@ -80,13 +80,14 @@ function ActiveSeries({ serialID }) {
       </div>
 
       {isModalOpen && !showSummaryReport && (
-        <div className={styles.modalBackdrop}>
-          <div className={styles.modal}>
-            <pre>{modalContent}</pre>
-            <button className={styles.button} onClick={closeModal}>סגור</button>
-          </div>
-        </div>
-      )}
+  <div className={styles.modalBackdrop}>
+    <div className={styles.modal}>
+      <pre>{modalContent}</pre> {/* שימוש בתג pre עם white-space: pre-wrap */}
+      <button className={styles.button} onClick={closeModal}>סגור</button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
