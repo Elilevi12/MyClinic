@@ -26,26 +26,34 @@ function MoneyManagement() {
   
     try {
       console.log("Fetching payment status...");
-      
+  
       const response = await fetch(
         `http://localhost:3300/therapist/moneyManagement/paymentStatus`,
         {
           headers: {
-             Authorization: localStorage.getItem("token"),
-
+            Authorization: localStorage.getItem("token"),
           },
         }
       );
+  
       const data = await response.json();
-      setPaymentStatus(data);
-      console.log(data);
-      
+  
+      // בדיקה האם מדובר במערך או באובייקט עם הודעה
+      if (Array.isArray(data)) {
+        setPaymentStatus(data);
+        console.log(data);
+      } else if (data.message) {
+        // במקרה שהשרת מחזיר הודעה
+        console.warn(data.message);
+        setPaymentStatus([]); // איפוס הרשימה אם אין נתונים
+      }
     } catch (error) {
       console.error("Error fetching payment status:", error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handlePatientSelect = (patient) => {
     setSelectedPatient(patient);
@@ -149,7 +157,7 @@ function MoneyManagement() {
         </tbody>
       </table>
 
-      {selectedPatient && (
+      {selectedPatient && ( 
         <div className={styles.modal}>
           <h2 className={styles.modalHeader}>
             {selectedPatient.first_name} {selectedPatient.last_name}

@@ -3,22 +3,23 @@ const router = express.Router();
 const db = require("../db/connection");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
+const sendMail = require("./mailer");
 const authenticateToken = (req, res, next) => {
-const token = req.headers["authorization"];  
+  const token = req.headers["authorization"];
   if (!token) {
-      return res.status(401).json({ message: "אסימון חסר" });
+    return res.status(401).json({ message: "אסימון חסר" });
   }
 
   jwt.verify(token, SECRET_KEY, (err, user) => {
-      if (err) {
-          return res.status(403).json({ message: "אסימון לא חוקי" });
-      }
-      req.user = user; // המשתמש שאומת
+    if (err) {
+      return res.status(403).json({ message: "אסימון לא חוקי" });
+    }
+    req.user = user; // המשתמש שאומת
 
- if (req.user.type !== "admin") {
-  return res.status(403).json({ message: "גישה אסורה" });
-}
-      next();
+    if (req.user.type !== "admin") {
+      return res.status(403).json({ message: "גישה אסורה" });
+    }
+    next();
   });
 };
 
@@ -29,25 +30,25 @@ router.get("/", (req, res) => {
 });
 
 router.get("/getTherapists", authenticateToken, (req, res) => {
-  
- 
+
+
   const sql = "SELECT * FROM therapists";
   db.query(sql, (err, results) => {
-      if (err) {
-          console.error("שגיאה בקבלת פרטי המטפלים:", err);
-          return res.status(500).json({ message: "שגיאה בקבלת פרטי המטפלים" });
-      }
+    if (err) {
+      console.error("שגיאה בקבלת פרטי המטפלים:", err);
+      return res.status(500).json({ message: "שגיאה בקבלת פרטי המטפלים" });
+    }
 
-      if (results.length === 0) {
-          return res.status(404).json({ message: "לא נמצאו מטפלים" });
-      }
+    if (results.length === 0) {
+      return res.status(404).json({ message: "לא נמצאו מטפלים" });
+    }
 
 
-      res.status(200).json(results);
+    res.status(200).json(results);
   });
 });
 
-router.post("/addTherapist",authenticateToken, (req, res) => {
+router.post("/addTherapist", authenticateToken, (req, res) => {
   const {
     first_name,
     last_name,
@@ -57,7 +58,7 @@ router.post("/addTherapist",authenticateToken, (req, res) => {
     address,
     specialty,
   } = req.body;
-  
+
   const randomNumber = Math.floor(Math.random() * 1000000);
 
   db.beginTransaction((err) => {
@@ -104,11 +105,27 @@ router.post("/addTherapist",authenticateToken, (req, res) => {
             console.error("שגיאה בביצוע השאילתות:", err);
             return db.rollback(() => res.status(500).json({ message: "שגיאה בהוספת המטפל" }));
           }
-          return res.status(201).json({ message: "המטפל נוסף בהצלחה" });
+          const subject = "ברוך הבא לאתר שלנו!";
+          const text = `
+            שלום ${first_name} ${last_name},
+
+            ברוך הבא לאתר שלנו!
+            להלן פרטי ההתחברות שלך:
+            שם משתמש: ${randomNumber}
+            סיסמה: ${123}
+            אנא שמור על פרטיות המידע שלך.
+          `;
+
+          sendMail(email, subject, text)
+            .then(() => res.status(201).json({ message: "המטפל נוסף בהצלחה והמייל נשלח" }))
+            .catch((err) => {
+              console.error("שגיאה בשליחת המייל:", err);
+              res.status(201).json({ message: "המטפל נוסף בהצלחה אך שליחת המייל נכשלה" });
+            });
         });
       });
     });
-  });
+  })
 });
 
 

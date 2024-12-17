@@ -3,7 +3,7 @@ const authenticateToken = require("./tokenTherapist");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const db = require("../db/connection");
-
+const sendMail = require("./mailer");
 router.get("/", (req, res) => {
   res.send("I therapist");
 });
@@ -22,10 +22,10 @@ router.use("/moneyManagement", appMoneyManagement);
 
 
 
-router.post("/ListOfPatients",authenticateToken, (req, res) => {
+router.post("/ListOfPatients", authenticateToken, (req, res) => {
   //רשימת מטופלים
 
-  const  therapist_id  = req.user.id;
+  const therapist_id = req.user.id;
 
   const sql = `SELECT *  FROM patients WHERE therapist_id = ?`;
   db.query(sql, [therapist_id], (err, result) => {
@@ -41,7 +41,7 @@ router.post("/ListOfPatients",authenticateToken, (req, res) => {
   });
 });
 
-router.post("/addPatient",authenticateToken ,(req, res) => {
+router.post("/addPatient", authenticateToken, (req, res) => {
   //הוספת מטופל
   const {
     first_name,
@@ -54,7 +54,7 @@ router.post("/addPatient",authenticateToken ,(req, res) => {
     total_treatments,
     comments,
   } = req.body;
-const therapist_id = req.user.id;
+  const therapist_id = req.user.id;
   const randomNumber = Math.floor(Math.random() * 1000000);
   db.beginTransaction((err) => {
     if (err) {
@@ -119,8 +119,27 @@ const therapist_id = req.user.id;
                   return db.rollback(() =>
                     res.status(500).json({ message: "שגיאה בהוספת המטופל" })
                   );
+
                 }
-                res.status(201).json({ message: "המטופל נוסף בהצלחה" });
+
+                const subject = "ברוך הבא לאתר שלנו!";
+                const text = `
+                  שלום ${first_name} ${last_name},
+      
+                  ברוך הבא לאתר שלנו!
+                  להלן פרטי ההתחברות שלך:
+                  שם משתמש: ${randomNumber}
+                  סיסמה: ${123}
+                  אנא שמור על פרטיות המידע שלך.
+                `;
+
+                sendMail(email, subject, text)
+                  .then(() => res.status(201).json({ message: "המטפל נוסף בהצלחה והמייל נשלח" }))
+                  .catch((err) => {
+                    console.error("שגיאה בשליחת המייל:", err);
+                    res.status(201).json({ message: "המטפל נוסף בהצלחה אך שליחת המייל נכשלה" });
+                  });
+
               });
             }
           );
@@ -130,11 +149,11 @@ const therapist_id = req.user.id;
   });
 });
 
-router.post("/waitingList",authenticateToken, (req, res) => {
+router.post("/waitingList", authenticateToken, (req, res) => {
 
-  const  therapist_id  = req.user.id;
+  const therapist_id = req.user.id;
   console.log(therapist_id);
-  
+
   const sql = ` SELECT 
       ts.*, 
       p.* 
@@ -158,7 +177,7 @@ router.post("/waitingList",authenticateToken, (req, res) => {
   });
 });
 
-router.get("/receivingTreatmentDates",authenticateToken, (req, res) => {
+router.get("/receivingTreatmentDates", authenticateToken, (req, res) => {
 
 
   const sql = `
@@ -173,7 +192,7 @@ JOIN patients p ON tser.patients_id = p.user_id
 WHERE tser.therapist_id = ?
 ORDER BY ts.treatment_date, ts.treatment_time;
 `;
-console.log(req.user);
+  console.log(req.user);
 
 
   const query = db.query(sql, [req.user.id], (err, result) => {
@@ -192,9 +211,9 @@ console.log(req.user);
   //קבלת תארכי טיפול להצגת יומן טיפולים
 });
 
-router.get("/getTherapist/",authenticateToken, (req, res) => {
+router.get("/getTherapist/", authenticateToken, (req, res) => {
   const sql = "SELECT * FROM therapists where user_id = ?";
-  db.query(sql, [req.user.id], 
+  db.query(sql, [req.user.id],
     (err, results) => {
       if (err) {
         console.error("שגיאה בקבלת פרטי המטפלים:", err);
@@ -209,7 +228,7 @@ router.get("/getTherapist/",authenticateToken, (req, res) => {
     });
 });
 
-router.get("/getPatient/:id",authenticateToken, (req, res) => {
+router.get("/getPatient/:id", authenticateToken, (req, res) => {
   const sql = "SELECT * FROM patients WHERE user_id = ?";
 
   db.query(sql, [req.params.id], (err, results) => {

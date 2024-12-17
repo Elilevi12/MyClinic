@@ -2,7 +2,7 @@ const express=require('express')
 const router=express.Router()
 const db = require("../db/connection")
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = "your_secret_key_here";
+const SECRET_KEY = process.env.SECRET_KEY;
 router.get('/',(req,res)=>{
     res.send("I shared")
 })
@@ -25,7 +25,7 @@ if(result[0].type!==type){
         const token = jwt.sign(
             { id: user.id, type: user.type },
             SECRET_KEY,
-            { expiresIn: "1h" } // האסימון יפוג לאחר שעה
+            { expiresIn: "5h" } // האסימון יפוג לאחר שעה
         );
 
         res.status(200).json({ token });
